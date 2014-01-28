@@ -207,7 +207,7 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
   edm::Handle<reco::CaloTauCollection> theCaloTauHandle;
   iEvent.getByLabel("caloRecoTauProducer",theCaloTauHandle);
   const reco::CaloTauCollection & caloTaus = *(theCaloTauHandle.product());
-  int nCaloTaus = caloTaus.size();
+  ////  int nCaloTaus = caloTaus.size();
 
   // calo tau discriminators // FIXME: duplicate code
   /*//   
@@ -266,17 +266,17 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
   //  std::cout << " calo tau vertex  " << nvtx << " calo tau vertex tracks " << ntrkV << std::endl;
   int jtau = 0;
 
-  double DRMAX = 1000.;
+  ////  double DRMAX = 1000.;
   reco::CaloTau theCaloTau;
 
   reco::CaloTauCollection::const_iterator iTau;
   int iTauInd = 0;
 
   // FIXME: not used at all
-  float DiscriminatorByLeadingTrackFinding = 0.;
+  ////  float DiscriminatorByLeadingTrackFinding = 0.;
   float DiscriminatorByLeadingTrackPtCut   = 0;
-  float DiscriminatorByIsolation           = 0;
-  float DiscriminatorAgainstElectron       = 0;
+  ////  float DiscriminatorByIsolation           = 0;
+  ////  float DiscriminatorAgainstElectron       = 0;
 
   reco::CaloTauRef theSelectedCaloTauRef;
 
@@ -300,11 +300,11 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
     // check that jetref is not zero pointer
     if (myJetRef.isNull())continue;    
         
-    double mN90  =  myJetRef->n90();
+    ////    double mN90  =  myJetRef->n90();
     double mEmf  =  myJetRef->emEnergyFraction(); 
     double mN90Hits = (*jetsID)[myJetRef].n90Hits;
     double mfHPD    = (*jetsID)[myJetRef].fHPD;
-    double mfRBX    = (*jetsID)[myJetRef].fRBX;  
+    ////    double mfRBX    = (*jetsID)[myJetRef].fRBX;  
     
     // jet ID selections // FIXME: Set the cut values in config file
    
@@ -319,9 +319,9 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
     
     // Obtain leading track (0.5 around jet axis) // FIXME: Set the cut values in config file
     std::string metric = "DR"; // can be DR,angle,area
-    double ip = -1;
+    ////    double ip = -1;
     // settings for tau isolation
-    double matchingConeSize  = 0.10;
+    ////    double matchingConeSize  = 0.10;
     double signalConeSize    = 0.07;
     double isolationConeSize = 0.5;
     //      double isolationConeSize = 0.4;
@@ -329,7 +329,7 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
     double ptOtherTracksMin  = 0.;
     //      double ptLeadingTrackMin = 6.;
     //      double ptOtherTracksMin  = 1.;
-    unsigned int isolationAnnulus_Tracksmaxn = 0;
+    ////    unsigned int isolationAnnulus_Tracksmaxn = 0;
     
     CaloTauElementsOperators op(theCaloTau);
     const reco::TrackRef myLdgChargedHadronTrackRef = op.leadTk(metric,isolationConeSize,ptLeadingTrackMin);
@@ -379,7 +379,7 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
     //    std::cout << " DiscriminatorByLeadingTrackFinding =" << DiscriminatorByLeadingTrackFinding  << "   DiscriminatorByLeadingTrackPtCut " << DiscriminatorByLeadingTrackPtCut << "    DiscriminatorByIsolation " <<  DiscriminatorByIsolation  << " DiscriminatorAgainstElectron " << DiscriminatorAgainstElectron << std::endl;
     
     // Charged track isolation
-    double d_trackIsolation = 
+    /*    double d_trackIsolation = 
       op.discriminatorByIsolTracksN(metric,
 				    matchingConeSize,
 				    ptLeadingTrackMin,
@@ -389,7 +389,7 @@ bool HPlusTauDumperCaloTau::setData(edm::Event& iEvent, const edm::EventSetup& i
 				    metric,
 				    isolationConeSize,
 				    isolationAnnulus_Tracksmaxn);
-    
+    */
     // Leading track
     math::XYZVector myLeadingChargedTrack = myLdgChargedHadronTrackRef->momentum();
     myDataLdgChargedHadronP->push_back(myLeadingChargedTrack);
