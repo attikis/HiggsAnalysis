@@ -197,7 +197,7 @@ bool HPlusTauDumperPF::setData(edm::Event& iEvent, const edm::EventSetup& iSetup
     // Charged track isolation
     const reco::PFCandidateRefVector& mySignalPFCandidates = myTauJetRef->signalPFCands(); // Leading track is included here 
     const reco::PFCandidateRefVector& myIsolationPFCandidates = myTauJetRef->isolationPFCands(); // Leading track is included here
-    const reco::PFCandidateRefVector& mySignalPFGammaCandidates = myTauJetRef->signalPFGammaCands();
+    ////    const reco::PFCandidateRefVector& mySignalPFGammaCandidates = myTauJetRef->signalPFGammaCands();
     edm::RefVector<reco::PFCandidateCollection>::const_iterator iCand;
     
     // Count the number of signal tracks in the signal cone above a certain pt threshold
