@@ -123,7 +123,7 @@ void HPlusJetEnergyScaleVariation::produce(edm::Event& iEvent, const edm::EventS
     // argument controls plus/minus variation (asymmetric uncertainty)
     double myChange = jecUnc.getUncertainty(plusVariation);
     double myFactor = 1. + myChange;
-    LorentzVector p4 = iJet->p4()*myFactor; 
+    ////    LorentzVector p4 = iJet->p4()*myFactor; 
 
     pat::Jet jet = *iJet;
     if(doVariation)
