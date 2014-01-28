@@ -21,8 +21,7 @@ namespace HPlus {
   }
   void BaseSelection::ensureSilentAnalyzeAllowed(const edm::Event& iEvent) const {
     if(fEventNumber == iEvent.id().event() && fLumiNumber == iEvent.id().luminosityBlock() && fRunNumber == iEvent.id().run()) {
-      std::string demangled;
-      edm::typeDemangle(typeid(*this).name(), demangled);
+      std::string demangled = edm::typeDemangle(typeid(*this).name());
       throw cms::Exception("LogicError") << "Called " << demangled << "::silentAnalyze() after " << demangled << "::analyze() has already been called in event " 
                                          << fEventNumber << ":" << fLumiNumber << ":" << fRunNumber << ". This is not allowed. (exception from BaseSelection::ensureSilentAnalyzeAllowed())" << std::endl;
     }
