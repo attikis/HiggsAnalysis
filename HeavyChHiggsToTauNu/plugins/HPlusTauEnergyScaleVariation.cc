@@ -48,7 +48,7 @@ void HPlusTauEnergyScaleVariation::produce(edm::Event& iEvent, const edm::EventS
                                 + energyEtaVariation*energyEtaVariation / iTau->eta() / iTau->eta());
     double myFactor = 1. + myChange;
     if (energyVariation < 0) myFactor = 1. - myChange;
-    LorentzVector p4 = iTau->p4()*myFactor; 
+    ////    LorentzVector p4 = iTau->p4()*myFactor; 
 
     pat::Tau tau = *iTau;
     tau.setP4(iTau->p4()*myFactor);
