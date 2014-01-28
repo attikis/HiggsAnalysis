@@ -133,7 +133,7 @@ float MathFunctions::getArrayMin( float Array[] ,	int ArrayLength ){
     
     if( Array[i] < MinimumValue ){
       MinimumValue = Array[i];      
-      ArrayIndexForMinimum = i;
+      ////      ArrayIndexForMinimum = i;
     }
     
   }
@@ -158,7 +158,7 @@ float MathFunctions::getArrayMax( float Array[] ,	int ArrayLength ){
     
     if( Array[i] < MaximumValue ){
       MaximumValue = Array[i];      
-      ArrayIndexForMaximum = i;
+      ////      ArrayIndexForMaximum = i;
     }
     
   }
@@ -202,7 +202,7 @@ float MathFunctions::getVectorMin( vector<float> InputVector ){
     
     if( InputVector[i] < MinimumValue ){
       MinimumValue = InputVector[i];      
-      VectorIndexForMinimum = i;
+      ////      VectorIndexForMinimum = i;
     }
     
   }
@@ -225,7 +225,7 @@ float MathFunctions::getVectorMax( vector<float> InputVector ){
     
     if( InputVector[i] < MaximumValue ){
       MaximumValue = InputVector[i];      
-      VectorIndexForMaximum = i;
+      ////      VectorIndexForMaximum = i;
     }
     
   }

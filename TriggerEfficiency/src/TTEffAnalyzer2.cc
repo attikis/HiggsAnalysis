@@ -979,7 +979,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       unsigned jetsInMatchingCone = 0;
 
       for(size_t i=0; i<l1taus.size(); ++i) {
-	double DR = deltaR(*l1taus[i], *jet);
+	double DR = reco::deltaR(*l1taus[i], *jet);
         if(DR < l1JetMatchingCone_) {
           ++jetsInMatchingCone;
           if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -991,7 +991,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
       }
       for(size_t i=0; i<l1cenjets.size(); ++i) {
-        double DR = deltaR(*l1cenjets[i], *jet);
+        double DR = reco::deltaR(*l1cenjets[i], *jet);
         if(DR < l1JetMatchingCone_) {
           ++jetsInMatchingCone;
           if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1005,7 +1005,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
 /*
       l1extra::L1JetParticleCollection::const_iterator iJet;
       for(iJet = hl1taus->begin(); iJet != hl1taus->end(); ++iJet, ++l1JetIndex) {
-        double DR = deltaR(*iJet, *jet);
+        double DR = reco::deltaR(*iJet, *jet);
         if(DR < l1JetMatchingCone_) {
           ++jetsInMatchingCone;
           if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1017,7 +1017,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
         }
       }
       for(iJet = hl1cenjets->begin(); iJet != hl1cenjets->end(); ++iJet, ++l1JetIndex) {
-        double DR = deltaR(*iJet, *jet);
+        double DR = reco::deltaR(*iJet, *jet);
         if(DR < l1JetMatchingCone_) {
           ++jetsInMatchingCone;
           if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1057,7 +1057,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Matching to offline jets
     double jetMinDR = 99999999.;
     for(size_t i=0; i<selectedPFJets.size(); ++i) {
-      jetMinDR = std::min(deltaR(*(selectedPFJets[i]), tau), jetMinDR);
+      jetMinDR = std::min(double(reco::deltaR(*(selectedPFJets[i]), tau)), jetMinDR);
     }
     PFTauJetMinDR_.push_back(jetMinDR);
 
@@ -1068,7 +1068,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     // Matching to HLT objects
     int foundMatch = 0;
     for(size_t i = 0; i < hltObjects.size(); ++i){
-        double DR = deltaR(hltObjects[i], tau);
+        double DR = reco::deltaR(hltObjects[i], tau);
 	if(DR < jetMinDR) foundMatch = 1;
 
     }
@@ -1077,7 +1077,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       TriggerFilter& tf = PFTau_matchedHLTObjectFilters_[iFilter];
       bool found = false;
       for(size_t iObj=0; iObj<tf.objects.size(); ++iObj) {
-        if(deltaR(tf.objects[iObj], tau) < jetMinDR) {
+        if(reco::deltaR(tf.objects[iObj], tau) < jetMinDR) {
           found = true;
           break;
         }
@@ -1095,7 +1095,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     double jetMaxEt = 0;
     unsigned jetsInMatchingCone = 0;
     for(size_t i=0; i<l1taus.size(); ++i) {
-      double DR = deltaR(*l1taus[i], tau);
+      double DR = reco::deltaR(*l1taus[i], tau);
       if(DR < l1JetMatchingCone_) {
 	++jetsInMatchingCone;
 	if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1107,7 +1107,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
     for(size_t i=0; i<l1cenjets.size(); ++i) {
-      double DR = deltaR(*l1cenjets[i], tau);
+      double DR = reco::deltaR(*l1cenjets[i], tau);
       if(DR < l1JetMatchingCone_) {
 	++jetsInMatchingCone;
 	if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1121,7 +1121,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     /*
     l1extra::L1JetParticleCollection::const_iterator iJet;
     for(iJet = hl1taus->begin(); iJet != hl1taus->end(); ++iJet, ++l1JetIndex) {
-      double DR = deltaR(*iJet, tau);
+      double DR = reco::deltaR(*iJet, tau);
       if(DR < l1JetMatchingCone_) {
         ++jetsInMatchingCone;
         if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1133,7 +1133,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
       }
     }
     for(iJet = hl1cenjets->begin(); iJet != hl1cenjets->end(); ++iJet, ++l1JetIndex) {
-      double DR = deltaR(*iJet, tau);
+      double DR = reco::deltaR(*iJet, tau);
       if(DR < l1JetMatchingCone_) {
         ++jetsInMatchingCone;
         if((l1SelectNearest_ && DR < jetMinDR) ||
@@ -1155,7 +1155,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     if(hl2TauAssoc.isValid()){
     for(reco::L2TauInfoAssociation::const_iterator it = hl2TauAssoc->begin(); it != hl2TauAssoc->end(); ++it) {
       const reco::CaloJet& l2Jet = *(it->key);
-      double DR = deltaR(l2Jet, tau);
+      double DR = reco::deltaR(l2Jet, tau);
       if(DR < l2JetMatchingCone_ && DR < jetMinDR) {
         jetMinDR = DR;
         foundL2 = &l2Jet;
@@ -1189,7 +1189,7 @@ void TTEffAnalyzer2::analyze(const edm::Event& iEvent, const edm::EventSetup& iS
     jetMinDR = 999999.;
     for(reco::PFTauCollection::const_iterator it = hl25taus->begin(); it != hl25taus->end(); ++it) {
       const reco::PFTau& l25tau = *it;
-      double DR = deltaR(l25tau, tau);
+      double DR = reco::deltaR(l25tau, tau);
       if(DR < l25TauMatchingCone_ && DR < jetMinDR) {
         jetMinDR = DR;
         foundL25 = &l25tau;

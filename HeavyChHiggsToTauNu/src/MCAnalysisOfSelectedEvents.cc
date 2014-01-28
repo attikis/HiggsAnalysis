@@ -52,6 +52,10 @@ namespace HPlus {
     fTauNotInTauFromBottomCounter(eventCounter.addSubCounter("MCinfo for selected events", "Bottom->Tau not in tau")),
     fTauNotInTauFromHplusCounter(eventCounter.addSubCounter("MCinfo for selected events", "Hplus->tau not in tau")),
 
+    fObservableMuonsCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated muons")),
+    fObservableElectronsCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated electrons")),
+    fObservableTausCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated taus")),
+
     fElectronOrMuonFoundCounter(eventCounter.addSubCounter("MCinfo for selected events", "Electron or muon found")),
     fNoElectronOrMuonFoundCounter(eventCounter.addSubCounter("MCinfo for selected events", "No electron or muon found")),
     fNoElectronOrMuonFoundRealTauCounter(eventCounter.addSubCounter("MCinfo for selected events", "No electron or muon found, real tau")),
@@ -59,10 +63,6 @@ namespace HPlus {
     fLeptonFoundCounter(eventCounter.addSubCounter("MCinfo for selected events", "Electron, muon or tau found")),
     fNoLeptonFoundCounter(eventCounter.addSubCounter("MCinfo for selected events", "No electron, muon or tau found")),
     fNoLeptonFoundRealTauCounter(eventCounter.addSubCounter("MCinfo for selected events", "No electron, muon, tau found, real tau")),   
-
-    fObservableMuonsCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated muons")),
-    fObservableElectronsCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated electrons")),
-    fObservableTausCounter(eventCounter.addSubCounter("MCinfo for selected events", "Observable associated taus")),
 
     fTauIsHadronFromHplusCounter(eventCounter.addSubCounter("MCinfo for selected events", "Tau from H+ ->tau->hadrons")),
     fTauIsElectronFromHplusCounter(eventCounter.addSubCounter("MCinfo for selected events", "Tau from H+ ->tau->electron")),
@@ -409,7 +409,7 @@ namespace HPlus {
     int motherId=9999;      
     bool wInMothers = false;
     bool zInMothers = false;
-    bool topInMothers = false;
+    ////    bool topInMothers = false;
     bool bottomInMothers = false;
     bool tauInMothers = false;
     bool hplusInMothers = false;
@@ -419,7 +419,7 @@ namespace HPlus {
       motherId = dparticle.pdgId();
       if( abs(motherId) == 24 ) wInMothers = true; 
       if( abs(motherId) == 23 ) zInMothers = true; 
-      if( abs(motherId) == 6 ) topInMothers = true;
+      ////      if( abs(motherId) == 6 ) topInMothers = true;
       if( abs(motherId) == 5 ) bottomInMothers = true;
       if( abs(motherId) == 15 ) tauInMothers = true;
       if( abs(motherId) == 37 ) hplusInMothers = true;
@@ -428,7 +428,7 @@ namespace HPlus {
 
     bool FromBottom = false;
     bool FromJet = false;    
-    bool FromHplusTau = false;
+    ////    bool FromHplusTau = false;
     bool FromWTau = false;
     bool FromW = false;
     bool FromZTau = false;
@@ -436,7 +436,7 @@ namespace HPlus {
     
     if (bottomInMothers && !wInMothers && !zInMothers  ) FromBottom = true;
     if (!bottomInMothers && !wInMothers && !hplusInMothers && !zInMothers ) FromJet = true;
-    if (hplusInMothers && tauInMothers ) FromHplusTau = true;
+    ////    if (hplusInMothers && tauInMothers ) FromHplusTau = true;
     if (wInMothers && tauInMothers ) FromWTau = true;
     if (zInMothers && tauInMothers ) FromZTau = true;
     if (wInMothers && !tauInMothers ) FromW = true;

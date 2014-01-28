@@ -16,6 +16,8 @@ namespace HPlus {
     const reco::GenParticle *rewindChainUp(const reco::GenParticle *particle);
     const reco::GenParticle *rewindChainDown(const reco::GenParticle *particle);
 
+    const math::XYZTLorentzVector calculateVisibleTau(const reco::GenParticle *tau);
+
     template <typename I, typename R>
     const reco::GenParticle *findMatching(const I& begin, const I& end, unsigned pdgId, const R& reference, double deltaR, bool visibleTau=false) {
       const reco::GenParticle *found = 0;
@@ -60,8 +62,6 @@ namespace HPlus {
     const reco::GenParticle *findMaxNonNeutrinoDaughter(const reco::GenParticle *particle);
 
     const reco::GenParticle *findTauDaughter(const reco::GenParticle *tau);
-
-    const math::XYZTLorentzVector calculateVisibleTau(const reco::GenParticle *tau);
 
     std::vector<const reco::GenParticle *> findTTBarWdecays(const edm::PtrVector<reco::GenParticle>& particles);
 

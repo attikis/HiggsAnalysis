@@ -142,9 +142,9 @@ namespace HPlus {
       
       //     std::cout << " hadronic taus  " << oneAndThreeProngTaus.size() << std::endl;	       
       for( LorentzVectorCollection::const_iterator tau = oneAndThreeProngTaus->begin();tau!=oneAndThreeProngTaus->end();++tau) {  
-	bool tauFromHiggs = false;
+	////	bool tauFromHiggs = false;
 	bool tauFromW = false;
-	bool tauCandFromW = false;	
+	////	bool tauCandFromW = false;	
 	for (size_t i=0; i < genParticles->size(); ++i){  
 	  const reco::Candidate & p = (*genParticles)[i];
 	  int id = p.pdgId();
@@ -155,19 +155,21 @@ namespace HPlus {
 	      const reco::GenParticle* dparticle = dynamic_cast<const reco::GenParticle*>(p.mother(im));
 	      if ( !dparticle) continue;
 	      int idmother = dparticle->pdgId();
+	      /*
 	      if ( abs(idmother) == 37 ) {
 		tauFromHiggs = true;
 	      }
+	      */
 	      if ( abs(idmother) == 24 ) {
 		tauFromW = true;
 	      }
 	    }
 	  }	  
-	  
+
 	  for (edm::PtrVector<pat::Tau>::iterator it = myVetoTauCandidates.begin(); it != myVetoTauCandidates.end(); ++it) {
 	    double deltaR = reco::deltaR( *tau, **it);
 	    if ( deltaR < 0.2 && tauFromW) {
-	      tauCandFromW = true;
+	      ////	      tauCandFromW = true;
 	      hTauCandFromWPt->Fill((*it)->pt()); 
 	    }
 	  }

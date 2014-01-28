@@ -391,7 +391,7 @@ namespace HPlus {
 	      // test with b jet from tau side
 	      double deltaR = ROOT::Math::VectorUtil::DeltaR(output.BjetTauSide->p4(),p.p4() );
 	      if ( deltaR < 0.4) bjetHiggsSide = true;
-	      idbjetHiggsSide = id;
+	      ////	      idbjetHiggsSide = id;
 	    }
 	  }
 	} 

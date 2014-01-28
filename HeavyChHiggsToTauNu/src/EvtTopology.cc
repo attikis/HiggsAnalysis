@@ -496,7 +496,8 @@ namespace HPlus {
     float jetThrust = 0.0;
     
     // Initialise the momentum vectors
-    for(int j = 0; j < 3; j++) momentum[j]=0;
+    //    float momentum[3];
+    //    for(int j = 0; j < 3; j++) momentum[j]=0;
 
     /// Loop over all selected jets
     for(edm::PtrVector<pat::Jet>::const_iterator iter = jets.begin(); iter != jets.end(); ++iter) {    

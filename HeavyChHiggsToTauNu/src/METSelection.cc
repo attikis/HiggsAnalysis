@@ -360,7 +360,7 @@ namespace HPlus {
     */
     //double sumet = 0;
 
-    reco::Candidate::LorentzVector rawJetP4 = selectedJet->correctedP4("Uncorrected");
+    ////    reco::Candidate::LorentzVector rawJetP4 = selectedJet->correctedP4("Uncorrected");
     reco::Candidate::LorentzVector rawJetP4offset = selectedJet->correctedP4(fJetOffsetCorrLabel);
     if(selectedJet->pt() > fJetType1Threshold) {
       mex += (selectedJet->px() - rawJetP4offset.px());

@@ -255,7 +255,7 @@ namespace HPlus {
         myHighestElecPt = myElectronPt;
         myHighestElecEta = myElectronEta;
       }
-      bElectronSelected = true;
+      ////      bElectronSelected = true;
       // Fill histos after Selection
       hElectronPt_AfterSelection->Fill(myElectronPt);
       hElectronEta_AfterSelection->Fill(myElectronEta);

@@ -234,15 +234,15 @@ void TauTriggerNtupleAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
 
       int pdgId = 0;
       int motherPdgId = 0;
-      int grandMotherPdgId = 0;
+      ////      int grandMotherPdgId = 0;
       if(gen) {
         pdgId = gen->pdgId();
         const reco::GenParticle *mother = HPlus::GenParticleTools::findMother(gen);
         if(mother) {
           motherPdgId = mother->pdgId();
-          const reco::GenParticle *grandMother = HPlus::GenParticleTools::findMother(mother);
-          if(grandMother)
-            grandMotherPdgId = grandMother->pdgId();
+	  ////          const reco::GenParticle *grandMother = HPlus::GenParticleTools::findMother(mother);
+	  ////          if(grandMother)
+	  ////            grandMotherPdgId = grandMother->pdgId();
         }
       }
 
@@ -262,15 +262,15 @@ void TauTriggerNtupleAnalyzer::analyze(const edm::Event& iEvent, const edm::Even
 
       int pdgId = 0;
       int motherPdgId = 0;
-      int grandMotherPdgId = 0;
+      ////      int grandMotherPdgId = 0;
       if(gen) {
         pdgId = gen->pdgId();
         const reco::GenParticle *mother = HPlus::GenParticleTools::findMother(gen);
         if(mother) {
           motherPdgId = mother->pdgId();
-          const reco::GenParticle *grandMother = HPlus::GenParticleTools::findMother(mother);
-          if(grandMother)
-            grandMotherPdgId = grandMother->pdgId();
+	  ////          const reco::GenParticle *grandMother = HPlus::GenParticleTools::findMother(mother);
+	  ////          if(grandMother)
+	  ////            grandMotherPdgId = grandMother->pdgId();
         }
       }
 
