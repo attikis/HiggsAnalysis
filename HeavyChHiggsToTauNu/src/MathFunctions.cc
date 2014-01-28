@@ -126,7 +126,7 @@ float MathFunctions::getArrayMin( float Array[] ,	int ArrayLength ){
 					      
   // Set the minimum as the first element of the array
   float MinimumValue = Array[0]; 
-  int ArrayIndexForMinimum=0; 
+  ////  int ArrayIndexForMinimum=0; 
   
   // loop over all array elements and compare to get the true minimum
   for( int i = 0; i < ArrayLength; i++){
@@ -149,7 +149,7 @@ float MathFunctions::getArrayMax( float Array[] ,	int ArrayLength ){
   
   // Set the minimum as the first element of the array
   float MaximumValue = Array[0]; 
-  int ArrayIndexForMaximum=0; 
+  ////  int ArrayIndexForMaximum=0; 
   
   // std::cout << " ArrayLength " << ArrayLength << std::endl;
   
@@ -195,7 +195,7 @@ float MathFunctions::getVectorMin( vector<float> InputVector ){
 					      
   // Set the minimum as the first element of the vector
   float MinimumValue = InputVector[0]; 
-  int VectorIndexForMinimum=0; 
+  ////  int VectorIndexForMinimum=0; 
   
   // loop over all vector elements and compare to get the true minimum
   for( unsigned int i = 0; i < InputVector.size(); i++){
@@ -218,7 +218,7 @@ float MathFunctions::getVectorMax( vector<float> InputVector ){
   
   // Set the minimum as the first element of the vector
   float MaximumValue = InputVector[0]; 
-  unsigned int VectorIndexForMaximum=0; 
+  ////  unsigned int VectorIndexForMaximum=0; 
   
   // loop over all vector elements and compare to get the true minimum
   for( unsigned int i = 0; i < InputVector.size(); i++){
