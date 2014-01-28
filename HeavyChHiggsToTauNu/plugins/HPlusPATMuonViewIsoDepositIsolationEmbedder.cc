@@ -101,6 +101,8 @@ class HPlusPATMuonViewIsoDepositIsolationEmbedder: public edm::EDProducer {
       case CandIsolatorFromDeposits::Max:          return dep.maxWithin(fDeltaR,   fVetos, fSkipDefaultVeto);
       case CandIsolatorFromDeposits::NearestDR:    return dep.nearestDR(fDeltaR,   fVetos, fSkipDefaultVeto);
       case CandIsolatorFromDeposits::MaxRelative:  return dep.maxWithin(fDeltaR,   fVetos, fSkipDefaultVeto) / dep.candEnergy() ;
+      case CandIsolatorFromDeposits::MeanDR: std::cout << "Problem in HPlusPATMuonViewIsoDepositIsolationEmbedder.cc, error: enumeration value 'MeanDR' not handled in switch" << std::endl; return 0;
+      case CandIsolatorFromDeposits::SumDR: std::cout << "Problem in HPlusPATMuonViewIsoDepositIsolationEmbedder.cc, error: enumeration value 'SumDR' not handled in switch" << std::endl; return 0;
       }
       throw cms::Exception("LogigError") << "Should not happen at " << __FILE__ << ", line " << __LINE__; // avoid gcc warning
     }
