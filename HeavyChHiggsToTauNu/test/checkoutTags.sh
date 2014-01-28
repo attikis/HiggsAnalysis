@@ -96,7 +96,7 @@ eval $(scram runtime -sh)
 # Follow is needed instead of V00-02-14 for one dictionary, PAT jobs fail otherwise
 addpkg DataFormats/StdDictionaries V00-02-15
 addpkg FWCore/GuiBrowsers V00-00-70
-addpkg RecoMET/METProducers      V03-03-12-02
+#### V03-03-28 in 620 addpkg RecoMET/METProducers      V03-03-12-02
 # Needed for running runMEtUncertainties() multiple times, no tag yet
 cvs up -r 1.19.8.1 PhysicsTools/PatAlgos/python/tools/helpers.py
 
