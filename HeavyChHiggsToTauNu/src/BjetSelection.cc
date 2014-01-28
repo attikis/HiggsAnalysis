@@ -357,7 +357,7 @@ namespace HPlus {
       bool bjetHiggsSide = false; 
       if( bjetTauSideFound  ) {
 
-	int idbjetHiggsSide = 0;
+	////	int idbjetHiggsSide = 0;
       
 	std::vector<LorentzVector> tausFromHp;
 
