@@ -10,8 +10,7 @@ namespace HPlus {
 
   void BaseSelection::ensureAnalyzeAllowed(const edm::Event& iEvent) {
     if(fEventNumber == iEvent.id().event() && fLumiNumber == iEvent.id().luminosityBlock() && fRunNumber == iEvent.id().run()) {
-      std::string demangled;
-      edm::typeDemangle(typeid(*this).name(), demangled);
+      std::string demangled = edm::typeDemangle(typeid(*this).name());
       throw cms::Exception("LogicError") << "Called " << demangled << "::analyze() after it has already been called in event " 
                                          << fEventNumber << ":" << fLumiNumber << ":" << fRunNumber << ". This is not allowed. (exception from BaseSelection::ensureAnalyzeAllowed())" << std::endl;
     }
