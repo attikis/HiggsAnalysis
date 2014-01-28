@@ -109,7 +109,7 @@ bool HPlusGlobalElectronVeto::filter(edm::Event& iEvent, const edm::EventSetup& 
 
   // Loop over muons
   *myHighestElectronPt = 0;
-  double myHighestElectronEta = -10;
+  //  double myHighestElectronEta = -10;
   for (pat::ElectronCollection::const_iterator iElectron = myElectronHandle->begin(); iElectron != myElectronHandle->end(); ++iElectron) {
     fCounter->addCount(fAllElectronCandidates);
 
