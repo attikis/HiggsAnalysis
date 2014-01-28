@@ -93,6 +93,17 @@ namespace HPlus {
 								"Positive discriminant")),
     negativeDiscriminant_SubCount(eventCounter.addSubCounter("FullHiggsMassCalculator",
 								"Negative discriminant")),
+    passedEvents_SubCount(eventCounter.addSubCounter("FullHiggsMassCalculator", "Passed events")),
+    selectionGreaterCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", "Greater solution closest")),                                       
+    selectionSmallerCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", "Smaller solution closest")),                                       
+    selectionTauNuAngleMaxCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection",                                                               
+                                                                      "TauNuAngleMax solution closest")),                                                
+    selectionTauNuAngleMinCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection",                                                               
+                                                                      "TauNuAngleMin solution closest")),                                                
+    selectionTauNuDeltaEtaMaxCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection",                                                            
+                                                                         "TauNuDeltaEtaMax solution closest")),                                          
+    selectionTauNuDeltaEtaMinCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection",                                                            
+                                                                         "TauNuDeltaEtaMin solution closest")),
     eventClass_Pure_SubCount(eventCounter.addSubCounter("FullHiggsMassCalculator", "Good identification of b-jet, tau, and MET")),
     eventClass_Impure_SubCount(eventCounter.addSubCounter("FullHiggsMassCalculator",
 							  "Misidentification of b-jet and/or tau and/or MET")),
@@ -115,19 +126,7 @@ namespace HPlus {
     count_tauMeasurementGood(eventCounter.addSubCounter("FullMassEventClassification", "#tau measurement good")),
     count_bMeasurementGood(eventCounter.addSubCounter("FullMassEventClassification", "b measurement good")),
     count_tauAndBjetFromSameTopQuark(eventCounter.addSubCounter("FullMassEventClassification", "#tau and b from same top")),
-    count_neutrinoMETCorrespondenceGood(eventCounter.addSubCounter("FullMassEventClassification", "MET #approx p_{#nu,T}")),
-
-    passedEvents_SubCount(eventCounter.addSubCounter("FullHiggsMassCalculator", "Passed events")),
-    selectionGreaterCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", "Greater solution closest")),
-    selectionSmallerCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", "Smaller solution closest")),
-    selectionTauNuAngleMaxCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection",
-								      "TauNuAngleMax solution closest")),
-    selectionTauNuAngleMinCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", 
-								      "TauNuAngleMin solution closest")),
-    selectionTauNuDeltaEtaMaxCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", 
-									 "TauNuDeltaEtaMax solution closest")),
-    selectionTauNuDeltaEtaMinCorrect_SubCount(eventCounter.addSubCounter("SolutionSelection", 
-									 "TauNuDeltaEtaMin solution closest"))
+    count_neutrinoMETCorrespondenceGood(eventCounter.addSubCounter("FullMassEventClassification", "MET #approx p_{#nu,T}"))
   {
     std::string myMethod = iConfig.getUntrackedParameter<std::string>("pzSelectionMethod");
     if (myMethod == "DeltaEtaMax") fPzSelectionMethod = eTauNuDeltaEtaMax;
@@ -791,8 +790,8 @@ namespace HPlus {
     double angle2 = getAngleBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum2);
     double deltaEta1 = getDeltaEtaBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum1);
     double deltaEta2 = getDeltaEtaBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum2);
-    double deltaR1 = getDeltaRBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum1);
-    double deltaR2 = getDeltaRBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum2);
+    ////    double deltaR1 = getDeltaRBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum1);
+    ////    double deltaR2 = getDeltaRBetweenNeutrinosAndTau(output.visibleTauFourMomentum, output.neutrinosFourMomentum2);
 
     // Select a solution using the desired method
     // Initialize...
