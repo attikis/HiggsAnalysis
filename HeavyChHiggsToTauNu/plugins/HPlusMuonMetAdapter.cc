@@ -47,8 +47,8 @@ void HPlusMuonMetAdapter::produce(edm::Event& iEvent, const edm::EventSetup& iSe
   reco::Muon mu(hmuon->at(0).charge(), muP4, hmuon->at(0).vertex());
   mu.setInnerTrack(hmuon->at(0).innerTrack());
 
-  const double massW = 80.403;
-  const double massW2 = massW*massW;
+  ////  const double massW = 80.403;
+  ////  const double massW2 = massW*massW;
   reco::Muon::LorentzVector nuP4 = hmet->at(0).p4();
 
   /*
