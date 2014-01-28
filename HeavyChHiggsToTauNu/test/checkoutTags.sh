@@ -90,9 +90,9 @@ eval $(scram runtime -sh)
 
 # PAT
 # https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes52X
-addpkg DataFormats/PatCandidates V06-05-06-08
-addpkg PhysicsTools/PatAlgos     V08-09-55
-addpkg PhysicsTools/PatUtils V03-09-28
+#### V06-06-02-02 in 620 addpkg DataFormats/PatCandidates V06-05-06-08
+#### V08-11-12 in 620 addpkg PhysicsTools/PatAlgos     V08-09-55
+#### V03-09-30 in 620 addpkg PhysicsTools/PatUtils V03-09-28
 # Follow is needed instead of V00-02-14 for one dictionary, PAT jobs fail otherwise
 addpkg DataFormats/StdDictionaries V00-02-15
 addpkg FWCore/GuiBrowsers V00-00-70
