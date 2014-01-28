@@ -147,7 +147,7 @@ namespace HPlus {
     bool bPassedElecID = false;
     bool bElecPtCut = false;
     bool bElecEtaCut = false;
-    bool bElectronSelected = false;
+    ////    bool bElectronSelected = false;
     bool bElecMatchingMCelectron = false;
     bool bElecMatchingMCelectronFromW = false;
 

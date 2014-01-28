@@ -161,7 +161,7 @@ namespace HPlus {
   
 
     bool myTauFoundStatus = false;
-    bool myLeptonVetoStatus = false;
+    ////    bool myLeptonVetoStatus = false;
     bool otherTauFound = false;
     bool otherHadronicTauFound = false;
     bool tauFromWFound = false;

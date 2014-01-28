@@ -488,7 +488,7 @@ namespace HPlus {
     }
 
     /// Declare momentum vector to be filled with jet's momentum components
-    float momentum[3];
+    ////    float momentum[3];
     float momentumMag = 0.0;
     float momentumMagSum = 0.0;
     float momentumZ = 0.0;
