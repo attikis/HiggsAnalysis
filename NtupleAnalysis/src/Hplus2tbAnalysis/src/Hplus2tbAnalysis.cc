@@ -29,18 +29,18 @@ private:
   Count cTrigger;
   METFilterSelection fMETFilterSelection;
   Count cVertexSelection;
-  TauSelection fTauSelection;
-  Count cFakeTauSFCounter;
-  Count cTauTriggerSFCounter;
+  //TauSelection fTauSelection;
+  //Count cFakeTauSFCounter;
+  //Count cTauTriggerSFCounter;
   Count cMetTriggerSFCounter;
-  ElectronSelection fElectronSelection;
-  MuonSelection fMuonSelection;
-  JetSelection fJetSelection;
-  AngularCutsCollinear fAngularCutsCollinear;
-  BJetSelection fBJetSelection;
+  //ElectronSelection fElectronSelection;
+  //MuonSelection fMuonSelection;
+  //JetSelection fJetSelection;
+  //AngularCutsCollinear fAngularCutsCollinear;
+  //BJetSelection fBJetSelection;
   Count cBTaggingSFCounter;
   METSelection fMETSelection;
-  AngularCutsBackToBack fAngularCutsBackToBack;
+  //AngularCutsBackToBack fAngularCutsBackToBack;
   Count cSelected;
     
   // Non-common histograms
@@ -58,26 +58,26 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
   fMETFilterSelection(config.getParameter<ParameterSet>("METFilter"),
                 fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   cVertexSelection(fEventCounter.addCounter("Primary vertex selection")),
-  fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
-  cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
+  //fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  //cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
+  //cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
   cMetTriggerSFCounter(fEventCounter.addCounter("Met trigger SF")),
-  fElectronSelection(config.getParameter<ParameterSet>("ElectronSelection"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
-  fMuonSelection(config.getParameter<ParameterSet>("MuonSelection"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
-  fJetSelection(config.getParameter<ParameterSet>("JetSelection"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  //fElectronSelection(config.getParameter<ParameterSet>("ElectronSelection"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
+  //fMuonSelection(config.getParameter<ParameterSet>("MuonSelection"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
+  //fJetSelection(config.getParameter<ParameterSet>("JetSelection"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  //fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  //fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
   fMETSelection(config.getParameter<ParameterSet>("METSelection"),
                 fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  fAngularCutsBackToBack(config.getParameter<ParameterSet>("AngularCutsBackToBack"),
-                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  //fAngularCutsBackToBack(config.getParameter<ParameterSet>("AngularCutsBackToBack"),
+  //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   cSelected(fEventCounter.addCounter("Selected events"))
 { }
 
@@ -86,14 +86,14 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   fCommonPlots.book(dir, isData());
   // Book histograms in event selection classes
   fMETFilterSelection.bookHistograms(dir);
-  fTauSelection.bookHistograms(dir);
-  fElectronSelection.bookHistograms(dir);
-  fMuonSelection.bookHistograms(dir);
-  fJetSelection.bookHistograms(dir);
-  fAngularCutsCollinear.bookHistograms(dir);
-  fBJetSelection.bookHistograms(dir);
+  //fTauSelection.bookHistograms(dir);
+  //fElectronSelection.bookHistograms(dir);
+  //fMuonSelection.bookHistograms(dir);
+  //fJetSelection.bookHistograms(dir);
+  //fAngularCutsCollinear.bookHistograms(dir);
+  //fBJetSelection.bookHistograms(dir);
   fMETSelection.bookHistograms(dir);
-  fAngularCutsBackToBack.bookHistograms(dir);
+  //fAngularCutsBackToBack.bookHistograms(dir);
   // Book non-common histograms
   //hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
 }
