@@ -28,7 +28,7 @@ private:
   Count cAllEvents;
   Count cTrigger;
   METFilterSelection fMETFilterSelection;
-  Count cVertexSelection;
+  //Count cVertexSelection;
   //TauSelection fTauSelection;
   //Count cFakeTauSFCounter;
   //Count cTauTriggerSFCounter;
@@ -38,11 +38,11 @@ private:
   //JetSelection fJetSelection;
   //AngularCutsCollinear fAngularCutsCollinear;
   //BJetSelection fBJetSelection;
-  Count cBTaggingSFCounter;
+  //Count cBTaggingSFCounter;
   METSelection fMETSelection;
   //AngularCutsBackToBack fAngularCutsBackToBack;
   Count cSelected;
-    
+
   // Non-common histograms
 
 };
@@ -57,7 +57,7 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
   cTrigger(fEventCounter.addCounter("Passed trigger")),
   fMETFilterSelection(config.getParameter<ParameterSet>("METFilter"),
                 fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  cVertexSelection(fEventCounter.addCounter("Primary vertex selection")),
+  //cVertexSelection(fEventCounter.addCounter("Primary vertex selection")),
   //fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
   //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   //cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
@@ -73,7 +73,7 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
   //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   //fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
   //              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-  cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
+  //cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
   fMETSelection(config.getParameter<ParameterSet>("METSelection"),
                 fEventCounter, fHistoWrapper, &fCommonPlots, ""),
   //fAngularCutsBackToBack(config.getParameter<ParameterSet>("AngularCutsBackToBack"),
@@ -109,7 +109,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   fCommonPlots.setFactorisationBinForEvent(std::vector<float> {});
 
   cAllEvents.increment();
-/*
+
 //====== Apply trigger
   if (!(fEvent.passTriggerDecision()))
     return;
@@ -117,26 +117,26 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   int nVertices = fEvent.vertexInfo().value();
   fCommonPlots.setNvertices(nVertices);
   fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
-
+/*
 //====== MET filters to remove events with spurious sources of fake MET
   const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
   if (!metFilterData.passedSelection())
     return;
-  
+
 //====== GenParticle analysis
   // if needed
-  
+
 //====== Check that primary vertex exists
   if (nVertices < 1)
     return;
   cVertexSelection.increment();
   fCommonPlots.fillControlPlotsAtVertexSelection(fEvent);
-  
+
 //====== Tau selection
   const TauSelection::Data tauData = fTauSelection.analyze(fEvent);
   if (!tauData.hasIdentifiedTaus())
     return;
-  
+
 //====== Fake tau SF
   if (fEvent.isMC()) {
     fEventWeight.multiplyWeight(tauData.getTauMisIDSF());
@@ -148,7 +148,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
     fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
     cTauTriggerSFCounter.increment();
   }
-
+*/
 //====== MET trigger SF
   const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
   if (fEvent.isMC()) {
@@ -157,7 +157,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   cMetTriggerSFCounter.increment();
   fCommonPlots.fillControlPlotsAfterMETTriggerScaleFactor(fEvent);
   //std::cout << tauData.getSelectedTau().pt() << ":" << tauData.getTauMisIDSF() << ", " << tauData.getTauTriggerSF() << ", met=" << silentMETData.getMET().R() << ", SF=" << silentMETData.getMETTriggerSF() << std::endl;
-  
+/*
 //====== Electron veto
   const ElectronSelection::Data eData = fElectronSelection.analyze(fEvent);
   if (eData.hasIdentifiedElectrons())
@@ -198,12 +198,12 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
     fEventWeight.multiplyWeight(bjetData.getBTaggingScaleFactorEventWeight());
   }
   cBTaggingSFCounter.increment();
-
+*/
 //====== MET selection
   const METSelection::Data METData = fMETSelection.analyze(fEvent, nVertices);
   if (!METData.passedSelection())
     return;
-  
+/*
 //====== Back-to-back angular cuts
   const AngularCutsBackToBack::Data backToBackData = fAngularCutsBackToBack.analyze(fEvent, tauData.getSelectedTau(), jetData, METData);
   if (!backToBackData.passedSelection())
@@ -213,11 +213,11 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   cSelected.increment();
   // Fill final plots
   fCommonPlots.fillControlPlotsAfterAllSelections(fEvent);
-  
+
 
 //====== Experimental selection code
   // if necessary
-  
+ */
 //====== Finalize
-  fEventSaver.save();*/
+  fEventSaver.save();
 }
