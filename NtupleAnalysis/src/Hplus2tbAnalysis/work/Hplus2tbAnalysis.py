@@ -10,12 +10,12 @@ if len(sys.argv) < 2:
     sys.exit(0)
 
 from HiggsAnalysis.NtupleAnalysis.main import Process, PSet, Analyzer
-from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import obtainAnalysisSuffix 
+from HiggsAnalysis.NtupleAnalysis.parameters.Hplus2tbAnalysisParameters import obtainAnalysisSuffix 
 process = Process("Hplus2tbAnalysis"+obtainAnalysisSuffix(sys.argv))
 process.addDatasetsFromMulticrab(sys.argv[1])
 
 # Add config
-from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import allSelections,applyAnalysisCommandLineOptions
+from HiggsAnalysis.NtupleAnalysis.parameters.Hplus2tbAnalysisParameters import allSelections,applyAnalysisCommandLineOptions
 # Set splitting of phase space (first bin is below first edge value and last bin is above last edge value)
 allSelections.CommonPlots.histogramSplitting = [
     #PSet(label="tauPt", binLowEdges=[60.0, 70.0, 80.0, 100.0], useAbsoluteValues=False),
