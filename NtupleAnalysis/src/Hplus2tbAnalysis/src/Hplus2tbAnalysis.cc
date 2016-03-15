@@ -120,7 +120,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
     }
   }
 
-/*
+
 //====== Apply trigger
   if (!(fEvent.passTriggerDecision()))
     return;
@@ -128,7 +128,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   int nVertices = fEvent.vertexInfo().value();
   fCommonPlots.setNvertices(nVertices);
   fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
-
+/*
 //====== MET filters to remove events with spurious sources of fake MET
   const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
   if (!metFilterData.passedSelection())
