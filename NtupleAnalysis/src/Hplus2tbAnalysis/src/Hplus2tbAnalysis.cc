@@ -44,6 +44,7 @@ private:
   Count cSelected;
 
   // Non-common histograms
+  WrappedTH1 *hAssociatedTPt;
 
 };
 
@@ -96,6 +97,8 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   //fAngularCutsBackToBack.bookHistograms(dir);
   // Book non-common histograms
   //hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
+  hAssociatedTPt =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
+
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -110,6 +113,14 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 
   cAllEvents.increment();
 
+  for (auto& p: fEvent.genparticles().getGenParticles()) {
+    if(p.pdgId() == 6){
+      //std::cout << "check pt " << p.pt() << std::endl;
+      hAssociatedTPt->Fill(p.pt());
+    }
+  }
+
+/*
 //====== Apply trigger
   if (!(fEvent.passTriggerDecision()))
     return;
@@ -117,7 +128,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   int nVertices = fEvent.vertexInfo().value();
   fCommonPlots.setNvertices(nVertices);
   fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
-/*
+
 //====== MET filters to remove events with spurious sources of fake MET
   const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
   if (!metFilterData.passedSelection())
