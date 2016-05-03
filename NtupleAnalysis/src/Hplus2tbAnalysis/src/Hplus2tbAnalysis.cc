@@ -45,6 +45,8 @@ private:
 
   // Non-common histograms
   WrappedTH1 *hAssociatedTPt;
+  WrappedTH1 *hAssociatedTEta;
+  WrappedTH1 *hAssociatedTPhi;
 
 };
 
@@ -98,6 +100,8 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   // Book non-common histograms
   //hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
   hAssociatedTPt =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
+  hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -2.5, 2.5);
+  hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
 }
 
@@ -117,6 +121,8 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
     if(p.pdgId() == 6){
       //std::cout << "check pt " << p.pt() << std::endl;
       hAssociatedTPt->Fill(p.pt());
+      hAssociatedTEta->Fill(p.eta());
+      hAssociatedTPhi->Fill(p.phi());
     }
   }
 
