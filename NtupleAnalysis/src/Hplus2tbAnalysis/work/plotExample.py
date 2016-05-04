@@ -29,9 +29,13 @@ def main():
     if len(sys.argv) < 2:
         usage()
 
+    plot(hName = "associatedTPt", title = "Top p_{T} (GeV/c)" )
+    plot(hName = "associatedTEta", title = "Top Eta")
+    plot(hName = "associatedTPhi", title = "Top Phi")
+
+def plot(hName, title):
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
-    hName = "associatedTPt"
     plotname = analysis+"_"+hName
 
 
@@ -67,7 +71,7 @@ def main():
     p.setLegend(histograms.moveLegend(histograms.createLegend(), **moveLegend))
 
     p.getFrame().GetYaxis().SetTitle("Arbitrary units")
-    p.getFrame().GetXaxis().SetTitle("Top p_{T} (GeV/c)")
+    p.getFrame().GetXaxis().SetTitle(title)
     p.getFrame2().GetYaxis().SetTitle("Ratio")
     p.getFrame2().GetYaxis().SetTitleOffset(1.6)
 
