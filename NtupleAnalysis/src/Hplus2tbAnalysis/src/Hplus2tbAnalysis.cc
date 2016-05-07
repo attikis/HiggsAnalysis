@@ -48,6 +48,8 @@ private:
   WrappedTH1 *hAssociatedTEta;
   WrappedTH1 *hAssociatedTPhi;
 
+  WrappedTH1 *hGenMetEt;
+  WrappedTH1 *hGenMetPhi;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -103,6 +105,8 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -2.5, 2.5);
   hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
+  hGenMetEt=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
+  hGenMetPhi=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -235,6 +239,9 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== Experimental selection code
   // if necessary
  */
+
+  hGenMetEt->Fill(fEvent.genMET().et());
+  hGenMetPhi->Fill(fEvent.genMET().phi());
 //====== Finalize
   fEventSaver.save();
 }
