@@ -32,12 +32,13 @@ def main():
     plot(hName = "associatedTPt", title = "Top p_{T} (GeV/c)" )
     plot(hName = "associatedTEta", title = "Top Eta")
     plot(hName = "associatedTPhi", title = "Top Phi")
+    plot(hName = "genMetEt", title = "Gen MET")
+    plot(hName = "genMetPhi", title = "Gen MET phi")
 
 def plot(hName, title):
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
     plotname = analysis+"_"+hName
-
 
     datasetsHiggs = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="ChargedHiggs_HplusTB_HplusToTauB_M_")
     datasetsTT    = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="TT")
