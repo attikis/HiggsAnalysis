@@ -44,9 +44,15 @@ private:
   Count cSelected;
 
   // Non-common histograms
+  // Top quark histos
   WrappedTH1 *hAssociatedTPt;
   WrappedTH1 *hAssociatedTEta;
   WrappedTH1 *hAssociatedTPhi;
+
+  // B quark histos
+  WrappedTH1 *hAssociatedBPt;
+  WrappedTH1 *hAssociatedBEta;
+  WrappedTH1 *hAssociatedBPhi;
 
   WrappedTH1 *hGenMetEt;
   WrappedTH1 *hGenMetPhi;
@@ -105,6 +111,10 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -2.5, 2.5);
   hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
+  hAssociatedBPt =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 400);
+  hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -2.5, 2.5);
+  hAssociatedBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPhi", "Associated b phi", 100, -3.1416, 3.1416);
+
   hGenMetEt=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
   hGenMetPhi=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
 }
@@ -127,6 +137,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
       hAssociatedTPt->Fill(p.pt());
       hAssociatedTEta->Fill(p.eta());
       hAssociatedTPhi->Fill(p.phi());
+    } else if (p.pdgId() == 5 ) {
+      hAssociatedBPt->Fill(p.pt());
+      hAssociatedBEta->Fill(p.eta());
+      hAssociatedBPhi->Fill(p.phi());
     }
   }
 

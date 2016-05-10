@@ -19,10 +19,12 @@ def usage():
     print "\n"
     sys.exit()
 
+
 def removeNegatives(histo):
     for bin in range(histo.GetNbinsX()):
         if histo.GetBinContent(bin) < 0:
             histo.SetBinContent(bin,0.)
+
 
 def main():
 
@@ -32,8 +34,14 @@ def main():
     plot(hName = "associatedTPt", title = "Top p_{T} (GeV/c)" )
     plot(hName = "associatedTEta", title = "Top Eta")
     plot(hName = "associatedTPhi", title = "Top Phi")
+
+    plot(hName = "associatedBPt",  title = "B p_{T} (GeV/c)" )
+    plot(hName = "associatedBEta", title = "B Eta")
+    plot(hName = "associatedBPhi", title = "B Phi")
+
     plot(hName = "genMetEt", title = "Gen MET")
     plot(hName = "genMetPhi", title = "Gen MET phi")
+
 
 def plot(hName, title):
     paths = [sys.argv[1]]
