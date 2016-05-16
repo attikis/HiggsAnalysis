@@ -5,6 +5,8 @@
 #include "EventSelection/interface/CommonPlots.h"
 #include "EventSelection/interface/EventSelections.h"
 
+#include "DataFormat/interface/Event.h"
+
 #include "TDirectory.h"
 
 class Hplus2tbAnalysis: public BaseSelector {
@@ -44,18 +46,24 @@ private:
   Count cSelected;
 
   // Non-common histograms
+  // Associated quarks histos
   // Top quark histos
   WrappedTH1 *hAssociatedTPt;
   WrappedTH1 *hAssociatedTEta;
   WrappedTH1 *hAssociatedTPhi;
-
   // B quark histos
   WrappedTH1 *hAssociatedBPt;
   WrappedTH1 *hAssociatedBEta;
   WrappedTH1 *hAssociatedBPhi;
 
+  // Generator level MET of the Event
   WrappedTH1 *hGenMetEt;
   WrappedTH1 *hGenMetPhi;
+
+  // H+
+  WrappedTH1 *hHplusPt;
+  WrappedTH1 *hHplusEta;
+  WrappedTH1 *hHplusPhi;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -107,16 +115,20 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   //fAngularCutsBackToBack.bookHistograms(dir);
   // Book non-common histograms
   //hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
-  hAssociatedTPt =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
+  hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
   hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -2.5, 2.5);
   hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
-  hAssociatedBPt =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 400);
+  hAssociatedBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 400);
   hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -2.5, 2.5);
   hAssociatedBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPhi", "Associated b phi", 100, -3.1416, 3.1416);
 
-  hGenMetEt=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
-  hGenMetPhi=  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
+  hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
+  hGenMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
+
+  hHplusPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPt",  "Hplus pT", 40, 0, 400);
+  hHplusEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusEta", "Hplus eta", 50, -2.5, 2.5);
+  hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -128,19 +140,25 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== Initialize
   fCommonPlots.initialize();
   fCommonPlots.setFactorisationBinForEvent(std::vector<float> {});
+  unsigned int nHplus = 0;
 
   cAllEvents.increment();
 
   for (auto& p: fEvent.genparticles().getGenParticles()) {
+    // TODO should i check for abs(p.pdgId()) ?
     if(p.pdgId() == 6){
-      //std::cout << "check pt " << p.pt() << std::endl;
+      // top quark
       hAssociatedTPt->Fill(p.pt());
       hAssociatedTEta->Fill(p.eta());
       hAssociatedTPhi->Fill(p.phi());
     } else if (p.pdgId() == 5 ) {
+      // b quark
       hAssociatedBPt->Fill(p.pt());
       hAssociatedBEta->Fill(p.eta());
       hAssociatedBPhi->Fill(p.phi());
+    } else if (p.pdgId() == 37) {
+      // H+
+      nHplus++;
     }
   }
 
@@ -254,8 +272,19 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   // if necessary
  */
 
+  // Event Gen MET
   hGenMetEt->Fill(fEvent.genMET().et());
   hGenMetPhi->Fill(fEvent.genMET().phi());
+
+  // H+
+  //if (nHplus > 0) {
+  if (fEvent.genparticles().getGenHplusCollection().size()) {
+    auto hplus = fEvent.genparticles().getGenHplusCollection().front();
+    hHplusPt->Fill(hplus.pt());
+    hHplusEta->Fill(hplus.eta());
+    hHplusPhi->Fill(hplus.phi());
+  }
+
 //====== Finalize
   fEventSaver.save();
 }
