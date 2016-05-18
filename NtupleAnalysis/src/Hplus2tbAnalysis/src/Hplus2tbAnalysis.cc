@@ -140,7 +140,6 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== Initialize
   fCommonPlots.initialize();
   fCommonPlots.setFactorisationBinForEvent(std::vector<float> {});
-  unsigned int nHplus = 0;
 
   cAllEvents.increment();
 
@@ -158,7 +157,9 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
       hAssociatedBPhi->Fill(p.phi());
     } else if (p.pdgId() == 37) {
       // H+
-      nHplus++;
+      hHplusPt->Fill(p.pt());
+      hHplusEta->Fill(p.eta());
+      hHplusPhi->Fill(p.phi());
     }
   }
 
@@ -275,15 +276,6 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
   // Event Gen MET
   hGenMetEt->Fill(fEvent.genMET().et());
   hGenMetPhi->Fill(fEvent.genMET().phi());
-
-  // H+
-  //if (nHplus > 0) {
-  if (fEvent.genparticles().getGenHplusCollection().size()) {
-    auto hplus = fEvent.genparticles().getGenHplusCollection().front();
-    hHplusPt->Fill(hplus.pt());
-    hHplusEta->Fill(hplus.eta());
-    hHplusPhi->Fill(hplus.phi());
-  }
 
 //====== Finalize
   fEventSaver.save();

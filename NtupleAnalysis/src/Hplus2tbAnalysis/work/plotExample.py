@@ -42,6 +42,10 @@ def main():
     plot(hName = "genMetEt", title = "Gen MET")
     plot(hName = "genMetPhi", title = "Gen MET phi")
 
+    plot(hName = "HplusPt",  title = "H^{+} p_{T} (GeV/c)" )
+    plot(hName = "HplusEta", title = "H^{+} Eta")
+    plot(hName = "HplusPhi", title = "H^{+} Phi")
+
 
 def plot(hName, title):
     paths = [sys.argv[1]]
