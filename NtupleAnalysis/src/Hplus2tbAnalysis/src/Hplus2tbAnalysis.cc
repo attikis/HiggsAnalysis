@@ -56,6 +56,16 @@ private:
   WrappedTH1 *hAssociatedBEta;
   WrappedTH1 *hAssociatedBPhi;
 
+  // H+ decay to quarks histos
+  // Top
+  WrappedTH1 *hHplusToTPt;
+  WrappedTH1 *hHplusToTEta;
+  WrappedTH1 *hHplusToTPhi;
+  // B
+  WrappedTH1 *hHplusToBPt;
+  WrappedTH1 *hHplusToBEta;
+  WrappedTH1 *hHplusToBPhi;
+
   // Generator level MET of the Event
   WrappedTH1 *hGenMetEt;
   WrappedTH1 *hGenMetPhi;
@@ -64,6 +74,9 @@ private:
   WrappedTH1 *hHplusPt;
   WrappedTH1 *hHplusEta;
   WrappedTH1 *hHplusPhi;
+
+  // HT - scalar sum of quarks t and b Pt
+  WrappedTH1 *hHt;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -123,12 +136,22 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
   hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -2.5, 2.5);
   hAssociatedBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPhi", "Associated b phi", 100, -3.1416, 3.1416);
 
+  hHplusToTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPt",  "H+ to t pT", 40, 0, 400);
+  hHplusToTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTEta", "H+ to t eta", 50, -2.5, 2.5);
+  hHplusToTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPhi", "H+ to t phi", 100, -3.1416, 3.1416);
+
+  hHplusToBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPt",  "H+ to b pT", 40, 0, 400);
+  hHplusToBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBEta", "H+ to b eta", 50, -2.5, 2.5);
+  hHplusToBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPhi", "H+ to b phi", 100, -3.1416, 3.1416);
+
   hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
   hGenMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
 
   hHplusPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPt",  "Hplus pT", 40, 0, 400);
   hHplusEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusEta", "Hplus eta", 50, -2.5, 2.5);
   hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
+
+  hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -143,20 +166,26 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 
   cAllEvents.increment();
 
+  // TODO should i check for abs(p.pdgId()) ?
   for (auto& p: fEvent.genparticles().getGenParticles()) {
-    // TODO should i check for abs(p.pdgId()) ?
+    // top quark
     if(p.pdgId() == 6){
-      // top quark
+      // TODO check who is the mother. If ! H+, it is associated.
       hAssociatedTPt->Fill(p.pt());
       hAssociatedTEta->Fill(p.eta());
       hAssociatedTPhi->Fill(p.phi());
+
+      hHt->Fill(p.pt());
+    // b quark
     } else if (p.pdgId() == 5 ) {
-      // b quark
+      // TODO check who is the mother. If ! H+, it is associated.
       hAssociatedBPt->Fill(p.pt());
       hAssociatedBEta->Fill(p.eta());
       hAssociatedBPhi->Fill(p.phi());
+
+      hHt->Fill(p.pt());
+    // H+
     } else if (p.pdgId() == 37) {
-      // H+
       hHplusPt->Fill(p.pt());
       hHplusEta->Fill(p.eta());
       hHplusPhi->Fill(p.phi());

@@ -46,6 +46,8 @@ def main():
     plot(hName = "HplusEta", title = "H^{+} Eta")
     plot(hName = "HplusPhi", title = "H^{+} Phi")
 
+    plot(hName = "Ht", title = "HT (GeV/c)")
+
 
 def plot(hName, title):
     paths = [sys.argv[1]]
