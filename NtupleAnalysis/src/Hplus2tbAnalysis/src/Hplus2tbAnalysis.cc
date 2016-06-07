@@ -170,26 +170,26 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	for (auto& p: fEvent.genparticles().getGenParticles()) {
 		// top quark
 		if(p.pdgId() == 6){
-			// if mother is gluon
-			if (p.mother() == 21 ) {
-				hAssociatedTPt->Fill(p.pt());
-				hAssociatedTEta->Fill(p.eta());
-				hAssociatedTPhi->Fill(p.phi());
-			} else if(p.mother() == 37) {
+			// if mother is H+
+			if (std::abs(p.mother()) == 37) {
 				hHplusToTPt->Fill(p.pt());
 				hHplusToTEta->Fill(p.eta());
 				hHplusToTPhi->Fill(p.phi());
+			} else {
+				hAssociatedTPt->Fill(p.pt());
+				hAssociatedTEta->Fill(p.eta());
+				hAssociatedTPhi->Fill(p.phi());
 			}
 		// b quark
 		} else if (p.pdgId() == 5 ) {
-			if (p.mother() == 21 ) {
-				hAssociatedBPt->Fill(p.pt());
-				hAssociatedBEta->Fill(p.eta());
-				hAssociatedBPhi->Fill(p.phi());
-			} else if(p.mother() == 37) {
+			if (std::abs(p.mother()) == 37) {
 				hHplusToBPt->Fill(p.pt());
 				hHplusToBEta->Fill(p.eta());
 				hHplusToBPhi->Fill(p.phi());
+			} else {
+				hAssociatedBPt->Fill(p.pt());
+				hAssociatedBEta->Fill(p.eta());
+				hAssociatedBPhi->Fill(p.phi());
 			}
 		// H+
 		} else if (std::abs(p.pdgId()) == 37) {
