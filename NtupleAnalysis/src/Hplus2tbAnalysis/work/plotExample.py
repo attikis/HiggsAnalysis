@@ -31,15 +31,23 @@ def main():
     if len(sys.argv) < 2:
         usage()
 
-    plot(hName = "associatedTPt", title = "Top p_{T} (GeV/c)" )
-    plot(hName = "associatedTEta", title = "Top Eta")
-    plot(hName = "associatedTPhi", title = "Top Phi")
+    plot(hName = "associatedTPt",  title = "Associated Top p_{T} (GeV/c)" )
+    plot(hName = "associatedTEta", title = "Associated Top Eta")
+    plot(hName = "associatedTPhi", title = "Associated Top Phi")
 
-    plot(hName = "associatedBPt",  title = "B p_{T} (GeV/c)" )
-    plot(hName = "associatedBEta", title = "B Eta")
-    plot(hName = "associatedBPhi", title = "B Phi")
+    plot(hName = "associatedBPt",  title = "Associated B p_{T} (GeV/c)" )
+    plot(hName = "associatedBEta", title = "Associated B Eta")
+    plot(hName = "associatedBPhi", title = "Associated B Phi")
 
-    plot(hName = "genMetEt", title = "Gen MET")
+    plot(hName = "HplusToTPt",  title = "H^{+} Top p_{T} (GeV/c)" )
+    plot(hName = "HplusToTEta", title = "H^{+} Top Eta")
+    plot(hName = "HplusToTPhi", title = "H^{+} Top Phi")
+
+    plot(hName = "HplusToBPt",  title = "H^{+} B p_{T} (GeV/c)" )
+    plot(hName = "HplusToBEta", title = "H^{+} B Eta")
+    plot(hName = "HplusToBPhi", title = "H^{+} B Phi")
+
+    plot(hName = "genMetEt",  title = "Gen MET")
     plot(hName = "genMetPhi", title = "Gen MET phi")
 
     plot(hName = "HplusPt",  title = "H^{+} p_{T} (GeV/c)" )
