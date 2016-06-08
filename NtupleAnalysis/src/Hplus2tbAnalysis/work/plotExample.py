@@ -31,33 +31,33 @@ def main():
     if len(sys.argv) < 2:
         usage()
 
-    plot(hName = "associatedTPt",  title = "Associated Top p_{T} (GeV/c)" )
-    plot(hName = "associatedTEta", title = "Associated Top Eta")
-    plot(hName = "associatedTPhi", title = "Associated Top Phi")
+    plot(hName = "associatedTPt",  title_x = "Associated Top p_{T} (GeV/c)")
+    plot(hName = "associatedTEta", title_x = "Associated Top Eta", rebin = 2)
+    plot(hName = "associatedTPhi", title_x = "Associated Top Phi", rebin = 3)
 
-    plot(hName = "associatedBPt",  title = "Associated B p_{T} (GeV/c)" )
-    plot(hName = "associatedBEta", title = "Associated B Eta")
-    plot(hName = "associatedBPhi", title = "Associated B Phi")
+    plot(hName = "associatedBPt",  title_x = "Associated B p_{T} (GeV/c)")
+    plot(hName = "associatedBEta", title_x = "Associated B Eta", rebin = 2)
+    plot(hName = "associatedBPhi", title_x = "Associated B Phi", rebin = 2)
 
-    plot(hName = "HplusToTPt",  title = "H^{+} Top p_{T} (GeV/c)" )
-    plot(hName = "HplusToTEta", title = "H^{+} Top Eta")
-    plot(hName = "HplusToTPhi", title = "H^{+} Top Phi")
+    plot(hName = "HplusToTPt",  title_x = "H^{+} Top p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "HplusToTEta", title_x = "H^{+} Top Eta", rebin = 2)
+    plot(hName = "HplusToTPhi", title_x = "H^{+} Top Phi", rebin = 3)
 
-    plot(hName = "HplusToBPt",  title = "H^{+} B p_{T} (GeV/c)" )
-    plot(hName = "HplusToBEta", title = "H^{+} B Eta")
-    plot(hName = "HplusToBPhi", title = "H^{+} B Phi")
+    plot(hName = "HplusToBPt",  title_x = "H^{+} B p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "HplusToBEta", title_x = "H^{+} B Eta", rebin = 2)
+    plot(hName = "HplusToBPhi", title_x = "H^{+} B Phi", rebin = 3)
 
-    plot(hName = "genMetEt",  title = "Gen MET")
-    plot(hName = "genMetPhi", title = "Gen MET phi")
+    plot(hName = "genMetEt",  title_x = "Gen MET", rebin = 1)
+    plot(hName = "genMetPhi", title_x = "Gen MET phi", rebin = 3)
 
-    plot(hName = "HplusPt",  title = "H^{+} p_{T} (GeV/c)" )
-    plot(hName = "HplusEta", title = "H^{+} Eta")
-    plot(hName = "HplusPhi", title = "H^{+} Phi")
+    plot(hName = "HplusPt",  title_x = "H^{+} p_{T} (GeV/c)")
+    plot(hName = "HplusEta", title_x = "H^{+} Eta")
+    plot(hName = "HplusPhi", title_x = "H^{+} Phi", rebin = 2)
 
-    plot(hName = "Ht", title = "HT (GeV/c)")
+    plot(hName = "Ht", title_x = "HT (GeV/c)")
 
 
-def plot(hName, title):
+def plot(hName, title_x, rebin = 0):
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
     plotname = analysis+"_"+hName
@@ -83,6 +83,10 @@ def plot(hName, title):
     histo2.SetMarkerColor(4)
     histo2.SetMarkerStyle(21)
 
+    if rebin:
+        histo1.Rebin(rebin)
+        histo2.Rebin(rebin)
+
     p = plots.ComparisonPlot(histograms.Histo(histo1, "m_{H^{#pm}} = 200 GeV/c^{2}", "p", "P"),
                              histograms.Histo(histo2, "t#bar{t}", "p", "P"))
 
@@ -94,7 +98,7 @@ def plot(hName, title):
     p.setLegend(histograms.moveLegend(histograms.createLegend(), **moveLegend))
 
     p.getFrame().GetYaxis().SetTitle("Arbitrary units")
-    p.getFrame().GetXaxis().SetTitle(title)
+    p.getFrame().GetXaxis().SetTitle(title_x)
     p.getFrame2().GetYaxis().SetTitle("Ratio")
     p.getFrame2().GetYaxis().SetTitleOffset(1.6)
 
