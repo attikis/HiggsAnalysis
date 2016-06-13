@@ -77,6 +77,11 @@ private:
 
 	// HT - scalar sum of quarks t and b Pt
 	WrappedTH1 *hHt;
+
+	// reco objects
+	// MET
+	WrappedTH1 *hMetEt;
+	WrappedTH1 *hMetPhi;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -152,6 +157,9 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
 
 	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
+
+	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 40, 0, 400);
+	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -316,6 +324,9 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	hGenMetEt->Fill(fEvent.genMET().et());
 	hGenMetPhi->Fill(fEvent.genMET().phi());
 
+	// Event RECO MET
+	hMetEt->Fill(fEvent.met().et());
+	hMetPhi->Fill(fEvent.met().phi());
 //====== Finalize
 	fEventSaver.save();
 }

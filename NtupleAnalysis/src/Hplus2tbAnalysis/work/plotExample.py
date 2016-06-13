@@ -31,30 +31,33 @@ def main():
     if len(sys.argv) < 2:
         usage()
 
-    plot(hName = "associatedTPt",  title_x = "Associated Top p_{T} (GeV/c)")
-    plot(hName = "associatedTEta", title_x = "Associated Top Eta", rebin = 2)
-    plot(hName = "associatedTPhi", title_x = "Associated Top Phi", rebin = 3)
+    plot(hName = "associatedTPt",  title_x = "Associated Top p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "associatedTEta", title_x = "Associated Top Eta", rebin = 4)
+    plot(hName = "associatedTPhi", title_x = "Associated Top Phi", rebin = 5)
 
-    plot(hName = "associatedBPt",  title_x = "Associated B p_{T} (GeV/c)")
-    plot(hName = "associatedBEta", title_x = "Associated B Eta", rebin = 2)
-    plot(hName = "associatedBPhi", title_x = "Associated B Phi", rebin = 2)
+    plot(hName = "associatedBPt",  title_x = "Associated B p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "associatedBEta", title_x = "Associated B Eta", rebin = 4)
+    plot(hName = "associatedBPhi", title_x = "Associated B Phi", rebin = 5)
 
     plot(hName = "HplusToTPt",  title_x = "H^{+} Top p_{T} (GeV/c)", rebin = 2)
-    plot(hName = "HplusToTEta", title_x = "H^{+} Top Eta", rebin = 2)
-    plot(hName = "HplusToTPhi", title_x = "H^{+} Top Phi", rebin = 3)
+    plot(hName = "HplusToTEta", title_x = "H^{+} Top Eta", rebin = 4)
+    plot(hName = "HplusToTPhi", title_x = "H^{+} Top Phi", rebin = 5)
 
     plot(hName = "HplusToBPt",  title_x = "H^{+} B p_{T} (GeV/c)", rebin = 2)
-    plot(hName = "HplusToBEta", title_x = "H^{+} B Eta", rebin = 2)
-    plot(hName = "HplusToBPhi", title_x = "H^{+} B Phi", rebin = 3)
+    plot(hName = "HplusToBEta", title_x = "H^{+} B Eta", rebin = 4)
+    plot(hName = "HplusToBPhi", title_x = "H^{+} B Phi", rebin = 5)
 
-    plot(hName = "genMetEt",  title_x = "Gen MET", rebin = 1)
-    plot(hName = "genMetPhi", title_x = "Gen MET phi", rebin = 3)
+    plot(hName = "genMetEt",  title_x = "Gen MET", rebin = 2)
+    plot(hName = "genMetPhi", title_x = "Gen MET phi", rebin = 5)
 
-    plot(hName = "HplusPt",  title_x = "H^{+} p_{T} (GeV/c)")
-    plot(hName = "HplusEta", title_x = "H^{+} Eta")
-    plot(hName = "HplusPhi", title_x = "H^{+} Phi", rebin = 2)
+    plot(hName = "HplusPt",  title_x = "H^{+} p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "HplusEta", title_x = "H^{+} Eta", rebin = 4)
+    plot(hName = "HplusPhi", title_x = "H^{+} Phi", rebin = 5)
 
-    plot(hName = "Ht", title_x = "HT (GeV/c)")
+    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 2)
+
+    plot(hName = "MetEt",  title_x = "MET", rebin = 2)
+    plot(hName = "MetPhi", title_x = "MET phi", rebin = 5)
 
 
 def plot(hName, title_x, rebin = 0):
