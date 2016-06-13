@@ -173,7 +173,21 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	fCommonPlots.setFactorisationBinForEvent(std::vector<float> {});
 
 	cAllEvents.increment();
+/*
+//====== Apply trigger
+	if (!(fEvent.passTriggerDecision()))
+		return;
+	cTrigger.increment();
+	int nVertices = fEvent.vertexInfo().value();
+	fCommonPlots.setNvertices(nVertices);
+	fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
 
+//====== MET filters to remove events with spurious sources of fake MET
+	const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
+	if (!metFilterData.passedSelection())
+		return;
+*/
+//====== GenParticle analysis
 	for (auto& p: fEvent.genparticles().getGenParticles()) {
 		// top quark
 		if(std::abs(p.pdgId()) == 6){
@@ -210,23 +224,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		hHt->Fill(j.pt());
 	}
 
-
-//====== Apply trigger
-	if (!(fEvent.passTriggerDecision()))
-		return;
-	cTrigger.increment();
-	int nVertices = fEvent.vertexInfo().value();
-	fCommonPlots.setNvertices(nVertices);
-	fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
+	// Event Gen MET
+	hGenMetEt->Fill(fEvent.genMET().et());
+	hGenMetPhi->Fill(fEvent.genMET().phi());
 /*
-//====== MET filters to remove events with spurious sources of fake MET
-	const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
-	if (!metFilterData.passedSelection())
-		return;
-
-//====== GenParticle analysis
-	// if needed
-
 //====== Check that primary vertex exists
 	if (nVertices < 1)
 		return;
@@ -249,7 +250,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
 		cTauTriggerSFCounter.increment();
 	}
-*/
+
 //====== MET trigger SF
 	const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
 	if (fEvent.isMC()) {
@@ -258,7 +259,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	cMetTriggerSFCounter.increment();
 	fCommonPlots.fillControlPlotsAfterMETTriggerScaleFactor(fEvent);
 	//std::cout << tauData.getSelectedTau().pt() << ":" << tauData.getTauMisIDSF() << ", " << tauData.getTauTriggerSF() << ", met=" << silentMETData.getMET().R() << ", SF=" << silentMETData.getMETTriggerSF() << std::endl;
-/*
+
 //====== Electron veto
 	const ElectronSelection::Data eData = fElectronSelection.analyze(fEvent);
 	if (eData.hasIdentifiedElectrons())
@@ -299,12 +300,12 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		fEventWeight.multiplyWeight(bjetData.getBTaggingScaleFactorEventWeight());
 	}
 	cBTaggingSFCounter.increment();
-*/
+
 //====== MET selection
 	const METSelection::Data METData = fMETSelection.analyze(fEvent, nVertices);
 	if (!METData.passedSelection())
 		return;
-/*
+
 //====== Back-to-back angular cuts
 	const AngularCutsBackToBack::Data backToBackData = fAngularCutsBackToBack.analyze(fEvent, tauData.getSelectedTau(), jetData, METData);
 	if (!backToBackData.passedSelection())
@@ -320,13 +321,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	// if necessary
  */
 
-	// Event Gen MET
-	hGenMetEt->Fill(fEvent.genMET().et());
-	hGenMetPhi->Fill(fEvent.genMET().phi());
-
 	// Event RECO MET
 	hMetEt->Fill(fEvent.met().et());
 	hMetPhi->Fill(fEvent.met().phi());
-//====== Finalize
+
+	//====== Finalize
 	fEventSaver.save();
 }
