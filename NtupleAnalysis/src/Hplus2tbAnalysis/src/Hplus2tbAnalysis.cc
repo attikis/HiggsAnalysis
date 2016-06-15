@@ -220,9 +220,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		}
 	}
 
-	for (auto& j: fEvent.genjets().toVector()) {
-		hHt->Fill(j.pt());
-	}
+	double genHT = 0;
+	for (auto& j: fEvent.genjets().toVector())
+		genHT += j.pt();
+	hHt->Fill(genHT);
 
 	// Event Gen MET
 	hGenMetEt->Fill(fEvent.genMET().et());
