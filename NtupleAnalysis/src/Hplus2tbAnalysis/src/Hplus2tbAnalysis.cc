@@ -76,12 +76,21 @@ private:
 	WrappedTH1 *hHplusPhi;
 
 	// HT - scalar sum of quarks t and b Pt
-	WrappedTH1 *hHt;
+	WrappedTH1 *hGenHt;
+
+	// number of jets
+	WrappedTH1 *hNGenJets;
 
 	// reco objects
 	// MET
 	WrappedTH1 *hMetEt;
 	WrappedTH1 *hMetPhi;
+
+	// HT
+	WrappedTH1 *hHt;
+
+	// number of jets
+	WrappedTH1 *hNJets;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -156,10 +165,16 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	hHplusEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusEta", "Hplus eta", 50, -2.5, 2.5);
 	hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
 
-	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
+	hGenHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genHt",  "Gen Ht", 40, 0, 400);
+
+	hNGenJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nGenJets",  "nGenJets", 100, 0, 40);
 
 	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 40, 0, 400);
 	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
+
+	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
+
+	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 40);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -221,9 +236,13 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	}
 
 	double genHT = 0;
-	for (auto& j: fEvent.genjets().toVector())
+	int nGenJets = 0;
+	for (const auto& j: fEvent.genjets()) {
 		genHT += j.pt();
-	hHt->Fill(genHT);
+		nGenJets++;
+	}
+	hGenHt->Fill(genHT);
+	hNGenJets->Fill(nGenJets);
 
 	// Event Gen MET
 	hGenMetEt->Fill(fEvent.genMET().et());
@@ -316,15 +335,22 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	cSelected.increment();
 	// Fill final plots
 	fCommonPlots.fillControlPlotsAfterAllSelections(fEvent);
-
-
+*/
 //====== Experimental selection code
 	// if necessary
- */
 
 	// Event RECO MET
 	hMetEt->Fill(fEvent.met().et());
 	hMetPhi->Fill(fEvent.met().phi());
+
+	double recoHT = 0;
+	int nJets = 0;
+	for (const auto& j: fEvent.jets()) {
+		recoHT += j.pt();
+		nJets++;
+	}
+	hHt->Fill(recoHT);
+	hNJets->Fill(nJets);
 
 	//====== Finalize
 	fEventSaver.save();

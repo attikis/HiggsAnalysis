@@ -54,10 +54,16 @@ def main():
     plot(hName = "HplusEta", title_x = "H^{+} Eta", rebin = 4)
     plot(hName = "HplusPhi", title_x = "H^{+} Phi", rebin = 5)
 
-    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 2)
+    plot(hName = "genHt", title_x = "Gen HT (GeV/c)", rebin = 2)
+
+    plot(hName = "nGenJets", title_x = "nGenJets", rebin = 4)
 
     plot(hName = "MetEt",  title_x = "MET", rebin = 2)
     plot(hName = "MetPhi", title_x = "MET phi", rebin = 5)
+
+    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 2)
+
+    plot(hName = "nJets", title_x = "nJets", rebin = 4)
 
 
 def plot(hName, title_x, rebin = 0):
