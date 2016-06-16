@@ -139,7 +139,7 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	//fAngularCutsCollinear.bookHistograms(dir);
 	fBJetSelection.bookHistograms(dir);
 	fMETSelection.bookHistograms(dir);
-	//fAngularCutsBackToBack.bookHistograms(dir);
+	fAngularCutsBackToBack.bookHistograms(dir);
 	// Book non-common histograms
 	//hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
 	hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
