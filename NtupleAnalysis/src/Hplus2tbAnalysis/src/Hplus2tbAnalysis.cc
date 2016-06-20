@@ -33,12 +33,12 @@ private:
 	Count cVertexSelection;
 	TauSelection fTauSelection;
 	Count cFakeTauSFCounter;
-	Count cTauTriggerSFCounter;
+	//Count cTauTriggerSFCounter;
 	Count cMetTriggerSFCounter;
 	ElectronSelection fElectronSelection;
 	MuonSelection fMuonSelection;
 	JetSelection fJetSelection;
-	AngularCutsCollinear fAngularCutsCollinear;
+	//AngularCutsCollinear fAngularCutsCollinear;
 	BJetSelection fBJetSelection;
 	Count cBTaggingSFCounter;
 	METSelection fMETSelection;
@@ -111,7 +111,7 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 	fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
-	cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
+	//cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
 	cMetTriggerSFCounter(fEventCounter.addCounter("Met trigger SF")),
 	fElectronSelection(config.getParameter<ParameterSet>("ElectronSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
@@ -119,8 +119,8 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
 	fJetSelection(config.getParameter<ParameterSet>("JetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-	fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
-	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+	//fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
+	//              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
@@ -140,7 +140,7 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	fElectronSelection.bookHistograms(dir);
 	fMuonSelection.bookHistograms(dir);
 	fJetSelection.bookHistograms(dir);
-	fAngularCutsCollinear.bookHistograms(dir);
+	//fAngularCutsCollinear.bookHistograms(dir);
 	fBJetSelection.bookHistograms(dir);
 	fMETSelection.bookHistograms(dir);
 	fAngularCutsBackToBack.bookHistograms(dir);
@@ -273,10 +273,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	}
 
 //====== Tau trigger SF
-	if (fEvent.isMC()) {
-		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
-		cTauTriggerSFCounter.increment();
-	}
+//	if (fEvent.isMC()) {
+//		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
+//		cTauTriggerSFCounter.increment();
+//	}
 
 //====== MET trigger SF
 	const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
@@ -303,9 +303,9 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		return;
 
 //====== Collinear angular cuts
-	const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-	if (!collinearData.passedSelection())
-		return;
+//	const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
+//	if (!collinearData.passedSelection())
+//		return;
 
 //====== Point of standard selections
 	fCommonPlots.fillControlPlotsAfterTopologicalSelections(fEvent);
