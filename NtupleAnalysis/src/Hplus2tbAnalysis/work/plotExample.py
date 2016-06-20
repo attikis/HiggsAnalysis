@@ -64,8 +64,10 @@ def main():
 
     plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 2)
 
-    plot(hName = "nJets", title_x = "nJets", rebin = 5)
-    plot(hName = "nBJets", title_x = "nBJets", rebin = 5)
+    plot(hName = "nJets", title_x = "nJets", rebin = 2)
+    plot(hName = "nBJets", title_x = "nBJets", rebin = 1)
+
+    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 2)
 
 
 def plot(hName, title_x, rebin = 0):

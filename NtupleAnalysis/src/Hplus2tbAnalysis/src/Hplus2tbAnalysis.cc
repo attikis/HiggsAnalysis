@@ -92,6 +92,9 @@ private:
 	// number of jets
 	WrappedTH1 *hNJets;
 	WrappedTH1 *hNBJets;
+
+	// leading jet pt
+	WrappedTH1 *hLeadingJetPt;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -175,8 +178,10 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 
 	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
 
-	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 40);
-	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets",  "nJets", 100, 0, 40);
+	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 30);
+	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets",  "nBJets", 100, 0, 15);
+
+	hLeadingJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT", 40, 0, 400);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -347,12 +352,19 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 
 	double recoHT = 0;
 	int nJets = 0;
+	double maxPt = 0;
+
 	for (const auto& j: fEvent.jets()) {
-		recoHT += j.pt();
+		double jet_pt = j.pt();
+		recoHT += jet_pt;
 		nJets++;
+		if (jet_pt > maxPt)
+			maxPt = jet_pt;
 	}
+
 	hHt->Fill(recoHT);
 	hNJets->Fill(nJets);
+	hLeadingJetPt->Fill(maxPt);
 
 	hNBJets->Fill(bjetData.getNumberOfSelectedBJets());
 
