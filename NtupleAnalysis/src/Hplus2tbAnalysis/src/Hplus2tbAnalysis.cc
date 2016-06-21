@@ -95,6 +95,7 @@ private:
 
 	// leading jet pt
 	WrappedTH1 *hLeadingJetPt;
+	WrappedTH1 *hLeadingBJetPt;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -169,19 +170,20 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	hHplusEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusEta", "Hplus eta", 50, -2.5, 2.5);
 	hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
 
-	hGenHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genHt",  "Gen Ht", 40, 0, 400);
+	hGenHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genHt",  "Gen Ht", 140, 200, 1600);
 
 	hNGenJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nGenJets",  "nGenJets", 100, 0, 40);
 
-	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 40, 0, 400);
+	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 60, 0, 600);
 	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
 
-	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 40, 0, 400);
+	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 200, 1600);
 
 	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 30);
 	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets",  "nBJets", 100, 0, 15);
 
-	hLeadingJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT", 40, 0, 400);
+	hLeadingJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT", 80, 50, 850);
+	hLeadingBJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt",  "Leading B Jet pT", 80, 0, 800);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -346,14 +348,15 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== Experimental selection code
 	// if necessary
 
-	// Event RECO MET
+	// RECO
+	// MET
 	hMetEt->Fill(fEvent.met().et());
 	hMetPhi->Fill(fEvent.met().phi());
 
+	// Jets
 	double recoHT = 0;
 	int nJets = 0;
 	double maxPt = 0;
-
 	for (const auto& j: fEvent.jets()) {
 		double jet_pt = j.pt();
 		recoHT += jet_pt;
@@ -365,8 +368,18 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	hHt->Fill(recoHT);
 	hNJets->Fill(nJets);
 	hLeadingJetPt->Fill(maxPt);
+	//std::cout << "HT: " << recoHT << "\n";
+	//std::cout << "max pt: " << maxPt;
 
+	// B jets
 	hNBJets->Fill(bjetData.getNumberOfSelectedBJets());
+	maxPt = 0;
+	for (const auto& bjet: bjetData.getSelectedBJets()) {
+		if (bjet.pt() > maxPt)
+			maxPt = bjet.pt();
+	}
+	hLeadingBJetPt->Fill(maxPt);
+	//std::cout << "\tmax B pt: " << maxPt << "\n";
 
 	//====== Finalize
 	fEventSaver.save();

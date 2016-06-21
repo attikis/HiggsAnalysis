@@ -55,29 +55,31 @@ def main():
     plot(hName = "HplusEta", title_x = "H^{+} Eta", rebin = 4)
     plot(hName = "HplusPhi", title_x = "H^{+} Phi", rebin = 5)
 
-    plot(hName = "genHt", title_x = "Gen HT (GeV/c)", rebin = 2)
+    plot(hName = "genHt", title_x = "Gen HT (GeV/c)", rebin = 10)
 
     plot(hName = "nGenJets", title_x = "nGenJets", rebin = 5)
 
     plot(hName = "MetEt",  title_x = "MET", rebin = 2)
     plot(hName = "MetPhi", title_x = "MET phi", rebin = 5)
 
-    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 2)
+    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10)
 
-    plot(hName = "nJets", title_x = "nJets", rebin = 2)
+    plot(hName = "nJets", title_x = "nJets", rebin = 4)
     plot(hName = "nBJets", title_x = "nBJets", rebin = 1)
 
     plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 2)
 
 
 def plot(hName, title_x, rebin = 0):
+    print(hName)
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
     plotname = analysis+"_"+hName
 
     datasetsHiggs = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="ChargedHiggs_HplusTB_HplusToTauB_M_")
     datasetsTT    = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="TT")
-    datasetsTT.merge("MC", ["TT","TT_ext"], keepSources=True)
+    datasetsTT.merge("MC", ["TT"], keepSources=True)
 
     style = tdrstyle.TDRStyle()
 
@@ -97,7 +99,8 @@ def plot(hName, title_x, rebin = 0):
         histo1.SetMarkerColor(2)
         histo1.SetMarkerStyle(20)
         removeNegatives(histo1)
-        histo1.Scale(1./histo1.Integral())
+	if histo1.Integral() > 0:
+            histo1.Scale(1./histo1.Integral())
 
         histo2 = dataset2.getHistogram()
         histo2.SetMarkerColor(4)
