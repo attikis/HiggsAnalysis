@@ -59,7 +59,7 @@ def main():
 
     plot(hName = "nGenJets", title_x = "nGenJets", rebin = 5)
 
-    plot(hName = "MetEt",  title_x = "MET", rebin = 2)
+    plot(hName = "MetEt",  title_x = "MET", rebin = 4)
     plot(hName = "MetPhi", title_x = "MET phi", rebin = 5)
 
     plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10)
@@ -67,8 +67,8 @@ def main():
     plot(hName = "nJets", title_x = "nJets", rebin = 4)
     plot(hName = "nBJets", title_x = "nBJets", rebin = 1)
 
-    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 2)
-    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 2)
+    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 4)
+    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 4)
 
 
 def plot(hName, title_x, rebin = 0):

@@ -26,16 +26,17 @@ metFilter = PSet(
                     "hbheIsoNoiseToken", # under scrutiny
                     "Flag_CSCTightHaloFilter",
                     "Flag_eeBadScFilter",
-                    "Flag_goodVertices"]
+                    "Flag_goodVertices"
+                    ]
 )
 
 #====== Tau selection
 tauSelection = PSet(
   applyTriggerMatching = True,
    triggerMatchingCone = 0.1,   # DeltaR for matching offline tau with trigger tau
-              tauPtCut = 60.0,
-             tauEtaCut = 2.1,
-        tauLdgTrkPtCut = 30.0,
+              tauPtCut = 1.0,
+             tauEtaCut = 666.1,
+        tauLdgTrkPtCut = 3.0,
                 prongs = 123,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
                   rtau = 0.0,   # to disable set to 0.0
   againstElectronDiscr = "againstElectronTightMVA5",
@@ -52,16 +53,16 @@ scaleFactors.assignTauTriggerSF(tauSelection, "nominal")
 
 #====== Electron veto
 eVeto = PSet(
-         electronPtCut = 15.0,
-        electronEtaCut = 2.5,
+         electronPtCut = 1.0,
+        electronEtaCut = 666.1,
            #electronID = "mvaEleID_PHYS14_PU20bx25_nonTrig_V1_wp90", # highest (wp90) for vetoing (2012: wp95)
      electronIsolation = "veto", # loosest possible for vetoing ("veto"), "tight" for selecting
 )
 
 #====== Muon veto
 muVeto = PSet(
-             muonPtCut = 10.0,
-            muonEtaCut = 2.5,
+             muonPtCut = 1.0,
+            muonEtaCut = 666.1,
                 muonID = "muIDLoose", # loosest option for vetoing (options: muIDLoose, muIDMedium, muIDTight)
          muonIsolation = "veto", # loosest possible for vetoing ("veto"), "tight" for selecting
 )
@@ -92,7 +93,7 @@ enableOptimizationPlots = True, # 2D histograms for optimizing angular cuts
 bjetSelection = PSet(
              #bjetDiscr = "combinedInclusiveSecondaryVertexV2BJetTags",
              bjetDiscr = "pfCombinedInclusiveSecondaryVertexV2BJetTags",
- bjetDiscrWorkingPoint = "Loose",
+ bjetDiscrWorkingPoint = "Tight",
  numberOfBJetsCutValue = 1,
  numberOfBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
 )
@@ -106,7 +107,7 @@ scaleFactors.setupBtagSFInformation(btagPset=bjetSelection,
 
 #====== MET selection
 metSelection = PSet(
-           METCutValue = 20.0,
+           METCutValue = 1.0,
        METCutDirection = ">", # options: ==, !=, <, <=, >, >=
   METSignificanceCutValue = -1000.0,
   METSignificanceCutDirection = ">", # options: ==, !=, <, <=, >, >=
