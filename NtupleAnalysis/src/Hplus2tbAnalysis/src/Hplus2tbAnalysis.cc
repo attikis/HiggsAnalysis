@@ -33,12 +33,12 @@ private:
 	Count cVertexSelection;
 	TauSelection fTauSelection;
 	Count cFakeTauSFCounter;
-	//Count cTauTriggerSFCounter;
+	Count cTauTriggerSFCounter;
 	Count cMetTriggerSFCounter;
 	ElectronSelection fElectronSelection;
 	MuonSelection fMuonSelection;
 	JetSelection fJetSelection;
-	//AngularCutsCollinear fAngularCutsCollinear;
+	AngularCutsCollinear fAngularCutsCollinear;
 	BJetSelection fBJetSelection;
 	Count cBTaggingSFCounter;
 	METSelection fMETSelection;
@@ -112,7 +112,7 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 	fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
-	//cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
+	cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
 	cMetTriggerSFCounter(fEventCounter.addCounter("Met trigger SF")),
 	fElectronSelection(config.getParameter<ParameterSet>("ElectronSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
@@ -120,8 +120,8 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
 	fJetSelection(config.getParameter<ParameterSet>("JetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-	//fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
-	//              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+	fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
+	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
@@ -141,7 +141,7 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	fElectronSelection.bookHistograms(dir);
 	fMuonSelection.bookHistograms(dir);
 	fJetSelection.bookHistograms(dir);
-	//fAngularCutsCollinear.bookHistograms(dir);
+	fAngularCutsCollinear.bookHistograms(dir);
 	fBJetSelection.bookHistograms(dir);
 	fMETSelection.bookHistograms(dir);
 	fAngularCutsBackToBack.bookHistograms(dir);
@@ -204,7 +204,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //	cTrigger.increment();
 	int nVertices = fEvent.vertexInfo().value();
 	fCommonPlots.setNvertices(nVertices);
-//	fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
+	fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
 
 //====== MET filters to remove events with spurious sources of fake MET
 	const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
@@ -275,10 +275,10 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	}
 
 //====== Tau trigger SF
-//	if (fEvent.isMC()) {
-//		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
-//		cTauTriggerSFCounter.increment();
-//	}
+	if (fEvent.isMC()) {
+		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
+		cTauTriggerSFCounter.increment();
+	}
 
 //====== MET trigger SF
 	const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
@@ -305,9 +305,9 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		return;
 
 //====== Collinear angular cuts
-//	const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-//	if (!collinearData.passedSelection())
-//		return;
+	const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
+	if (!collinearData.passedSelection())
+		return;
 
 //====== Point of standard selections
 	fCommonPlots.fillControlPlotsAfterTopologicalSelections(fEvent);
@@ -357,12 +357,15 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	double recoHT = 0;
 	int nJets = 0;
 	double maxPt = 0;
+	//double minPt = 66642;
 	for (const auto& j: fEvent.jets()) {
 		double jet_pt = j.pt();
 		recoHT += jet_pt;
 		nJets++;
 		if (jet_pt > maxPt)
 			maxPt = jet_pt;
+		//if (jet_pt < minPt)
+		//	minPt = jet_pt;
 	}
 
 	hHt->Fill(recoHT);
@@ -370,16 +373,21 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	hLeadingJetPt->Fill(maxPt);
 	//std::cout << "HT: " << recoHT << "\n";
 	//std::cout << "max pt: " << maxPt;
+	//std::cout << "min jet Pt: " << minPt;
 
 	// B jets
 	hNBJets->Fill(bjetData.getNumberOfSelectedBJets());
 	maxPt = 0;
+	//minPt = 66642;
 	for (const auto& bjet: bjetData.getSelectedBJets()) {
 		if (bjet.pt() > maxPt)
 			maxPt = bjet.pt();
+		//if (bjet.pt() < minPt)
+		//	minPt = bjet.pt();
 	}
 	hLeadingBJetPt->Fill(maxPt);
 	//std::cout << "\tmax B pt: " << maxPt << "\n";
+	//std::cout << "\tmin B pt: " << minPt << "\n";
 
 	//====== Finalize
 	fEventSaver.save();

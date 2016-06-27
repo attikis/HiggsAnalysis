@@ -34,10 +34,10 @@ metFilter = PSet(
 tauSelection = PSet(
   applyTriggerMatching = True,
    triggerMatchingCone = 0.1,   # DeltaR for matching offline tau with trigger tau
-              tauPtCut = 1.0,
-             tauEtaCut = 666.1,
-        tauLdgTrkPtCut = 3.0,
-                prongs = 123,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
+              tauPtCut = 60.0,
+             tauEtaCut = 2.1,
+        tauLdgTrkPtCut = 30.0,
+                prongs = 1,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
                   rtau = 0.0,   # to disable set to 0.0
   againstElectronDiscr = "againstElectronTightMVA5",
       againstMuonDiscr = "againstMuonTight3",
@@ -53,16 +53,16 @@ scaleFactors.assignTauTriggerSF(tauSelection, "nominal")
 
 #====== Electron veto
 eVeto = PSet(
-         electronPtCut = 1.0,
-        electronEtaCut = 666.1,
+         electronPtCut = 15.0,
+        electronEtaCut = 2.5,
            #electronID = "mvaEleID_PHYS14_PU20bx25_nonTrig_V1_wp90", # highest (wp90) for vetoing (2012: wp95)
      electronIsolation = "veto", # loosest possible for vetoing ("veto"), "tight" for selecting
 )
 
 #====== Muon veto
 muVeto = PSet(
-             muonPtCut = 1.0,
-            muonEtaCut = 666.1,
+             muonPtCut = 10.0,
+            muonEtaCut = 2.5,
                 muonID = "muIDLoose", # loosest option for vetoing (options: muIDLoose, muIDMedium, muIDTight)
          muonIsolation = "veto", # loosest possible for vetoing ("veto"), "tight" for selecting
 )
@@ -70,7 +70,7 @@ muVeto = PSet(
 #====== Jet selection
 jetSelection = PSet(
                jetType = "Jets", # options: Jets (AK4PFCHS), JetsPuppi (AK4Puppi)
-              jetPtCut = 30.0,
+              jetPtCut = 40.0,
              jetEtaCut = 2.5,
      tauMatchingDeltaR = 0.4,
   numberOfJetsCutValue = 3,
@@ -107,7 +107,7 @@ scaleFactors.setupBtagSFInformation(btagPset=bjetSelection,
 
 #====== MET selection
 metSelection = PSet(
-           METCutValue = 1.0,
+           METCutValue = 100.0,
        METCutDirection = ">", # options: ==, !=, <, <=, >, >=
   METSignificanceCutValue = -1000.0,
   METSignificanceCutDirection = ">", # options: ==, !=, <, <=, >, >=
@@ -115,7 +115,7 @@ metSelection = PSet(
    applyPhiCorrections = False  # FIXME: no effect yet
 )
 # MET trigger SF
-scaleFactors.assignMETTriggerSF(metSelection, bjetSelection.bjetDiscrWorkingPoint, "nominal")
+#scaleFactors.assignMETTriggerSF(metSelection, bjetSelection.bjetDiscrWorkingPoint, "nominal")
 
 #====== Angular cuts / back-to-back
 angularCutsBackToBack = PSet(
