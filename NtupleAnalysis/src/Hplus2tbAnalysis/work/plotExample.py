@@ -59,19 +59,19 @@ def main():
 
     plot(hName = "nGenJets", title_x = "nGenJets", rebin = 5)
 
-    plot(hName = "MetEt",  title_x = "MET", rebin = 4)
-    plot(hName = "MetPhi", title_x = "MET phi", rebin = 5)
+    plot(hName = "MetEt",  title_x = "MET", rebin = 4, ymax = 0.30)
+    plot(hName = "MetPhi", title_x = "MET phi", rebin = 5, ymax = 0.30)
 
-    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10)
+    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10, ymax = 0.30)
 
-    plot(hName = "nJets", title_x = "nJets", rebin = 4)
-    plot(hName = "nBJets", title_x = "nBJets", rebin = 1)
+    plot(hName = "nJets", title_x = "nJets", rebin = 4, ymax = 0.35)
+    plot(hName = "nBJets", title_x = "nBJets", rebin = 1, ymax = 0.35)
 
-    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 4)
-    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 4)
+    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 4, ymax = 0.35)
+    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 4, ymax = 0.35)
 
 
-def plot(hName, title_x, rebin = 0):
+def plot(hName, title_x, rebin = 0, ymax = 0.25):
     print(hName)
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
@@ -113,7 +113,7 @@ def plot(hName, title_x, rebin = 0):
         p = plots.ComparisonPlot(histograms.Histo(histo1, "m_{H^{#pm}} = " + m_str + " GeV/c^{2}", "p", "P"),
                                  histograms.Histo(histo2, "t#bar{t}", "p", "P"))
 
-        opts = {"ymin": 0, "ymax": 0.2}
+        opts = {"ymin": 0, "ymax": ymax}
         opts2 = {"ymin": 0.5, "ymax": 1.5}
         p.createFrame(os.path.join(plotDir + "/" + m_str, plotname), createRatio=True, opts=opts, opts2=opts2)
 
