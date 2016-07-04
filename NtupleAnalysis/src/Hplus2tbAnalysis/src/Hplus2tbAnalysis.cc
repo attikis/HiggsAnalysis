@@ -96,6 +96,10 @@ private:
 	// leading jet pt
 	WrappedTH1 *hLeadingJetPt;
 	WrappedTH1 *hLeadingBJetPt;
+
+	// jets eta
+	WrappedTH1 *hJetEta;
+	WrappedTH1 *hBJetEta;
 };
 
 #include "Framework/interface/SelectorFactory.h"
@@ -177,13 +181,16 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 60, 0, 600);
 	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
 
-	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 200, 1600);
+	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 200, 2000);
 
 	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 30);
 	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets",  "nBJets", 100, 0, 15);
 
 	hLeadingJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT", 80, 50, 850);
 	hLeadingBJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt",  "Leading B Jet pT", 80, 0, 800);
+
+	hJetEta  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "JetsEta",  "Jets Eta",   50, -5.5, 5.5);
+	hBJetEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "BJetsEta", "B Jets Eta", 50, -5.5, 5.5);
 }
 
 void Hplus2tbAnalysis::setupBranches(BranchManager& branchManager) {
@@ -366,6 +373,8 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 			maxPt = jet_pt;
 		//if (jet_pt < minPt)
 		//	minPt = jet_pt;
+		hJetEta->Fill(j.eta());
+		//std::cout << "Jet eta: " << j.eta() << "\n";
 	}
 
 	hHt->Fill(recoHT);
@@ -384,6 +393,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 			maxPt = bjet.pt();
 		//if (bjet.pt() < minPt)
 		//	minPt = bjet.pt();
+		hBJetEta->Fill(bjet.eta());
 	}
 	hLeadingBJetPt->Fill(maxPt);
 	//std::cout << "\tmax B pt: " << maxPt << "\n";
