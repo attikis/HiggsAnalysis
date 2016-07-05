@@ -40,11 +40,9 @@ private:
 	ElectronSelection fElectronSelection;
 	MuonSelection fMuonSelection;
 	JetSelection fJetSelection;
-	AngularCutsCollinear fAngularCutsCollinear;
 	BJetSelection fBJetSelection;
 	Count cBTaggingSFCounter;
 	METSelection fMETSelection;
-	AngularCutsBackToBack fAngularCutsBackToBack;
 	Count cSelected;
 
 	// Non-common histograms
@@ -126,14 +124,10 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
 	fJetSelection(config.getParameter<ParameterSet>("JetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-	fAngularCutsCollinear(config.getParameter<ParameterSet>("AngularCutsCollinear"),
-	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	fBJetSelection(config.getParameter<ParameterSet>("BJetSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cBTaggingSFCounter(fEventCounter.addCounter("b tag SF")),
 	fMETSelection(config.getParameter<ParameterSet>("METSelection"),
-	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-	fAngularCutsBackToBack(config.getParameter<ParameterSet>("AngularCutsBackToBack"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cSelected(fEventCounter.addCounter("Selected events"))
 { }
@@ -147,18 +141,16 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	fElectronSelection.bookHistograms(dir);
 	fMuonSelection.bookHistograms(dir);
 	fJetSelection.bookHistograms(dir);
-	fAngularCutsCollinear.bookHistograms(dir);
 	fBJetSelection.bookHistograms(dir);
 	fMETSelection.bookHistograms(dir);
-	fAngularCutsBackToBack.bookHistograms(dir);
 	// Book non-common histograms
 	//hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
-	hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 400);
-	hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -2.5, 2.5);
+	hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 500);
+	hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -3, 3);
 	hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
-	hAssociatedBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 400);
-	hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -2.5, 2.5);
+	hAssociatedBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 500);
+	hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -3, 3);
 	hAssociatedBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPhi", "Associated b phi", 100, -3.1416, 3.1416);
 
 	hHplusToTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPt",  "H+ to t pT", 40, 0, 400);
@@ -180,16 +172,16 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 
 	hNGenJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nGenJets",  "nGenJets", 100, 0, 40);
 
-	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 60, 0, 600);
+	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 75, 0, 750);
 	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
 
-	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 200, 2000);
+	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 250, 2500);
 
-	hNJets  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets",  30, 0, 30);
-	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets", "nBJets", 15, 0, 15);
+	hNJets  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets",  40, 0, 40);
+	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets", "nBJets", 11, -1, 10);
 
-	hLeadingJetPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT",   80, 50, 850);
-	hLeadingBJetPt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt", "Leading B Jet pT", 80, 0, 800);
+	hLeadingJetPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT",   100, 0, 1000);
+	hLeadingBJetPt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt", "Leading B Jet pT", 100, 0, 1000);
 
 	hJetEta  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "JetsEta",  "Jets Eta",   50, -5.5, 5.5);
 	hBJetEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "BJetsEta", "B Jets Eta", 50, -5.5, 5.5);
@@ -210,7 +202,7 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== Apply trigger
 //	if (!(fEvent.passTriggerDecision()))
 //		return;
-//	cTrigger.increment();
+	cTrigger.increment();
 	int nVertices = fEvent.vertexInfo().value();
 	fCommonPlots.setNvertices(nVertices);
 	fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
@@ -315,26 +307,11 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	if (!jetData.passedSelection())
 		return;
 
-	// TODO get rid of this
-//====== Collinear angular cuts
-	//const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-	//if (!collinearData.passedSelection())
-	//	return;
-
 //====== Point of standard selections
 	//fCommonPlots.fillControlPlotsAfterTopologicalSelections(fEvent);
 
 //====== b-jet selection
 	const BJetSelection::Data bjetData = fBJetSelection.analyze(fEvent, jetData);
-	// Fill final shape plots with b tag efficiency applied as an event weight
-	// TODO get rid of this
-	//if (silentMETData.passedSelection()) {
-		//const AngularCutsBackToBack::Data silentBackToBackData = fAngularCutsBackToBack.silentAnalyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-		//const AngularCutsBackToBack::Data silentBackToBackData = fAngularCutsBackToBack.silentAnalyzeWithoutTau(fEvent, jetData, silentMETData);
-		//if (silentBackToBackData.passedSelection()) {
-		//	fCommonPlots.fillControlPlotsAfterAllSelectionsWithProbabilisticBtag(fEvent, silentMETData, bjetData.getBTaggingPassProbability());
-		//}
-	//}
 	if (!bjetData.passedSelection())
 		return;
 
@@ -347,12 +324,6 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 //====== MET selection
 	//const METSelection::Data METData = fMETSelection.analyze(fEvent, nVertices);
 	//if (!METData.passedSelection())
-	//	return;
-
-	// TODO get rid of this
-//====== Back-to-back angular cuts
-	//const AngularCutsBackToBack::Data backToBackData = fAngularCutsBackToBack.analyze(fEvent, tauData.getSelectedTau(), jetData, METData);
-	//if (!backToBackData.passedSelection())
 	//	return;
 
 //====== All cuts passed
@@ -372,40 +343,32 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	double recoHT = 0;
 	int nJets = 0;
 	double maxPt = 0;
-	//double minPt = 66642;
 	for (const auto& j: fEvent.jets()) {
 		double jet_pt = j.pt();
 		recoHT += jet_pt;
+
 		nJets++;
+
 		if (jet_pt > maxPt)
 			maxPt = jet_pt;
-		//if (jet_pt < minPt)
-		//	minPt = jet_pt;
+
 		hJetEta->Fill(j.eta());
-		//std::cout << "Jet eta: " << j.eta() << "\n";
 	}
 
 	hHt->Fill(recoHT);
 	hNJets->Fill(nJets);
 	hLeadingJetPt->Fill(maxPt);
-	//std::cout << "HT: " << recoHT << "\n";
-	//std::cout << "max pt: " << maxPt;
-	//std::cout << "min jet Pt: " << minPt;
 
 	// B jets
 	hNBJets->Fill(bjetData.getNumberOfSelectedBJets());
 	maxPt = 0;
-	//minPt = 66642;
 	for (const auto& bjet: bjetData.getSelectedBJets()) {
 		if (bjet.pt() > maxPt)
 			maxPt = bjet.pt();
-		//if (bjet.pt() < minPt)
-		//	minPt = bjet.pt();
+
 		hBJetEta->Fill(bjet.eta());
 	}
 	hLeadingBJetPt->Fill(maxPt);
-	//std::cout << "\tmax B pt: " << maxPt << "\n";
-	//std::cout << "\tmin B pt: " << minPt << "\n";
 
 	//====== Finalize
 	fEventSaver.save();
