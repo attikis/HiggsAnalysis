@@ -48,7 +48,7 @@ def main():
     plot(hName = "HplusToBEta", title_x = "H^{+} B Eta", rebin = 4)
     plot(hName = "HplusToBPhi", title_x = "H^{+} B Phi", rebin = 5)
 
-    plot(hName = "genMetEt",  title_x = "Gen MET", rebin = 2)
+    plot(hName = "genMetEt",  title_x = "Gen MET", rebin = 4)
     plot(hName = "genMetPhi", title_x = "Gen MET phi", rebin = 5)
 
     plot(hName = "HplusPt",  title_x = "H^{+} p_{T} (GeV/c)", rebin = 2)
@@ -64,14 +64,14 @@ def main():
 
     plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 12, ymax = 0.45)
 
-    plot(hName = "nJets", title_x = "nJets", rebin = 4, ymax = 0.35)
+    plot(hName = "nJets",  title_x = "nJets",  rebin = 2, ymax = 0.30)
     plot(hName = "nBJets", title_x = "nBJets", rebin = 1, ymax = 0.45)
 
     plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 5, ymax = 0.45)
     plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 5, ymax = 0.45)
 
-    plot(hName = "JetsEta",  title_x = "Jets eta",  rebin = 2, ymax = 0.4)
-    plot(hName = "BJetsEta", title_x = "BJets eta", rebin = 2, ymax = 0.4)
+    plot(hName = "JetsEta",  title_x = "Jets eta",  rebin = 3, ymax = 0.4)
+    plot(hName = "BJetsEta", title_x = "BJets eta", rebin = 3, ymax = 0.4)
 
 
 def plot(hName, title_x, rebin = 0, ymax = 0.25):

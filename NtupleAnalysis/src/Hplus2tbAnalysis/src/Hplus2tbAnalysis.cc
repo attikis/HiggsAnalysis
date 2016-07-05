@@ -9,6 +9,8 @@
 
 #include "TDirectory.h"
 
+#include "Math/VectorUtil.h"
+
 class Hplus2tbAnalysis: public BaseSelector {
 public:
 	explicit Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCounters);
@@ -28,12 +30,12 @@ private:
 	CommonPlots fCommonPlots;
 	// Event selection classes and event counters (in same order like they are applied)
 	Count cAllEvents;
-	//Count cTrigger;
+	Count cTrigger;
 	METFilterSelection fMETFilterSelection;
 	Count cVertexSelection;
 	TauSelection fTauSelection;
-	Count cFakeTauSFCounter;
-	Count cTauTriggerSFCounter;
+	//Count cFakeTauSFCounter;
+	//Count cTauTriggerSFCounter;
 	Count cMetTriggerSFCounter;
 	ElectronSelection fElectronSelection;
 	MuonSelection fMuonSelection;
@@ -109,14 +111,14 @@ Hplus2tbAnalysis::Hplus2tbAnalysis(const ParameterSet& config, const TH1* skimCo
 : BaseSelector(config, skimCounters),
 	fCommonPlots(config.getParameter<ParameterSet>("CommonPlots"), CommonPlots::kHplus2tbAnalysis, fHistoWrapper),
 	cAllEvents(fEventCounter.addCounter("All events")),
-	//cTrigger(fEventCounter.addCounter("Passed trigger")),
+	cTrigger(fEventCounter.addCounter("Passed trigger")),
 	fMETFilterSelection(config.getParameter<ParameterSet>("METFilter"),
 	                    fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 	cVertexSelection(fEventCounter.addCounter("Primary vertex selection")),
 	fTauSelection(config.getParameter<ParameterSet>("TauSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, ""),
-	cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
-	cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
+	//cFakeTauSFCounter(fEventCounter.addCounter("Fake tau SF")),
+	//cTauTriggerSFCounter(fEventCounter.addCounter("Tau trigger SF")),
 	cMetTriggerSFCounter(fEventCounter.addCounter("Met trigger SF")),
 	fElectronSelection(config.getParameter<ParameterSet>("ElectronSelection"),
 	              fEventCounter, fHistoWrapper, &fCommonPlots, "Veto"),
@@ -167,7 +169,7 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	hHplusToBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBEta", "H+ to b eta", 50, -2.5, 2.5);
 	hHplusToBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPhi", "H+ to b phi", 100, -3.1416, 3.1416);
 
-	hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 400);
+	hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 600);
 	hGenMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
 
 	hHplusPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPt",  "Hplus pT", 40, 0, 400);
@@ -183,11 +185,11 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 
 	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 200, 2000);
 
-	hNJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets", 100, 0, 30);
-	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets",  "nBJets", 100, 0, 15);
+	hNJets  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets",  30, 0, 30);
+	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets", "nBJets", 15, 0, 15);
 
-	hLeadingJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT", 80, 50, 850);
-	hLeadingBJetPt= fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt",  "Leading B Jet pT", 80, 0, 800);
+	hLeadingJetPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT",   80, 50, 850);
+	hLeadingBJetPt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt", "Leading B Jet pT", 80, 0, 800);
 
 	hJetEta  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "JetsEta",  "Jets Eta",   50, -5.5, 5.5);
 	hBJetEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "BJetsEta", "B Jets Eta", 50, -5.5, 5.5);
@@ -215,8 +217,8 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 
 //====== MET filters to remove events with spurious sources of fake MET
 	const METFilterSelection::Data metFilterData = fMETFilterSelection.analyze(fEvent);
-	if (!metFilterData.passedSelection())
-		return;
+	//if (!metFilterData.passedSelection())
+	//	return;
 
 //====== GenParticle analysis
 	for (auto& p: fEvent.genparticles().getGenParticles()) {
@@ -271,29 +273,30 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	fCommonPlots.fillControlPlotsAtVertexSelection(fEvent);
 
 //====== Tau selection
-	const TauSelection::Data tauData = fTauSelection.analyze(fEvent);
-	if (!tauData.hasIdentifiedTaus())
+	//const TauSelection::Data tauData = fTauSelection.analyze(fEvent);
+	const TauSelection::Data tauData = fTauSelection.silentAnalyze(fEvent);
+	if (tauData.hasIdentifiedTaus())
 		return;
 
 //====== Fake tau SF
-	if (fEvent.isMC()) {
-		fEventWeight.multiplyWeight(tauData.getTauMisIDSF());
-		cFakeTauSFCounter.increment();
-	}
+	//if (fEvent.isMC()) {
+	//	fEventWeight.multiplyWeight(tauData.getTauMisIDSF());
+	//	cFakeTauSFCounter.increment();
+	//}
 
 //====== Tau trigger SF
-	if (fEvent.isMC()) {
-		fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
-		cTauTriggerSFCounter.increment();
-	}
+	//if (fEvent.isMC()) {
+	//	fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
+	//	cTauTriggerSFCounter.increment();
+	//}
 
 //====== MET trigger SF
-	const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
-	if (fEvent.isMC()) {
-		fEventWeight.multiplyWeight(silentMETData.getMETTriggerSF());
-	}
-	cMetTriggerSFCounter.increment();
-	fCommonPlots.fillControlPlotsAfterMETTriggerScaleFactor(fEvent);
+	//const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
+	//if (fEvent.isMC()) {
+	//	fEventWeight.multiplyWeight(silentMETData.getMETTriggerSF());
+	//}
+	//cMetTriggerSFCounter.increment();
+	//fCommonPlots.fillControlPlotsAfterMETTriggerScaleFactor(fEvent);
 	//std::cout << tauData.getSelectedTau().pt() << ":" << tauData.getTauMisIDSF() << ", " << tauData.getTauTriggerSF() << ", met=" << silentMETData.getMET().R() << ", SF=" << silentMETData.getMETTriggerSF() << std::endl;
 
 //====== Electron veto
@@ -307,50 +310,55 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 		return;
 
 //====== Jet selection
-	const JetSelection::Data jetData = fJetSelection.analyze(fEvent, tauData.getSelectedTau());
+	//const JetSelection::Data jetData = fJetSelection.analyze(fEvent, tauData.getSelectedTau());
+	const JetSelection::Data jetData = fJetSelection.analyzeWithoutTau(fEvent);
 	if (!jetData.passedSelection())
 		return;
 
+	// TODO get rid of this
 //====== Collinear angular cuts
-	const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-	if (!collinearData.passedSelection())
-		return;
+	//const AngularCutsCollinear::Data collinearData = fAngularCutsCollinear.analyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
+	//if (!collinearData.passedSelection())
+	//	return;
 
 //====== Point of standard selections
-	fCommonPlots.fillControlPlotsAfterTopologicalSelections(fEvent);
+	//fCommonPlots.fillControlPlotsAfterTopologicalSelections(fEvent);
 
 //====== b-jet selection
 	const BJetSelection::Data bjetData = fBJetSelection.analyze(fEvent, jetData);
 	// Fill final shape plots with b tag efficiency applied as an event weight
-	if (silentMETData.passedSelection()) {
-		const AngularCutsBackToBack::Data silentBackToBackData = fAngularCutsBackToBack.silentAnalyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
-		if (silentBackToBackData.passedSelection()) {
-			fCommonPlots.fillControlPlotsAfterAllSelectionsWithProbabilisticBtag(fEvent, silentMETData, bjetData.getBTaggingPassProbability());
-		}
-	}
+	// TODO get rid of this
+	//if (silentMETData.passedSelection()) {
+		//const AngularCutsBackToBack::Data silentBackToBackData = fAngularCutsBackToBack.silentAnalyze(fEvent, tauData.getSelectedTau(), jetData, silentMETData);
+		//const AngularCutsBackToBack::Data silentBackToBackData = fAngularCutsBackToBack.silentAnalyzeWithoutTau(fEvent, jetData, silentMETData);
+		//if (silentBackToBackData.passedSelection()) {
+		//	fCommonPlots.fillControlPlotsAfterAllSelectionsWithProbabilisticBtag(fEvent, silentMETData, bjetData.getBTaggingPassProbability());
+		//}
+	//}
 	if (!bjetData.passedSelection())
 		return;
 
 //====== b tag SF
-	if (fEvent.isMC()) {
-		fEventWeight.multiplyWeight(bjetData.getBTaggingScaleFactorEventWeight());
-	}
-	cBTaggingSFCounter.increment();
+	//if (fEvent.isMC()) {
+	//	fEventWeight.multiplyWeight(bjetData.getBTaggingScaleFactorEventWeight());
+	//}
+	//cBTaggingSFCounter.increment();
 
 //====== MET selection
-	const METSelection::Data METData = fMETSelection.analyze(fEvent, nVertices);
-	if (!METData.passedSelection())
-		return;
+	//const METSelection::Data METData = fMETSelection.analyze(fEvent, nVertices);
+	//if (!METData.passedSelection())
+	//	return;
 
+	// TODO get rid of this
 //====== Back-to-back angular cuts
-	const AngularCutsBackToBack::Data backToBackData = fAngularCutsBackToBack.analyze(fEvent, tauData.getSelectedTau(), jetData, METData);
-	if (!backToBackData.passedSelection())
-		return;
+	//const AngularCutsBackToBack::Data backToBackData = fAngularCutsBackToBack.analyze(fEvent, tauData.getSelectedTau(), jetData, METData);
+	//if (!backToBackData.passedSelection())
+	//	return;
 
 //====== All cuts passed
 	cSelected.increment();
-	// Fill final plots
-	fCommonPlots.fillControlPlotsAfterAllSelections(fEvent);
+	// TODO Fill final plots
+	//fCommonPlots.fillControlPlotsAfterAllSelections(fEvent);
 
 //====== Experimental selection code
 	// if necessary

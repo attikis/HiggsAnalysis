@@ -10,10 +10,10 @@ histoLevel = "Debug"  # Options: Systematics, Vital, Informative, Debug
 #====== Trigger
 trg = PSet(
   # No need to specify version numbers, they are automatically scanned in range 1--100 (remove the '_v' suffix)
-  triggerOR = ["HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80",
-               "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80_JetIdCleaned",
-               "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120",
-               "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120_JetIdCleaned",
+  triggerOR = [#"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80",
+               #"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80_JetIdCleaned",
+               #"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120",
+               #"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120_JetIdCleaned",
                #"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120",
                #"HLT_LooseIsoPFTau35_Trk20_Prong1_MET70",HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120_v1
                ],
@@ -22,11 +22,11 @@ trg = PSet(
 
 #====== MET filter
 metFilter = PSet(
-  discriminators = ["hbheNoiseTokenRun2Loose", # Loose is recommended
-                    "hbheIsoNoiseToken", # under scrutiny
-                    "Flag_CSCTightHaloFilter",
-                    "Flag_eeBadScFilter",
-                    "Flag_goodVertices"
+  discriminators = [#"hbheNoiseTokenRun2Loose", # Loose is recommended
+                    #"hbheIsoNoiseToken", # under scrutiny
+                    #"Flag_CSCTightHaloFilter",
+                    #"Flag_eeBadScFilter",
+                    #"Flag_goodVertices"
                     ]
 )
 
@@ -45,11 +45,11 @@ tauSelection = PSet(
   
 )
 # tau misidentification scale factors
-scaleFactors.assignTauMisidentificationSF(tauSelection, "eToTau", "full", "nominal")
-scaleFactors.assignTauMisidentificationSF(tauSelection, "muToTau", "full", "nominal")
-scaleFactors.assignTauMisidentificationSF(tauSelection, "jetToTau", "full", "nominal")
+#scaleFactors.assignTauMisidentificationSF(tauSelection, "eToTau", "full", "nominal")
+#scaleFactors.assignTauMisidentificationSF(tauSelection, "muToTau", "full", "nominal")
+#scaleFactors.assignTauMisidentificationSF(tauSelection, "jetToTau", "full", "nominal")
 # tau trigger SF
-scaleFactors.assignTauTriggerSF(tauSelection, "nominal")
+#scaleFactors.assignTauTriggerSF(tauSelection, "nominal")
 
 #====== Electron veto
 eVeto = PSet(
@@ -70,15 +70,16 @@ muVeto = PSet(
 #====== Jet selection
 jetSelection = PSet(
                jetType = "Jets", # options: Jets (AK4PFCHS), JetsPuppi (AK4Puppi)
-              jetPtCut = 40.0,
+              jetPtCut = 30.0,
              jetEtaCut = 2.5,
      tauMatchingDeltaR = 0.4,
-  numberOfJetsCutValue = 3,
+  numberOfJetsCutValue = 0,
   numberOfJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
             jetIDDiscr = "IDtight", # options: IDloose, IDtight, IDtightLeptonVeto
           jetPUIDDiscr = "", # does not work at the moment 
 )
- 
+
+# TODO get rid of this
 #====== Angular cuts / collinear
 angularCutsCollinear = PSet(
        nConsideredJets = 3,    # Number of highest-pt jets to consider (excluding jet corresponding to tau)
@@ -94,20 +95,20 @@ bjetSelection = PSet(
              #bjetDiscr = "combinedInclusiveSecondaryVertexV2BJetTags",
              bjetDiscr = "pfCombinedInclusiveSecondaryVertexV2BJetTags",
  bjetDiscrWorkingPoint = "Tight",
- numberOfBJetsCutValue = 1,
+ numberOfBJetsCutValue = 0,
  numberOfBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
 )
 
-scaleFactors.setupBtagSFInformation(btagPset=bjetSelection, 
-                                    btagPayloadFilename="CSVv2.csv",
-                                    #btagEfficiencyFilename="btageff_TTJets.json",
-                                    #btagEfficiencyFilename="btageff_WJetsHT.json",
-                                    btagEfficiencyFilename="btageff_hybrid.json",
-                                    direction="nominal")
+#scaleFactors.setupBtagSFInformation(btagPset=bjetSelection,
+#                                    btagPayloadFilename="CSVv2.csv",
+#                                    #btagEfficiencyFilename="btageff_TTJets.json",
+#                                    #btagEfficiencyFilename="btageff_WJetsHT.json",
+#                                    btagEfficiencyFilename="btageff_hybrid.json",
+#                                    direction="nominal")
 
 #====== MET selection
 metSelection = PSet(
-           METCutValue = 100.0,
+           METCutValue = 1.0,
        METCutDirection = ">", # options: ==, !=, <, <=, >, >=
   METSignificanceCutValue = -1000.0,
   METSignificanceCutDirection = ">", # options: ==, !=, <, <=, >, >=
@@ -117,6 +118,7 @@ metSelection = PSet(
 # MET trigger SF
 #scaleFactors.assignMETTriggerSF(metSelection, bjetSelection.bjetDiscrWorkingPoint, "nominal")
 
+# TODO get rid of this
 #====== Angular cuts / back-to-back
 angularCutsBackToBack = PSet(
        nConsideredJets = 3,    # Number of highest-pt jets to consider (excluding jet corresponding to tau)
@@ -127,6 +129,7 @@ enableOptimizationPlots = True, # 2D histograms for optimizing angular cuts
         cutValueJet4 = 0.0,   # Cut value in degrees (circular cut)
 )
 
+# TODO remove angular cuts
 #====== Common plots options
 commonPlotsOptions = PSet(
   # Splitting of histograms as function of one or more parameters
@@ -153,6 +156,7 @@ commonPlotsOptions = PSet(
        enablePUDependencyPlots = True,
 )
 
+# TODO remove angular cuts
 #====== Build all selections group
 allSelections = PSet(
  histogramAmbientLevel = histoLevel,
