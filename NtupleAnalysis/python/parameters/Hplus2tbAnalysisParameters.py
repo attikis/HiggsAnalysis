@@ -71,7 +71,7 @@ muVeto = PSet(
 jetSelection = PSet(
                jetType = "Jets", # options: Jets (AK4PFCHS), JetsPuppi (AK4Puppi)
               jetPtCut = 30.0,
-             jetEtaCut = 2.5,
+             jetEtaCut = 3.5,
      tauMatchingDeltaR = 0.4,
   numberOfJetsCutValue = 0,
   numberOfJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
@@ -95,7 +95,7 @@ bjetSelection = PSet(
              #bjetDiscr = "combinedInclusiveSecondaryVertexV2BJetTags",
              bjetDiscr = "pfCombinedInclusiveSecondaryVertexV2BJetTags",
  bjetDiscrWorkingPoint = "Tight",
- numberOfBJetsCutValue = 0,
+ numberOfBJetsCutValue = 1,
  numberOfBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
 )
 

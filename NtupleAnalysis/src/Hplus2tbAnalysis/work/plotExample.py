@@ -57,24 +57,25 @@ def main():
 
     plot(hName = "genHt", title_x = "Gen HT (GeV/c)", rebin = 10)
 
-    plot(hName = "nGenJets", title_x = "nGenJets", rebin = 5, ymax = 0.35)
+    plot(hName = "nGenJets", title_x = "nGenJets", rebin = 4, ymax = 0.35)
 
-    plot(hName = "MetEt",  title_x = "MET", rebin = 5, ymax = 0.45)
-    plot(hName = "MetPhi", title_x = "MET phi", rebin = 5, ymax = 0.20)
 
-    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 12, ymax = 0.45)
+    plot(hName = "MetEt",  title_x = "MET",     rebin = 3, ymax = 0.45, ymax_comparison = 6., xmax = 350)
+    plot(hName = "MetPhi", title_x = "MET phi", rebin = 6, ymax = 0.20)
 
-    plot(hName = "nJets",  title_x = "nJets",  rebin = 2, ymax = 0.30)
-    plot(hName = "nBJets", title_x = "nBJets", rebin = 1, ymax = 0.55)
+    plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10, ymax = 0.45, ymax_comparison = 4., xmax = 1600)
 
-    plot(hName = "LeadingJetPt", title_x = "Leading Jet p_{T} (GeV/c)", rebin = 5, ymax = 0.55)
-    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 5, ymax = 0.55)
+    plot(hName = "nJets",  title_x = "nJets",  rebin = 2, ymax = 0.35, ymax_comparison = 3., xmax = 36)
+    plot(hName = "nBJets", title_x = "nBJets", rebin = 0, ymax = 0.65, ymax_comparison = 5., xmax = 8)
 
-    plot(hName = "JetsEta",  title_x = "Jets eta",  rebin = 3, ymax = 0.3)
+    plot(hName = "LeadingJetPt",  title_x = "Leading Jet p_{T} (GeV/c)",   rebin = 4, ymax = 0.55, ymax_comparison = 7., xmax = 600)
+    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 2, ymax = 0.65, ymax_comparison = 7., xmax = 300)
+
+    plot(hName = "JetsEta",  title_x = "Jets eta",  rebin = 3, ymax = 0.25)
     plot(hName = "BJetsEta", title_x = "BJets eta", rebin = 3, ymax = 0.4)
 
 
-def plot(hName, title_x, rebin = 0, ymax = 0.25):
+def plot(hName, title_x, rebin = 0, ymax = 0.25, ymax_comparison = 2.5, xmax = 0):
     print(hName)
     paths = [sys.argv[1]]
     analysis = "Hplus2tbAnalysis"
@@ -117,7 +118,11 @@ def plot(hName, title_x, rebin = 0, ymax = 0.25):
                                  histograms.Histo(histo2, "t#bar{t}", "p", "P"))
 
         opts = {"ymin": 0, "ymax": ymax}
-        opts2 = {"ymin": 0.1, "ymax": 2.0}
+        opts2 = {"ymin": 0.1, "ymax": ymax_comparison}
+        if xmax:
+                opts3 = {"xmax": xmax}
+                opts.update(opts3)
+
         p.createFrame(os.path.join(plotDir + "/" + m_str, plotname), createRatio=True, opts=opts, opts2=opts2)
 
         moveLegend = {"dx": -0.2, "dy": -0.1, "dh": -0.1}

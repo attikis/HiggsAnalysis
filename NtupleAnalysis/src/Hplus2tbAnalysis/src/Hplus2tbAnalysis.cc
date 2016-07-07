@@ -145,43 +145,44 @@ void Hplus2tbAnalysis::book(TDirectory *dir) {
 	fMETSelection.bookHistograms(dir);
 	// Book non-common histograms
 	//hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
-	hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt", "Associated t pT", 40, 0, 500);
-	hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50, -3, 3);
+	hAssociatedTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPt",  "Associated t pT",  100,  0, 1000);
+	hAssociatedTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTEta", "Associated t eta", 50,  -3, 3);
 	hAssociatedTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedTPhi", "Associated t phi", 100, -3.1416, 3.1416);
 
-	hAssociatedBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt", "Associated b pT", 40, 0, 500);
+	hAssociatedBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPt",  "Associated b pT",  100, 0, 1000);
 	hAssociatedBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBEta", "Associated b eta", 50, -3, 3);
 	hAssociatedBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "associatedBPhi", "Associated b phi", 100, -3.1416, 3.1416);
 
-	hHplusToTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPt",  "H+ to t pT", 40, 0, 400);
+	hHplusToTPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPt",  "H+ to t pT",  100, 0, 1000);
 	hHplusToTEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTEta", "H+ to t eta", 50, -2.5, 2.5);
 	hHplusToTPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToTPhi", "H+ to t phi", 100, -3.1416, 3.1416);
 
-	hHplusToBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPt",  "H+ to b pT", 40, 0, 400);
+	hHplusToBPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPt",  "H+ to b pT",  100, 0, 1000);
 	hHplusToBEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBEta", "H+ to b eta", 50, -2.5, 2.5);
 	hHplusToBPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusToBPhi", "H+ to b phi", 100, -3.1416, 3.1416);
 
-	hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt", "Gen MET", 40, 0, 600);
+	hGenMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetEt",  "Gen MET",     100, 0, 1000);
 	hGenMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genMetPhi", "Gen MET phi", 100, -3.1416, 3.1416);
 
-	hHplusPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPt",  "Hplus pT", 40, 0, 400);
+	hHplusPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPt",  "Hplus pT",  100, 0, 1000);
 	hHplusEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusEta", "Hplus eta", 50, -2.5, 2.5);
 	hHplusPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "HplusPhi", "Hplus phi", 100, -3.1416, 3.1416);
 
-	hGenHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genHt",  "Gen Ht", 140, 200, 1600);
+	hGenHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "genHt",  "Gen Ht", 140, 200, 2000);
 
-	hNGenJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nGenJets",  "nGenJets", 100, 0, 40);
+	hNGenJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nGenJets",  "nGenJets", 40, 0, 40);
 
-	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET", 75, 0, 750);
+
+	hMetEt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetEt",  "MET",     150, 0, 1500);
 	hMetPhi = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "MetPhi", "MET phi", 100, -3.1416, 3.1416);
 
-	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 140, 250, 2500);
+	hHt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "Ht",  "Ht", 300, 0, 3000);
 
 	hNJets  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nJets",  "nJets",  40, 0, 40);
-	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets", "nBJets", 11, -1, 10);
+	hNBJets = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "nBJets", "nBJets", 10, 0, 10);
 
-	hLeadingJetPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT",   100, 0, 1000);
-	hLeadingBJetPt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt", "Leading B Jet pT", 100, 0, 1000);
+	hLeadingJetPt  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingJetPt",  "Leading Jet pT",   150, 0, 1500);
+	hLeadingBJetPt = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "LeadingBJetPt", "Leading B Jet pT", 150, 0, 1500);
 
 	hJetEta  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "JetsEta",  "Jets Eta",   50, -5.5, 5.5);
 	hBJetEta = fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "BJetsEta", "B Jets Eta", 50, -5.5, 5.5);
