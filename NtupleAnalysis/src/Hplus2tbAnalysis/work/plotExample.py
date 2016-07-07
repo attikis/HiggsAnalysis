@@ -66,10 +66,10 @@ def main():
     plot(hName = "Ht", title_x = "HT (GeV/c)", rebin = 10, ymax = 0.45, ymax_comparison = 4., xmax = 1600)
 
     plot(hName = "nJets",  title_x = "nJets",  rebin = 2, ymax = 0.35, ymax_comparison = 3., xmax = 36)
-    plot(hName = "nBJets", title_x = "nBJets", rebin = 0, ymax = 0.65, ymax_comparison = 5., xmax = 8)
+    plot(hName = "nBJets", title_x = "nBJets", rebin = 0, ymax = 0.75, ymax_comparison = 5., xmax = 8)
 
     plot(hName = "LeadingJetPt",  title_x = "Leading Jet p_{T} (GeV/c)",   rebin = 4, ymax = 0.55, ymax_comparison = 7., xmax = 600)
-    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 2, ymax = 0.65, ymax_comparison = 7., xmax = 300)
+    plot(hName = "LeadingBJetPt", title_x = "Leading B Jet p_{T} (GeV/c)", rebin = 2, ymax = 0.40, ymax_comparison = 7., xmax = 300)
 
     plot(hName = "JetsEta",  title_x = "Jets eta",  rebin = 3, ymax = 0.25)
     plot(hName = "BJetsEta", title_x = "BJets eta", rebin = 3, ymax = 0.4)

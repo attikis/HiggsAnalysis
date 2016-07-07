@@ -336,9 +336,6 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 	// if necessary
 
 	// RECO
-	// MET
-	hMetEt->Fill(fEvent.met().et());
-	hMetPhi->Fill(fEvent.met().phi());
 
 	// Jets
 	double recoHT = 0;
@@ -352,13 +349,22 @@ void Hplus2tbAnalysis::process(Long64_t entry) {
 
 		if (jet_pt > maxPt)
 			maxPt = jet_pt;
-
-		hJetEta->Fill(j.eta());
 	}
+
+	// HT selection
+	if (recoHT < 300)
+		return;
+
+	for (const auto& j: fEvent.jets())
+		hJetEta->Fill(j.eta());
 
 	hHt->Fill(recoHT);
 	hNJets->Fill(nJets);
 	hLeadingJetPt->Fill(maxPt);
+
+	// MET
+	hMetEt->Fill(fEvent.met().et());
+	hMetPhi->Fill(fEvent.met().phi());
 
 	// B jets
 	hNBJets->Fill(bjetData.getNumberOfSelectedBJets());
