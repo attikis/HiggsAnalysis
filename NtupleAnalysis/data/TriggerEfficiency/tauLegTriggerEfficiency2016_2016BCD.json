@@ -58,45 +58,44 @@
           "bins" : [
              {
                "pt"              :20.0,
-               "efficiency"      :0.0454240235198,
-               "uncertaintyPlus" :0.00415787862049,
-               "uncertaintyMinus":0.00415787862049
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              },
              {
                "pt"              :30.0,
-               "efficiency"      :0.0425624905978,
-               "uncertaintyPlus" :0.00301138272818,
-               "uncertaintyMinus":0.00301138272818
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              },
              {
                "pt"              :40.0,
-               "efficiency"      :0.130447385984,
-               "uncertaintyPlus" :0.00687173334687,
-               "uncertaintyMinus":0.00687173334687
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              },
              {
                "pt"              :50.0,
-               "efficiency"      :0.67674347543,
-               "uncertaintyPlus" :0.0196790611365,
-               "uncertaintyMinus":0.0196790611365
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              },
              {
                "pt"              :60.0,
-               "efficiency"      :0.841606315513,
-               "uncertaintyPlus" :0.0203605152351,
-               "uncertaintyMinus":0.0203605152351
-             },
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0             },
              {
                "pt"              :80.0,
-               "efficiency"      :0.93238102218,
-               "uncertaintyPlus" :0.0243097363816,
-               "uncertaintyMinus":0.0243097363816
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              },
              {
                "pt"              :100.0,
-               "efficiency"      :0.849156633055,
-               "uncertaintyPlus" :0.0357553069515,
-               "uncertaintyMinus":0.0357553069515
+               "efficiency"      :1.0,
+               "uncertaintyPlus" :0.0,
+               "uncertaintyMinus":0.0
              }
           ]
       }
