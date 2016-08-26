@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 skim = cms.EDFilter("SignalAnalysisSkim",
-    TriggerResults = cms.InputTag("TriggerResults::HLT"),
+    TriggerResults = cms.InputTag("TriggerResults::HLT-DISABLED_due_to_missing_reHLT"),
     HLTPaths       = cms.vstring(
 	"HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80_v",
         "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET90_v",
