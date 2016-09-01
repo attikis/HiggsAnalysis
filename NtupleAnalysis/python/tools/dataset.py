@@ -3853,7 +3853,7 @@ class DatasetManager:
 #
 # This holds the name, ROOT file, and data/MC status of a dataset.
 class DatasetPrecursor:
-    def __init__(self, name, filenames):
+    def __init__(self, name, filenames, pileupDir="nominal"):
         self._name = name
         if isinstance(filenames, basestring):
             self._filenames = [filenames]
@@ -3885,12 +3885,19 @@ class DatasetPrecursor:
                     raise Exception("Mismatch in dataVersion when creating multi-file DatasetPrecursor, got %s from file %s, and %s from %s" % (dataVersion, self._filenames[0], dv.GetTitle(), name))
 
             isTree = aux.Get(rf, "Events") != None
+            # decide which pileup spectrum to use for reweighting
+            pileupName="pileup"
+#            if pileupDir=="up":
+#                pileupName+="_up"
+#            if pileupDir=="down":
+#                pileupName+="_down"
+            
             if isTree:
-                pileup = aux.Get(rf, "pileup")
+#                pileup = aux.Get(rf, "pileup")
+#                if pileup == None:
+                pileup = aux.Get(rf, "configInfo/"+pileupName)
                 if pileup == None:
-                    pileup = aux.Get(rf, "configInfo/pileup")
-                    if pileup == None:
-                        print "Unable to find 'pileup' or 'configInfo/pileup' from ROOT file '%s'" % name
+                    print "Unable to find configInfo/%s' from ROOT file '%s'"%(pileupName,name)
                 if self._pileup is None:
                     if pileup != None:
                         self._pileup = pileup
@@ -3977,7 +3984,20 @@ class DatasetManagerCreator:
     # Creates DatasetPrecursor objects for each ROOT file, reads the
     # contents of first MC file to get list of available analyses.
     def __init__(self, rootFileList, **kwargs):
+        self._precursors=[]
+        # if pileup systematic variation, create DatasetPrecursors using up/down varied PU spectrum
+#        if kwargs.get("systematicVariation","nominal") == "SystVarPUWeightPlus":
+#            self._precursors = [DatasetPrecursor(name, filenames, pileupDir="up") for name, filenames in rootFileList]
+#        elif kwargs.get("systematicVariation","nominal") == "SystVarPUWeightMinus":
+#            self._precursors = [DatasetPrecursor(name, filenames, pileupDir="down") for name, filenames in rootFileList]
+#        # otherwise create DatasetPrecursors with nominal PU spectrum
+#        else:
+#            self._precursors = [DatasetPrecursor(name, filenames, pileupDir="nominal") for name, filenames in rootFileList]
         self._precursors = [DatasetPrecursor(name, filenames) for name, filenames in rootFileList]
+
+#        sys.stderr.write("BILEET:")
+#        sys.stderr.write(kwargs.get("systematicVariation","nominal"))
+
         self._baseDirectory = kwargs.get("baseDirectory", "")
         
         mcRead = False
@@ -4122,7 +4142,7 @@ class DatasetManagerCreator:
         opts = kwargs.get("opts", None)
         if opts is not None:
             for arg in ["analysisName", "searchMode", "dataEra", "optimizationMode", "systematicVariation", "counterDir"]:
-                o = getattr(opts, arg)
+                o = getattr(opts, arg) 
                 if o is not None:
                     _args[arg] = o
             del _args["opts"]
