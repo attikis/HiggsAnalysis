@@ -12,7 +12,7 @@ def main():
     mcParamsFound = False
     for line in fIN:
 
-	if "" in line:
+	if "mcParameters" in line:
 	    mcParamsFound = True
 
 	if mcParamsFound:
