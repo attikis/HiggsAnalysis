@@ -25,6 +25,8 @@ MinimumStatUncertaintyBkg = 0.5
 
 fitstart = 180
 fitstop = 2000 # extended, used to be 700
+#fitstop = 4000 # extended, used to be 700
+
 applyfrom = fitstart
 function = "FitFuncExpTailExoAlternate"
 #function = "FitFuncExpTailTauTauAlternate"

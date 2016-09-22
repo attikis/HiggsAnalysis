@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-dataEras = ["2015"]
+dataEras = ["2016"]
 #dataEras = ["2015B","2015C"]
 searchModes = ["80to1000"]
 
@@ -24,7 +24,6 @@ allSelections.CommonPlots.histogramSplitting = [
   ]
 #===== Selection customisations
 allSelections.TauSelection.prongs = 13
-allSelections.TauSelection.isolationDiscr = "byMediumIsolationMVA3newDMwLT" ## default = byMediumIsolationMVA3newDMwLT   
 #allSelections.TauSelection.tauPtCut = 50.0 #uncomment for light H+ (default 60.0 for heavy H+)
 #allSelections.METSelection.METCutValue = 80.0 #uncomment for light H+ (default 100.0 for heavy H+)
 allSelections.AngularCutsBackToBack.cutValueJet1 = 40.0

@@ -43,6 +43,7 @@ _dataEras = {
     "Run2016BCD": ["_Run2016B", "_Run2016C", "_Run2016D"],
     "Run2016D": ["_Run2016D"],
     "Run2016E": ["_Run2016E"],
+    "Run2016F": ["_Run2016F"],
     "Run2016": ["_Run2016B", "_Run2016C", "_Run2016D","_Run2016E","_Run2016F"]    
 }
 
@@ -3753,7 +3754,14 @@ class DatasetManager:
         if not os.path.exists(jsonname):
             raise Exception("Lumi JSON file '%s' does not exist. Have you set runMin/runMax and lumi in the analyzer?" % jsonname)
         data = json.load(open(jsonname))
-        return data[self.datasets[0].getAnalysisName()]
+        if self.datasets[0].getAnalysisName() in data:
+            return data[self.datasets[0].getAnalysisName()]
+        else:
+            lumi = 0
+            for ds in data.keys():
+                lumi += data[ds]
+            return lumi
+        return -1
 
     def loadRunRange(self, fname="runrange.json"):
         import json

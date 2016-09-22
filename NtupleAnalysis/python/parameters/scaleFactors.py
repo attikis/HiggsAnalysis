@@ -10,6 +10,11 @@ import os
 # Both are supplied as config parameters, but the type (2) SF's are accessed 
 # via GenericScaleFactor c++ class, which causes some naming scheme rules
 
+# Tau ID efficiency scale factor
+# https://twiki.cern.ch/twiki/bin/view/CMS/TauIDRecommendation13TeV
+def assignTauIdentificationSF(tauSelectionPset):
+    tauSelectionPset.tauIdentificationSF = 0.83 # for Run-2 2016
+
 
 ##===== Tau misidentification (simple SF)
 # \param tauSelectionPset  the tau config PSet
@@ -74,10 +79,10 @@ def assignTauTriggerSF(tauSelectionPset, direction, variationType="MC"):
         nprongs = "3prong"
 
 ####    tauTrgJson = "tauLegTriggerEfficiency2015_"+nprongs+".json"
-    tauTrgJson = "tauLegTriggerEfficiency2016_2016BCD.json"
+    tauTrgJson = "tauLegTriggerEfficiency2016.json"
     print "Taking tau trigger eff/sf from",tauTrgJson
 
-    reader = TriggerSFJsonReader("2016ICHEP", "runs_271036_276811", tauTrgJson)
+    reader = TriggerSFJsonReader("2016HIP", "runs_273150_278800", tauTrgJson)
 
     result = reader.getResult()
     if variationType == "MC":
@@ -95,7 +100,7 @@ def assignMETTriggerSF(METSelectionPset, btagDiscrWorkingPoint, direction, varia
     # FIXME: there is no mechanic right now to choose correct era / run range
     # FIXME: this approach works as long as there is just one efficiency for the simulated samples
 ####    reader = TriggerSFJsonReader("2015D", "runs_256629_260627", "metLegTriggerEfficiency2015_btag%s.json"%btagDiscrWorkingPoint)
-    reader = TriggerSFJsonReader("2016ICHEP", "runs_271036_276811", "metLegTriggerEfficiency2016.json") 
+    reader = TriggerSFJsonReader("2016", "runs_271036_279588", "metLegTriggerEfficiency2016.json") 
     result = reader.getResult()
     if variationType == "MC":
         _assignTrgSF("metTriggerSF", result["binEdges"], result["SF"], result["SFmcUp"], result["SFmcDown"], METSelectionPset, direction)

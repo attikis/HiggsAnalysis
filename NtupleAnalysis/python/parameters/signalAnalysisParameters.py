@@ -18,13 +18,17 @@ trg = PSet(
 
 #====== MET filter
 metFilter = PSet(
-  discriminators = ["hbheNoiseTokenRun2Loose", # Loose is recommended
+  discriminators = [#"hbheNoiseTokenRun2Loose", # Loose is recommended
 #                    "hbheIsoNoiseToken", # under scrutiny
+                    "Flag_HBHENoiseFilter",
                     "Flag_HBHENoiseIsoFilter",
                     "Flag_EcalDeadCellTriggerPrimitiveFilter",
-                    "Flag_CSCTightHaloFilter",
+#                    "Flag_CSCTightHaloFilter",
                     "Flag_eeBadScFilter",
-                    "Flag_goodVertices"]
+                    "Flag_goodVertices",
+                    "Flag_globalTightHalo2016Filter",
+                    "badPFMuonFilter",
+                    "badChargedCandidateFilter"]
 )
 
 #====== Tau selection
@@ -34,7 +38,8 @@ tauSelection = PSet(
               tauPtCut = 60.0, #for heavy H+, overriden in signalAnalysis.py for light H+
              tauEtaCut = 2.1,
         tauLdgTrkPtCut = 30.0,
-                prongs = 13,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
+#                prongs = 13,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
+                prongs = 1,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
                   rtau = 0.0,   # to disable set to 0.0
   againstElectronDiscr = "againstElectronTightMVA6",
 #  againstElectronDiscr = "",
@@ -42,6 +47,8 @@ tauSelection = PSet(
 #        isolationDiscr = "byMediumIsolationMVA3oldDMwLT",
         isolationDiscr = "byLooseCombinedIsolationDeltaBetaCorr3Hits",
 )
+# tau identification scale factors
+scaleFactors.assignTauIdentificationSF(tauSelection)
 # tau misidentification scale factors
 scaleFactors.assignTauMisidentificationSF(tauSelection, "eToTau", "full", "nominal")
 scaleFactors.assignTauMisidentificationSF(tauSelection, "muToTau", "full", "nominal")
@@ -182,7 +189,7 @@ commonPlotsOptions = PSet(
    angularCuts1DBins = PSet(nBins=52, axisMin=0., axisMax=260.),
          topMassBins = PSet(nBins=60, axisMin=0., axisMax=600.),
            WMassBins = PSet(nBins=60, axisMin=0., axisMax=300.),
-              mtBins = PSet(nBins=160, axisMin=0., axisMax=800.), # 5 GeV bin width for tail fitter
+              mtBins = PSet(nBins=800, axisMin=0., axisMax=4000.), # 5 GeV bin width for tail fitter
          invmassBins = PSet(nBins=50, axisMin=0., axisMax=500.),
   # Enable/Disable some debug-level plots
        enablePUDependencyPlots = True,
