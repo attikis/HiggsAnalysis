@@ -126,8 +126,8 @@ void SignalAnalysis::process(Long64_t entry) {
   cAllEvents.increment();
 
 //====== Apply trigger
-  if (!(fEvent.passTriggerDecision()))
-    return;
+////  if (!(fEvent.passTriggerDecision()))
+////    return;
   cTrigger.increment();
   int nVertices = fEvent.vertexInfo().value();
   fCommonPlots.setNvertices(nVertices);

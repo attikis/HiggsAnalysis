@@ -375,8 +375,8 @@ void QCDMeasurement::process(Long64_t entry) {
   fNormalizationSystematicsControlRegion.setNvertices(nVertices);
 
 //====== Apply trigger
-  if (!(fEvent.passTriggerDecision()))
-    return;
+////  if (!(fEvent.passTriggerDecision()))
+////    return;
   cTrigger.increment();
   fCommonPlots.fillControlPlotsAfterTrigger(fEvent);
   
