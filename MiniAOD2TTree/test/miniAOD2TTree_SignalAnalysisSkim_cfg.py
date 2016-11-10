@@ -87,7 +87,7 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
         ),
 	filter = cms.untracked.bool(False)
     ),
-    METNoiseFilter = process.METNoiseFilter,
+####    METNoiseFilter = process.METNoiseFilter,
     Taus      = process.Taus,
     Electrons = process.Electrons,
     Muons     = process.Muons,

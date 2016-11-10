@@ -9,7 +9,7 @@ def produceCustomisations(process,isData):
     process.CustomisationsSequence = cms.Sequence()
 #    reproduceJEC(process)
 #    reproduceElectronID(process)
-    reproduceMETNoiseFilters(process)
+####    reproduceMETNoiseFilters(process)
     reproduceMET(process,isData)
     reproduceJEC(process)
     print "=== Customisations done"
