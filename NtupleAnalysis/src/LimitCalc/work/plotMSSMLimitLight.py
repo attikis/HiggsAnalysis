@@ -46,7 +46,8 @@ def main():
         match = json_re.search(argv)
         if match:
             jsonfile = match.group(0)
-    jsonfile = "limits_light2016.json"
+#    jsonfile = "limits_light2016.json"
+    jsonfile = "limits2016/limitsForMSSMplots_ICHEP_v2_light.json"
 #    limits = limit.BRLimits(limitsfile=jsonfile,configfile="limitdata/lightHplus_configuration.json")
     limits = limit.BRLimits(limitsfile=jsonfile,configfile="limits2016/lightHplus_configuration.json")
 
@@ -55,9 +56,10 @@ def main():
 
     # Apply TDR style
     style = tdrstyle.TDRStyle()
-    if limit.forPaper:
-        histograms.cmsTextMode = histograms.CMSMode.PAPER
-    #histograms.cmsTextMode = histograms.CMSMode.PAPER # tmp
+#    if limit.forPaper:
+#        histograms.cmsTextMode = histograms.CMSMode.PAPER
+    histograms.cmsTextMode = histograms.CMSMode.PRELIMINARY
+#    histograms.cmsTextMode = histograms.CMSMode.PAPER # tmp
     #histograms.cmsTextMode = histograms.CMSMode.UNPUBLISHED # tmp
     limit.forPaper = True # to get GeV without c^2
 
@@ -120,6 +122,8 @@ def main():
 #    scenario = "MSSM m_{h}^{max}"
     scenario = os.path.split(rootfile)[-1].replace(".root","")
 
+    from JsonWriter import JsonWriter
+    jsonWriter = JsonWriter()
     for key in graphs.keys():
         print "Graph--------------------------------",key
         graphs[key] = db.graphToTanBetaCombined(graphs[key],xVariable,selection)
@@ -129,6 +133,7 @@ def main():
             #obsminus = db.getTheorUncert(graphs[key],xVariable,selection,"-")
             #graphs["obs_th_minus"] = db.graphToTanBetaCombined(obsminus,xVariable,selection)
         print key,"done"
+        jsonWriter.addGraph(key,graphs[key])
 
     graphs["mintanb"] = db.minimumTanbGraph("mHp",selection)
     
@@ -137,7 +142,18 @@ def main():
     else:
         graphs["Allowed"] = db.mhLimit("mh","mHp",selection,"125.0+-3.0")
 #    graphs["isomass"] = None
-    
+
+    jsonWriter.addGraph("Allowed",graphs["Allowed"])
+    jsonWriter.addGraph("mintanb",graphs["mintanb"])
+
+    jsonWriter.addParameter("name","limitsTanb_light_"+scenario)
+    jsonWriter.addParameter("scenario",scenario)
+    jsonWriter.addParameter("luminosity",limits.getLuminosity())
+    jsonWriter.addParameter("finalStateText",limits.getFinalstateText())
+    jsonWriter.addParameter("mHplus",limit.mHplus())
+    jsonWriter.addParameter("selection",selection)
+    jsonWriter.write("MSSMLimitLight_"+scenario+".json")
+
     limit.doTanBetaPlotLight("limitsTanb_light_"+scenario, graphs, limits.getLuminosity(), limits.getFinalstateText(), limit.mHplus(), scenario)
     sys.exit()
 

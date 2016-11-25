@@ -76,8 +76,31 @@ Taus = cms.VPSet(
             ),
             filter = cms.untracked.bool(False), 
             jetSrc = cms.InputTag("slimmedJets"), # made from ak4PFJetsCHS
+            systVariations = cms.bool(True),
             TESvariation = cms.untracked.double(0.03),
             TESvariationExtreme = cms.untracked.double(0.10)
     )
 )
 
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauIDRecommendation13TeV
+Taus_TauPOGRecommendation = cms.VPSet()
+Taus_TauPOGRecommendation.append(Taus[0].clone())
+Taus_TauPOGRecommendation[0].discriminators = cms.vstring(
+                'againstElectronLooseMVA6',                                                                                                                                                                                               
+                'againstElectronMediumMVA6',                                                                                                                                                                                              
+                'againstElectronTightMVA6',                                                                                                                                                                                               
+                'againstElectronVLooseMVA6',                                                                                                                                                                                              
+                'againstElectronVTightMVA6',                                                                                                                                                                                              
+                'againstMuonLoose3',                                                                                                                                                                                                      
+                'againstMuonTight3',                                                                                                                                                                                                      
+                'byLooseCombinedIsolationDeltaBetaCorr3Hits',                                                                                                                                                                             
+                'byMediumCombinedIsolationDeltaBetaCorr3Hits',                                                                                                                                                                            
+                'byTightCombinedIsolationDeltaBetaCorr3Hits',                                                                                                                                                                             
+                'decayModeFinding',                                                                                                                                                                                                       
+                'decayModeFindingNewDMs'
+)
+
+TausNoSysVariations = cms.VPSet()
+TausNoSysVariations.append(Taus_TauPOGRecommendation[0].clone())
+for i in range(len(TausNoSysVariations)):
+    TausNoSysVariations[i].systVariations = cms.bool(False)
