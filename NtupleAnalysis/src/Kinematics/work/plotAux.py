@@ -60,6 +60,7 @@ styleDict = {
     "QCD_bEnriched_HT1500to2000": styles.qcdFillStyle,
     "QCD_bEnriched_HT2000toInf" : styles.qcdFillStyle,
 
+    "TTBB"                   : styles.ttbbStyle,
     "TT"                   : styles.ttStyle,
     "TTJets"               : styles.ttjetsStyle,
     "SingleTop"            : styles.singleTopStyle,
@@ -269,7 +270,8 @@ def GetCutEfficiencyHisto(dataset, histoName, statOpt, **kwargs):
     rootHisto = dataset.getDatasetRootHisto(histoName)
 
     # Normalise the histogram
-    NormalizeRootHisto(rootHisto, dataset.isMC(), normalizeTo)
+    NormalizeRootHisto(datasetsMgr, rootHisto, dataset.isMC(), normalizeTo)
+    #NormalizeRootHisto(datasetsMgr, rootHisto, d.isMC(), normalizeTo)
 
     ## Get a clone of the wrapped histogram normalized as requested.
     h = rootHisto.getHistogram()
@@ -626,7 +628,7 @@ def Verbose(msg, printHeader=True, verbose=False):
     return
 
 
-def SaveAs(p, savePath, saveName, saveFormats, verbose):
+def SaveAs(p, savePath, saveName, saveFormats, verbose=True):
     '''
     '''
     Verbose("Saving plots in %s format(s)" % (len(saveFormats)), True)

@@ -9,12 +9,16 @@ Launch but exclude the M_180 sample
 
 Launch but exclude the multiple signal samples
 ./plotTest.py -m Kinematics_161025_020335 -e "M_180|M_200|M_220|M_250|M_300|M_350|M_400"
-
 Launch but only include the QCD_Pt samples
 ./plotTest.py -m Kinematics_161025_020335 -i QCD_Pt
 
 Launch but exclude various samples
 ./plotTest.py -m Kinematics_161025_020335 -e "M_200|M_220|M_250|M_300|M_350|M_400|QCD_Pt|JetHT"
+or 
+./plotTest.py -m Hplus2tbAnalysis_161026_135227 -e "M_180|M_200|M_220|M_250|M_300|M_350|M_400|M_500|ZZTo4Q"
+
+Last Used:
+./plotTest.py -m Kinematics_161116_20161104T0853 -i "M_200|M_500|TT_ext|TTTT|TTBB|TTZ|ttb|ZJets|QCD_b"
 '''
 
 #================================================================================================
@@ -32,43 +36,53 @@ import HiggsAnalysis.NtupleAnalysis.tools.styles as styles
 import HiggsAnalysis.NtupleAnalysis.tools.plots as plots
 import HiggsAnalysis.NtupleAnalysis.tools.histograms as histograms
 import HiggsAnalysis.NtupleAnalysis.tools.aux as aux
-from plotAux import *
 
 import ROOT
-
 
 #================================================================================================
 # Variable Definition
 #================================================================================================
 kwargs = {
-    "verbose"        : False,
-    "dataEra"        : "Run2016",
-    "searchMode"     : "80to1000",
-    "analysis"       : "Kinematics",
-    "optMode"        : "",
-    #"savePath"       : "/Users/attikis/latex/talks/post_doc.git/HPlus/HIG-XY-XYZ/2016/Kinematics_06September2016/figures/all/",
-    #"savePath"       : None,
-    "savePath"       : os.getcwd() + "/Plots/",
-    "refDataset"     : "ChargedHiggs_HplusTB_HplusToTB_M_180",
-    "saveFormats"    : [".png"],
-    "normalizeTo"    : "Luminosity", #One", "XSection", "Luminosity"
-    "createRatio"    : False,
-    "logX"           : False,
-    "logY"           : True,
-    "gridX"          : True,
-    "gridY"          : True,
-    "drawStyle"      : "HIST9", # "P",  #"HIST9"
-    "legStyle"       : "F",     # "LP", "F"
-    "cutValue"       : 15,
-    "cutLine"        : False,
-    "cutBox"         : False,
-    "cutLessthan"    : False,
-    "cutFillColour"  : ROOT.kAzure-4,
+    "verbose"          : False,
+    "dataEra"          : "Run2016",
+    "searchMode"       : "80to1000",
+    "analysis"         : "Kinematics",
+    "optMode"          : "",
+    "savePath"         : os.getcwd() + "/Plots/", #"/Users/attikis/latex/talks/post_doc.git/HPlus/HIG-XY-XYZ/2016/Kinematics_06September2016/figures/all/",
+    "saveFormats"      : [".png"], #, ".pdf"],
+    "xlabel"           : None,
+    "ylabel"           : "Arbitrary Units / %.1f", #"Events / %.0f",
+    "rebinX"           : 1,
+    "rebinY"           : 1,
+    "xlabelsize"       : None, #10, #None, #10
+    "ratio"            : False,
+    "ratioYlabel"      : None,
+    "ratioInvert"      : False,
+    "stackMCHistograms": False,
+    "addMCUncertainty" : False,
+    "addLuminosityText": False,
+    "addCmsText"       : True,
+    "errorBarsX"       : True,
+    "logX"             : False,
+    "logY"             : False,
+    "gridX"            : True,
+    "gridY"            : True,
+    "cmsExtraText"     : "Preliminary", #"Preliminary" "Simulation"
+    "removeLegend"     : False,
+    "moveLegend"       : {"dx": -0.1, "dy": 0.0, "dh": +0.0},
+    "cutValue"         : None, #1.2,
+    "cutLine"          : False,
+    "cutBox"           : False,
+    "cutLessthan"      : False,
+    "cutFillColour"    : ROOT.kAzure-4,
 }
 
 
 hNames = [
-    "BQuarkPair_dRMin_pT",
+    "BQuarkPair_dRMin_Pt",
+    "BQuarkPair_dRMin_Eta",
+    "BQuarkPair_dRMin_Rap",
+    "BQuarkPair_dRMin_Phi",
     "BQuarkPair_dRMin_dEta",
     "BQuarkPair_dRMin_dPhi",
     "BQuarkPair_dRMin_dR",
@@ -79,13 +93,112 @@ hNames = [
     "BQuarkPair_dRMin_jet2_dR",
     "BQuarkPair_dRMin_jet2_dEta",
     "BQuarkPair_dRMin_jet2_dPhi",
+    "MaxDiJetMass_Pt",
+    "MaxDiJetMass_Eta",
+    "MaxDiJetMass_Mass",
+    "MaxDiJetMass_Rap",
+    "MaxDiJetMass_dR",
+    "MaxDiJetMass_dRrap",
+    "MaxDiJetMass_dEta",
+    "MaxDiJetMass_dRap",
+    "MaxDiJetMass_dPhi",
+    "BQuarkPair_dR",
+    "BQuarkPair_dEta",
+    "BQuarkPair_dPhi",
+    "BQuarkPair_dRAverage",
+    "BQuarkPair_dEtaAverage",
+    "BQuarkPair_dPhiAverage",
+    "BQuarkPair_MaxPt_Pt",
+    "BQuarkPair_MaxPt_Eta",
+    "BQuarkPair_MaxPt_Phi",
+    "BQuarkPair_MaxPt_M",
+    "BQuarkPair_MaxPt_jet1_dR",
+    "BQuarkPair_MaxPt_jet1_dEta",
+    "BQuarkPair_MaxPt_jet1_dPhi",
+    "BQuarkPair_MaxPt_jet2_dR",
+    "BQuarkPair_MaxPt_jet2_dEta",
+    "BQuarkPair_MaxPt_jet2_dPhi",
+    "BQuarkPair_MaxMass_Pt",
+    "BQuarkPair_MaxMass_Eta",
+    "BQuarkPair_MaxMass_Phi",
+    "BQuarkPair_MaxMass_M",
+    "BQuarkPair_MaxMass_jet1_dR",
+    "BQuarkPair_MaxMass_jet1_dEta",
+    "BQuarkPair_MaxMass_jet1_dPhi",
+    "BQuarkPair_MaxMass_jet2_dR",
+    "BQuarkPair_MaxMass_jet2_dEta",
+    "BQuarkPair_MaxMass_jet2_dPhi",
+    "BQuarks_N",
+    "BQuark1_Pt",
+    "BQuark2_Pt",
+    "BQuark3_Pt",
+    "BQuark4_Pt",
+    "BQuark1_Eta",
+    "BQuark2_Eta",
+    "BQuark3_Eta",
+    "BQuark4_Eta",
+    "MaxTriJetPt_Pt",
+    "MaxTriJetPt_Eta",
+    "MaxTriJetPt_Rap",
+    "MaxTriJetPt_Mass",
+    "MaxTriJetPt_dEtaMax",
+    "MaxTriJetPt_dPhiMax",
+    "MaxTriJetPt_dRMax",
+    "MaxTriJetPt_dEtaMin",
+    "MaxTriJetPt_dPhiMin",
+    "MaxTriJetPt_dRMin",
+    "MaxTriJetPt_dEtaAverage",
+    "MaxTriJetPt_dPhiAverage",
+    "MaxTriJetPt_dRAverage",
     ]
 
 
+
 #================================================================================================
-# Main
+# Function Definition
 #================================================================================================
-def main(opts):
+def Print(msg, printHeader=False):
+    fName = __file__.split("/")[-1]
+    if printHeader==True:
+        print "=== ", fName
+        print "\t", msg
+    else:
+        print "\t", msg
+    return
+
+
+def Verbose(msg, printHeader=True, verbose=False):
+    if not verbose:
+        return
+    Print(msg, printHeader)
+    return
+
+
+def HasKeys(keyList, **kwargs):
+    for key in keyList:
+        if key not in kwargs:
+            raise Exception("Could not find the keyword \"%s\" in kwargs" % (key) )
+    return
+
+
+def GetDatasetsFromDir(mcrab, opts, **kwargs):
+
+    dataEra    = kwargs.get("dataEra")
+    searchMode = kwargs.get("searchMode")
+    analysis   = kwargs.get("analysis")
+    optMode    = kwargs.get("optMode")
+
+    if opts.includeTasks != "":
+        datasets = dataset.getDatasetsFromMulticrabDirs([mcrab], dataEra=dataEra, searchMode=searchMode, analysisName=analysis, includeOnlyTasks=opts.includeTasks, optimizationMode=optMode)
+    elif opts.excludeTasks != "":
+        datasets = dataset.getDatasetsFromMulticrabDirs([mcrab], dataEra=dataEra, searchMode=searchMode, analysisName=analysis, excludeTasks=opts.excludeTasks, optimizationMode=optMode)
+        # excludeTasks="M_180|M_220|M_250"
+    else:
+        datasets = dataset.getDatasetsFromMulticrabDirs([mcrab], dataEra=dataEra, searchMode=searchMode, analysisName=analysis, optimizationMode=optMode)
+    return datasets
+
+
+def main(hName, opts):
 
     # Setup the style
     style = tdrstyle.TDRStyle()
@@ -93,97 +206,79 @@ def main(opts):
     # Set ROOT batch mode boolean
     ROOT.gROOT.SetBatch(opts.batchMode)
 
-    # ========================================
-    # Datasets
-    # ========================================
     # Setup & configure the dataset manager
     datasetsMgr = GetDatasetsFromDir(opts.mcrab, opts, **kwargs)
-    intLumi     = GetLumi(datasetsMgr)
     datasetsMgr.updateNAllEventsToPUWeighted()
-    datasetsMgr.PrintCrossSections()
-    datasetsMgr.PrintLuminosities()
+    # datasetsMgr.PrintCrossSections()
+    # datasetsMgr.PrintLuminosities()
 
     # Set/Overwrite cross-sections
     for d in datasetsMgr.getAllDatasets():
         if "ChargedHiggs" in d.getName():
             datasetsMgr.getDataset(d.getName()).setCrossSection(1.0)
     
-    # Merge datasts (Note: Merged MC histograms must be normalized to something)
+    # Merge datasets: All JetHT to "Data", QCD_Pt to "QCD", QCD_bEnriched to "QCD_b",  single-top to "SingleTop", WW, WZ, ZZ to "Diboson"           
     plots.mergeRenameReorderForDataMC(datasetsMgr)
 
     # Remove datasets
-    if 0:
-        datasetsMgr.remove("TTJets")
-        datasetsMgr.remove(filter(lambda name: not "QCD" in name, datasetsMgr.getAllDatasetNames()))
+    # datasetsMgr.remove("QCD-b") 
     
     # Print dataset information
-    datasetsMgr.PrintInfo()
+    # datasetsMgr.PrintInfo()
+    
+    # Create  plot, with the default 
+    s = {"normalizeToOne": True}
+    p = plots.MCPlot(datasetsMgr, hName, **s)
+    p.histoMgr.setHistoLegendStyleAll("LP")
+    p.histoMgr.setHistoDrawStyleAll("EP")
+    p.histoMgr.setHistoLegendStyle("ChargedHiggs_HplusTB_HplusToTB_M_500", "F")
+    p.histoMgr.setHistoDrawStyle ("ChargedHiggs_HplusTB_HplusToTB_M_500", "HIST")
+    #datasetsMgr.getDataset("ZJetsToQQ_HT600toInf").getDatasetRootHisto(hName).getHistogram().SetMarkerColor(ROOT.kBlack)
 
 
-    # ========================================
-    # Histograms
-    # ========================================
-    for counter, hName in enumerate(hNames):
-        
-        # Get the save path and name, Get Histos for Plotter
-        savePath, saveName    = GetSavePathAndName(hName, **kwargs)
-        refHisto, otherHistos = GetHistosForPlotter(datasetsMgr, hName, **kwargs)
-        
-        # Create a comparison plot
-        p = plots.ComparisonManyPlot(refHisto, otherHistos)
+    # Create a comparison plot
+    ratioOpts = {"ymin": 0.0, "ymax": 2.0}
+    if kwargs.get("logY")==True:
+        canvOpts = {"xmin": 0.0, "ymin": 1e-5, "ymaxfactor": 10}
+    else:
+        canvOpts = {"ymin": 0.0, "ymaxfactor": 1.2}
 
-        # Remove negative contributions
-        if 0:
-            RemoveNegativeBins(datasetsMgr, hName, p)
+    # Draw a customised plot & Save it
+    plots.drawPlot(p, 
+                   os.path.join(kwargs.get("savePath"), hName.replace("/", "_").replace(" ", "_").replace("(", "_").replace(")", "") ),
+                   xlabel=kwargs.get("xlabel"), 
+                   ylabel=kwargs.get("ylabel"),
+                   rebinX=kwargs.get("rebinX"), 
+                   rebinY=kwargs.get("rebinY"),
+                   xlabelsize=kwargs.get("xlabelsize"),
+                   ratio=kwargs.get("ratio"), 
+                   stackMCHistograms=kwargs.get("stackMCHistograms"), 
+                   ratioYlabel=kwargs.get("ratioYlabel"),
+                   ratioInvert=kwargs.get("ratioInvert"),
+                   addMCUncertainty=kwargs.get("addMCUncertainty"), 
+                   addLuminosityText=kwargs.get("addLuminosityText"),
+                   addCmsText=kwargs.get("addCmsText"),
+                   opts=canvOpts, opts2=ratioOpts, 
+                   log=kwargs.get("logY"), 
+                   errorBarsX=kwargs.get("errorBarsX"),
+                   cmsExtraText=kwargs.get("cmsExtraText"),
+                   moveLegend=kwargs.get("moveLegend"),
+                   drawStyle="P",
+                   legendStyle="LP",
+                   #cutLine=kwargs.get("cutValue"),
+                   cutBox={"cutValue": kwargs.get("cutValue"), "fillColor": kwargs.get("cutFillColour"), "box": kwargs.get("cutBox"), "line": kwargs.get("cutLine"), "lessThan": kwargs.get("cutLessthan")},
+                   )
+    
+    # Remove legend?
+    if kwargs.get("removeLegend"):
+        p.removeLegend()
 
-        # Y-axis
-        ratioOpts = {"ymin": 0.0, "ymax": 2.0}
-        if kwargs.get("logY")==True:
-            opts = {"ymin": 1e-2, "ymaxfactor": 100}
-        else:
-            opts = {"ymin": 0.0, "ymaxfactor": 1.2}
-
-        # ========================================
-        # Frame
-        # ========================================
-        p.createFrame(saveName, createRatio=kwargs.get("createRatio"), opts=opts, opts2=ratioOpts)
-
-        # Legend
-        moveLegend = {"dx": -0.11, "dy": +0.0, "dh": +0.2}
-        p.setLegend(histograms.moveLegend(histograms.createLegend(), **moveLegend))
-
-        # Move the refDataset to first in the draw order (back)
-        histoNames = [h.getName() for h in p.histoMgr.getHistos()]
-        p.histoMgr.reorder(filter(lambda n: plots._legendLabels[kwargs.get("refDataset") ] not in n, histoNames))
-        if 0:
-            p.removeLegend()
-
-        # Axes
-        p.getFrame().GetYaxis().SetTitle( getTitleY(refHisto, **kwargs) )
-        if kwargs.get("createRatio"):
-            p.getFrame2().GetYaxis().SetTitle("Ratio")
-            p.getFrame2().GetYaxis().SetTitleOffset(1.6)
-
-        # Set Log and Grid
-        SetLogAndGrid(p, **kwargs)
-
-        # Cut line / Cut box
-        _kwargs = {"lessThan": kwargs.get("cutLessthan")}
-        p.addCutBoxAndLine(cutValue=kwargs.get("cutValue"), fillColor=kwargs.get("cutFillColour"), box=kwargs.get("cutBox"), line=kwargs.get("cutLine"), **_kwargs)
-
-        # Draw the final plot
-        p.draw()
-
-
-        # ========================================
-        # Add Text
-        # ========================================
-        histograms.addStandardTexts(lumi=intLumi)
-        # histograms.addText(0.4, 0.9, "Alexandros Attikis", 17)
-        # histograms.addText(0.4, 0.11, "Runs " + datasetsMgr.loadRunRange(), 17)
-
-        # Save the canvas to a file
-        SaveAs(p, savePath, saveName, kwargs.get("saveFormats"), counter==0)
+    # Additional text
+    # histograms.addText(0.4, 0.9, "Alexandros Attikis", 17)
+    # histograms.addText(0.4, 0.11, "Runs " + datasetsMgr.loadRunRange(), 17)
+    
+    if not opts.batchMode:
+        raw_input("=== plotTest.py:\n\tPress any key to quit ROOT ...")
 
     return
 
@@ -199,7 +294,7 @@ if __name__ == "__main__":
                       help="Path to the multicrab directory for input")
 
     parser.add_option("-b", "--batchMode", dest="batchMode", action="store_false", default=True, 
-                      help="Enables batch mode (canvas creation does NOT generates a window)")
+                      help="Enables batch mode (canvas creation  NOT generates a window)")
 
     parser.add_option("-v", "--verbose", dest="verbose", action="store_true", default=False, 
                       help="Enables verbose mode (for debugging purposes)")
@@ -221,7 +316,8 @@ if __name__ == "__main__":
         pass
 
     # Program execution
-    main(opts)
+    for histo in hNames:
+        main(histo, opts)
 
     if not opts.batchMode:
         raw_input("=== plotTemplate.py: Press any key to quit ROOT ...")
