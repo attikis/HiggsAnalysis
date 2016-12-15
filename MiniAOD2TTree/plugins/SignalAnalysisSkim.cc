@@ -95,7 +95,7 @@ SignalAnalysisSkim::~SignalAnalysisSkim(){
 bool SignalAnalysisSkim::filter(edm::Event& iEvent, const edm::EventSetup& iSetup ){
 
     nEvents++;
-
+/*
     // Trigger bits
     edm::Handle<edm::TriggerResults> trghandle;
     iEvent.getByToken(trgResultsToken,trghandle);
@@ -137,6 +137,7 @@ bool SignalAnalysisSkim::filter(edm::Event& iEvent, const edm::EventSetup& iSetu
 
 	if(!passed) return false; 
     }
+*/
 /*
     // FIXME: CaloMET to emulate Trigger MET leg, to skim the samples at least with the MET leg 09062016/SL
     edm::Handle<edm::View<pat::MET>> methandle;                                                                                                                                                    
