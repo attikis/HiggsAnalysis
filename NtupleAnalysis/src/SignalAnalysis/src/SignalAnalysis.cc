@@ -126,8 +126,8 @@ void SignalAnalysis::process(Long64_t entry) {
   cAllEvents.increment();
 
 //====== Apply trigger
-  if (!(fEvent.passTriggerDecision()))
-    return;
+////  if (!(fEvent.passTriggerDecision()))
+////    return;
   cTrigger.increment();
   int nVertices = fEvent.vertexInfo().value();
   fCommonPlots.setNvertices(nVertices);
@@ -168,14 +168,14 @@ void SignalAnalysis::process(Long64_t entry) {
 
 //====== Tau trigger SF
   if (fEvent.isMC()) {
-    fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
+    ////    fEventWeight.multiplyWeight(tauData.getTauTriggerSF());
     cTauTriggerSFCounter.increment();
   }
 
 //====== MET trigger SF
   const METSelection::Data silentMETData = fMETSelection.silentAnalyze(fEvent, nVertices);
   if (fEvent.isMC()) {
-    fEventWeight.multiplyWeight(silentMETData.getMETTriggerSF());
+    ////    fEventWeight.multiplyWeight(silentMETData.getMETTriggerSF());
   }
   cMetTriggerSFCounter.increment();
   fCommonPlots.fillControlPlotsAfterMETTriggerScaleFactor(fEvent);
