@@ -55,15 +55,15 @@ builder = AnalysisBuilder("SignalAnalysis",
                           dataEras,
                           searchModes,
                           #### Options ####
-                          usePUreweighting=True,
-                          doSystematicVariations=True
+                          usePUreweighting=False,
+                          doSystematicVariations=False
                           )
 #builder.addVariation("METSelection.METCutValue", [100,120,140])
 #builder.addVariation("AngularCutsBackToBack.workingPoint", ["Loose","Medium","Tight"])
 builder.build(process, allSelections)
 
 # Pick events
-#process.addOptions(EventSaver = PSet(enabled = True,pickEvents = True))
+process.addOptions(EventSaver = PSet(enabled = True,pickEvents = True))
 
 # Run the analysis
 if "proof" in sys.argv:
