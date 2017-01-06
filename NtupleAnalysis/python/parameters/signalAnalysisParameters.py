@@ -18,22 +18,22 @@ trg = PSet(
 
 #====== MET filter
 metFilter = PSet(
-  discriminators = [#"hbheNoiseTokenRun2Loose", # Loose is recommended
+  discriminators = []#"hbheNoiseTokenRun2Loose", # Loose is recommended
 #                    "hbheIsoNoiseToken", # under scrutiny
-                    "Flag_HBHENoiseFilter",
-                    "Flag_HBHENoiseIsoFilter",
-                    "Flag_EcalDeadCellTriggerPrimitiveFilter",
+                    #"Flag_HBHENoiseFilter",
+                    #"Flag_HBHENoiseIsoFilter",
+                    #"Flag_EcalDeadCellTriggerPrimitiveFilter",
 #                    "Flag_CSCTightHaloFilter",
-                    "Flag_eeBadScFilter",
-                    "Flag_goodVertices",
-                    "Flag_globalTightHalo2016Filter",
-                    "badPFMuonFilter",
-                    "badChargedCandidateFilter"]
+                    #"Flag_eeBadScFilter",
+                    #"Flag_goodVertices",
+                    #"Flag_globalTightHalo2016Filter",
+                    #"badPFMuonFilter",
+                    #"badChargedCandidateFilter"]
 )
 
 #====== Tau selection
 tauSelection = PSet(
-  applyTriggerMatching = True,
+  applyTriggerMatching = False,
    triggerMatchingCone = 0.1,   # DeltaR for matching offline tau with trigger tau
               tauPtCut = 60.0, #for heavy H+, overriden in signalAnalysis.py for light H+
              tauEtaCut = 2.1,
