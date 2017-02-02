@@ -26,11 +26,13 @@ CommonPlots::CommonPlots(const ParameterSet& config, const AnalysisType type, Hi
   fHtBinSettings(config.getParameter<ParameterSet>("htBins")),
   fBJetDiscriminatorBinSettings(config.getParameter<ParameterSet>("bjetDiscrBins")),
   fAngularCuts1DSettings(config.getParameter<ParameterSet>("angularCuts1DBins")),
+  fMvaBinSettings(config.getParameter<ParameterSet>("mvaBins")),
   //fTopMassBinSettings(config.getParameter<ParameterSet>("topMassBins")),
   //fWMassBinSettings(config.getParameter<ParameterSet>("WMassBins")),
   fMtBinSettings(config.getParameter<ParameterSet>("mtBins")),
   //fInvmassBinSettings(config.getParameter<ParameterSet>("invmassBins")),
   hNSelectedVsRunNumber(nullptr)
+
 { 
   // Create CommonPlotsBase objects
   bool enableStatus = config.getParameter<bool>("enablePUDependencyPlots");
@@ -65,6 +67,7 @@ CommonPlots::~CommonPlots() {
   fHistoSplitter.deleteHistograms(hCtrlJetEtaPhiAfterStdSelections);
   fHistoSplitter.deleteHistograms(hCtrlMET);
   fHistoSplitter.deleteHistograms(hCtrlMETPhi);
+  fHistoSplitter.deleteHistograms(hCtrlMVA);
   fHistoSplitter.deleteHistograms(hCtrlNBJets);
   fHistoSplitter.deleteHistograms(hCtrlBJetPt);
   fHistoSplitter.deleteHistograms(hCtrlBJetEta);
@@ -290,6 +293,11 @@ void CommonPlots::book(TDirectory *dir, bool isData) {
     "BackToBackAngularCutsJet4", ";min(#sqrt{#Delta#phi(#tau,MET)^{2}+(180^{#circ}-#Delta#phi(jet_{4},MET))^{2}}), ^{#circ};N_{events}", 
     fAngularCuts1DSettings.bins(), fAngularCuts1DSettings.min(), fAngularCuts1DSettings.max());
 
+  fHistoSplitter.createShapeHistogramTriplet<TH1F>(fEnableGenuineTauHistograms, HistoLevel::kSystematics, myDirs, hCtrlMVA, 
+    "MVA", ";MVA;N_{events}", 
+    fMvaBinSettings.bins(), fMvaBinSettings.min(), fMvaBinSettings.max());
+
+
   // control plots after all selections
   fHistoSplitter.createShapeHistogramTriplet<TH1F>(fEnableGenuineTauHistograms, HistoLevel::kSystematics, myDirs, hCtrlNVerticesAfterAllSelections, 
     "NVertices_AfterAllSelections", ";N_{vertices};N_{events}",
@@ -397,6 +405,8 @@ void CommonPlots::book(TDirectory *dir, bool isData) {
     "DeltaPhiTauMet_AfterAllSelections", ";#Delta#phi(#tau,MET), {}^{#circ};N_{events}", 
     36, 0, 180);
   
+
+
   // shape plots after all selections
   fHistoSplitter.createShapeHistogramTriplet<TH1F>(true, HistoLevel::kSystematics, myDirs3, hShapeTransverseMass, 
     "shapeTransverseMass", ";m_{T}(tau,MET), GeV/c^{2};N_{events}",
@@ -427,6 +437,7 @@ void CommonPlots::initialize() {
   fBJetData = BJetSelection::Data();
   fMETData = METSelection::Data();
   fBackToBackAngularCutsData = AngularCutsCollinear::Data();
+  fMVAData = MVASelection::Data();
   fHistoSplitter.initialize();
   
   for (auto& p: fBaseObjects) {
@@ -461,6 +472,15 @@ void CommonPlots::fillControlPlotsAtTauSelection(const Event& event, const TauSe
     p->fillControlPlotsAtTauSelection(event, data);
   }
 }
+
+void CommonPlots::fillControlPlotsAtMVASelection(const Event& event, const MVASelection::Data& data) {
+  fMVAData = data;
+  fHistoSplitter.fillShapeHistogramTriplet(hCtrlMVA, bIsGenuineTau, fMVAData.mvaValue());
+  for (auto& p: fBaseObjects) {
+    p->fillControlPlotsAtMVASelection(event, data);
+  }
+}
+
 
 void CommonPlots::fillControlPlotsAtJetSelection(const Event& event, const JetSelection::Data& data) {
   fJetData = data;
@@ -506,6 +526,8 @@ void CommonPlots::fillControlPlotsAtMETSelection(const Event& event, const METSe
   }
 }
 
+
+
 void CommonPlots::fillControlPlotsAtAngularCutsBackToBack(const Event& event, const AngularCutsBackToBack::Data& data) {
   fBackToBackAngularCutsData = data;
   fHistoSplitter.fillShapeHistogramTriplet(hCtrlBackToBackAngularCutsMinimum, bIsGenuineTau, fBackToBackAngularCutsData.getMinimumCutValue());
@@ -517,6 +539,7 @@ void CommonPlots::fillControlPlotsAtAngularCutsBackToBack(const Event& event, co
     p->fillControlPlotsAtAngularCutsBackToBack(event, data);
   }
 }
+
 
 //===== unique filling methods (to be called AFTER return statement from analysis routine)
 void CommonPlots::fillControlPlotsAfterTrigger(const Event& event) {
@@ -657,6 +680,7 @@ void CommonPlots::fillControlPlotsAfterAllSelections(const Event& event, bool wi
   fHistoSplitter.fillShapeHistogramTriplet(hCtrlMETAfterAllSelections, bIsGenuineTau, fMETData.getMET().R());
   fHistoSplitter.fillShapeHistogramTriplet(hCtrlMETPhiAfterAllSelections, bIsGenuineTau, fMETData.getMET().phi());
   
+
   fHistoSplitter.fillShapeHistogramTriplet(hCtrlNBJetsAfterAllSelections, bIsGenuineTau, fBJetData.getNumberOfSelectedBJets());
   for (auto& p: fBJetData.getSelectedBJets()) {
     fHistoSplitter.fillShapeHistogramTriplet(hCtrlBJetPtAfterAllSelections, bIsGenuineTau, p.pt());
@@ -716,13 +740,15 @@ void CommonPlots::fillControlPlotsForQCDShapeUncertainty(const Event& event,
                                                          const AngularCutsBackToBack::Data& collinearAngularCutsData,
                                                          const BJetSelection::Data& bJetData,
                                                          const METSelection::Data& metData,
-                                                         const AngularCutsCollinear::Data& backToBackAngularCutsData) {
+                                                         const AngularCutsCollinear::Data& backToBackAngularCutsData,
+							 const MVASelection::Data& mvaData) {
   fillControlPlotsAfterTopologicalSelections(event);
   // Note that the following methods store the data object as members
   fillControlPlotsAtAngularCutsCollinear(event, collinearAngularCutsData);
   fillControlPlotsAtMETSelection(event, metData);
   fillControlPlotsAtBtagging(event, bJetData);
   fillControlPlotsAtAngularCutsBackToBack(event, backToBackAngularCutsData);
+  fillControlPlotsAtMVASelection(event,mvaData);
   // Fill plots after final selection
   fillControlPlotsAfterAllSelections(event);
 }

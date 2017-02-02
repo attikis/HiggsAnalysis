@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-dataEras = ["2016"]
+dataEras = ["2016D"]
 #dataEras = ["2015B","2015C"]
 searchModes = ["80to1000"]
 
@@ -15,8 +15,31 @@ if len(sys.argv) < 2:
 from HiggsAnalysis.NtupleAnalysis.main import Process, PSet, Analyzer
 from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import obtainAnalysisSuffix
 process = Process("QCDMeasurement"+obtainAnalysisSuffix(sys.argv))
-process.addDatasetsFromMulticrab(sys.argv[1], blacklist=["ChargedHiggs"])
-
+process.addDatasetsFromMulticrab(sys.argv[1], 
+blacklist = ["ChargedHiggs_TTToHplusBWB",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_180",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_250",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_300",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_350",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_400",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_500",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_750",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_800",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_1000",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_2000",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_3000",
+        "ChargedHiggs_HplusTB_HplusToTauNu_M_200",
+        "Tau_Run2016C_23Sep2016_v1_275420_276283",
+        "Tau_Run2016D_23Sep2016_v1_276315_276437",
+        "Tau_Run2016D_23Sep2016_v1_276453_276811",
+        "Tau_Run2016E_23Sep2016_v1_276824_277420",
+        "Tau_Run2016F_23Sep2016_v1_277816_278800",
+        "Tau_Run2016F_23Sep2016_v1_278801_278808",
+        "Tau_Run2016G_23Sep2016_v1_278816_280385",
+        "Tau_Run2016H_PromptReco_v1_281010_281202",
+        "Tau_Run2016H_PromptReco_v2_281207_284035",
+        "Tau_Run2016H_PromptReco_v3_271036_284044"
+])
 # Add config
 from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import allSelections,applyAnalysisCommandLineOptions,setAngularCutsWorkingPoint
 # Enable genuine tau histograms for common plots (needed for calculating N_QCD)
@@ -55,7 +78,7 @@ builder = AnalysisBuilder("QCDMeasurement",
                           searchModes,
                           #### Options ####
                           usePUreweighting=True,
-                          doSystematicVariations=True,
+                          doSystematicVariations=False,
                           )
 #builder.addVariation("METSelection.METCutValue", [100,120,140])
 #builder.addVariation("AngularCutsBackToBack.workingPoint", ["Loose","Medium","Tight"])

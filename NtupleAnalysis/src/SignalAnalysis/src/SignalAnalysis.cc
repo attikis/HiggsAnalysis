@@ -7,6 +7,7 @@
 #include "EventSelection/interface/TransverseMass.h"
 
 #include "TDirectory.h"
+#include <iostream>
 
 class SignalAnalysis: public BaseSelector {
 public:
@@ -44,6 +45,8 @@ private:
   METSelection fMETSelection;
   AngularCutsBackToBack fAngularCutsBackToBack;
   //  JetCorrelations fJetCorrelations;
+  MVASelection fMVASelection;
+
   Count cSelected;
     
   // Non-common histograms
@@ -88,6 +91,8 @@ SignalAnalysis::SignalAnalysis(const ParameterSet& config, const TH1* skimCounte
                 fEventCounter, fHistoWrapper, &fCommonPlots, ""),
 // fJetCorrelations(config.getParameter<ParameterSet>("JetCorrelations"),
 //                fEventCounter, fHistoWrapper, &fCommonPlots, ""),
+  fMVASelection(config.getParameter<ParameterSet>("MVASelection"),
+		fEventCounter, fHistoWrapper, &fCommonPlots,"MVASelection",""),
   cSelected(fEventCounter.addCounter("Selected events"))
 { }
 
@@ -104,6 +109,8 @@ void SignalAnalysis::book(TDirectory *dir) {
   fBJetSelection.bookHistograms(dir);
   fMETSelection.bookHistograms(dir);
   fAngularCutsBackToBack.bookHistograms(dir);
+  fMVASelection.bookHistograms(dir);
+
   //  fJetCorrelations.bookHistograms(dir);
   // Book non-common histograms
   //hExample =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kInformative, dir, "example pT", "example pT", 40, 0, 400);
@@ -111,6 +118,7 @@ void SignalAnalysis::book(TDirectory *dir) {
   //  hTransverseMass_WRegion =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, dir, "TransverseMass_WRegion", "TransverseMass_WRegion", 200, 0, 800);
   hTransverseMass_ttRegion_bbcuts =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, dir, "TransverseMass_ttRegion_bbcuts", "TransverseMass_ttRegion_bbcuts", 200, 0, 800);
   //  hTransverseMass_WRegion_bbcuts =  fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, dir, "TransverseMass_WRegion", "TransverseMass_WRegion_bbcuts", 200, 0, 800);
+
 }
 
 void SignalAnalysis::setupBranches(BranchManager& branchManager) {
@@ -252,6 +260,10 @@ void SignalAnalysis::process(Long64_t entry) {
     //    hTransverseMass_WRegion_bbcuts->Fill(myTransverseMass);
   }
 
+  const MVASelection::Data mvaData = fMVASelection.analyze(fEvent, *fMVASelection.reader);
+  if(!mvaData.passedSelection())
+//    std::cout<<mvaData.mvaValue()<<std::endl;
+    return;
 
 //====== All cuts passed
   cSelected.increment();

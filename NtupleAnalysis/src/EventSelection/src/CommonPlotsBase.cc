@@ -25,6 +25,8 @@ void CommonPlotsBase::fillControlPlotsAtBtagging(const Event& event, const BJetS
 void CommonPlotsBase::fillControlPlotsAtAngularCutsBackToBack(const Event& event, const AngularCutsBackToBack::Data& data) { }
 //void CommonPlotsBase::fillControlPlotsAtTopSelection(const Event& event, const TopSelectionManager::Data& data) { }
 //void CommonPlotsBase::fillControlPlotsAtEvtTopology(const Event& event, const EvtTopology::Data& data) { }
+void CommonPlotsBase::fillControlPlotsAtMVASelection(const Event& event, const MVASelection::Data& data) { }
+
 
 //===== unique filling methods (to be called AFTER return statement from analysis routine)
 void CommonPlotsBase::fillControlPlotsAfterAntiIsolatedTauSelection(const Event& event, const TauSelection::Data& data) { }
