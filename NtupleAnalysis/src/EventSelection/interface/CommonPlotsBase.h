@@ -32,6 +32,8 @@ public:
   virtual void fillControlPlotsAtAngularCutsBackToBack(const Event& event, const AngularCutsBackToBack::Data& data);
   //virtual void fillControlPlotsAtTopSelection(const Event& event, const TopSelectionManager::Data& data);
   //virtual void fillControlPlotsAtEvtTopology(const Event& event, const EvtTopology::Data& data);
+  virtual void fillControlPlotsAtMVASelection(const Event& event, const MVASelection::Data& data);
+
   
   //===== unique filling methods (to be called AFTER return statement from analysis routine)
   virtual void fillControlPlotsAfterTrigger(const Event& event);

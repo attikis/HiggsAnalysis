@@ -101,6 +101,11 @@ enableOptimizationPlots = True, # 2D histograms for optimizing angular cuts
         cutValueJet4 = 0.0,   # Cut value in degrees (circular cut)
 )
  
+#====== MVA selection
+mvaSelection = PSet(
+	MVACut=0.2,
+)
+
 #====== B-jet selection
 bjetSelection = PSet(
               jetPtCut = 30.0,
@@ -195,6 +200,7 @@ commonPlotsOptions = PSet(
              htBins = PSet(nBins=240, axisMin=0., axisMax=2400.), 
        bjetDiscrBins = PSet(nBins=20, axisMin=-1.0, axisMax=1.0),
    angularCuts1DBins = PSet(nBins=52, axisMin=0., axisMax=260.),
+	     mvaBins = PSet(nBins=100, axisMin=-1.0, axisMax=1.0),
          topMassBins = PSet(nBins=60, axisMin=0., axisMax=600.),
            WMassBins = PSet(nBins=60, axisMin=0., axisMax=300.),
               mtBins = PSet(nBins=1000, axisMin=0., axisMax=5000.), # 5 GeV bin width for tail fitter
@@ -216,6 +222,7 @@ allSelections = PSet(
          BJetSelection = bjetSelection,
           METSelection = metSelection,
  AngularCutsBackToBack = angularCutsBackToBack,
+ 	  MVASelection = mvaSelection,
        JetCorrelations = jetCorrelations,
            CommonPlots = commonPlotsOptions,
 )

@@ -983,6 +983,18 @@ ControlPlots.append(ControlPlotInput(
     flowPlotCaption  = "^{}R_{bb}^{min}", # Leave blank if you don't want to include the item to the selection flow plot
 ))
 
+ControlPlots.append(ControlPlotInput(
+    title            = "MVA",
+    histoName        = "MVA",
+    details          = { "xlabel": "MVA",
+                         "ylabel": "Events",
+                         "divideByBinWidth": False,
+                         "unit": " ",
+                         "log": False,
+                         "opts": {"ymin": 0.0} },
+    flowPlotCaption  = "MVA Cut",
+))
+
 if OptionMassShape =="TransverseMass":
     ControlPlots.append(ControlPlotInput(title="TransverseMass",
         histoName="shapeTransverseMass",

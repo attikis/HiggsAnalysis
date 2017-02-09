@@ -28,9 +28,8 @@ TESTDIR := $(BASEDIR)/test
 ROOTINC := $(shell root-config --cflags)
 #ROOTLIBDIR := $(shell root-config --libdir)
 ROOTLIBS := $(shell root-config --glibs)
-
 # Compile flags
-CXXFLAGS := -O2 -Wall -Wno-unused-local-typedefs -fPIC -D_REENTRANT $(ROOTINC) $(INC)
+CXXFLAGS := -O2 -Wall -Wno-unused-local-typedefs -fPIC -D_REENTRANT $(ROOTINC) $(INC) 
 CXXEXTRAFLAGS := 
 
 GCC_NEED_ZX := $(shell expr `gcc -dumpversion | cut -f2 -d.` \<= 6)
@@ -41,7 +40,7 @@ else
 endif
 
 # Link flags
-LDFLAGS := $(ROOTLIBS) -lProof -lGenVector -lTreePlayer -Llib
+LDFLAGS := $(ROOTLIBS) -lProof -lGenVector -lTreePlayer -Llib -lTMVA
 
 # Debugging
 ifeq "$(DEBUG)" "yes"
