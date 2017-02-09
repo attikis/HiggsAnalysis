@@ -471,7 +471,10 @@ class DatacardColumn():
                 myDsetRootHisto = myShapeExtractor.extractQCDPurityHistogram(self, dsetMgr, self.getFullShapeHistoName())
                 self._rateResult.setPurityHistogram(myDsetRootHisto.getHistogram())
                 myAveragePurity = myShapeExtractor.extractQCDPurityAsValue(myRateHistograms[0], self.getPurityHistogram())
-                #print "*** Average QCD purity", myAveragePurity
+                print "*** Average QCD purity", myAveragePurity
+		if(myAveragePurity==1.0):
+			myAveragePurity=0.99
+		
         except:
             print "ERROR: It looks like the purity histogram does not exist!"
             raise
@@ -592,6 +595,7 @@ class DatacardColumn():
                                         if e.getId() == n.getId():
                                             if e.isQCDNuisance():
                                                 myResult = n.getResult().Clone()
+						#myAveragePurity=0.7
                                                 myResult.scale((1.0-myAverageCtrlPlotPurity) / (1.0 - myAveragePurity))
                                                 #print n._exId, n.getResult().getUncertaintyUp(), myAverageCtrlPlotPurity, myResult.getUncertaintyUp()
                                 if not isinstance(h.getRootHisto(),ROOT.TH2):

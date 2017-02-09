@@ -255,7 +255,7 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
 //  output.setValue(reader->EvaluateMVA("BDTG method"));
   output.setValue(reader->EvaluateMVA("DNN method"));
   hMVAValueAll->Fill(output.mvaValue());
-  passedMVA=(output.mvaValue()>0.2);
+  passedMVA=(output.mvaValue()>0.6);
   if(passedMVA){
     output.setTrue();
     cPassedMVASelection.increment();

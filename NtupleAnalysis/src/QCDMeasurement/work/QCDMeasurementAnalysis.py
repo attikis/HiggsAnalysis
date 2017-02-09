@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-dataEras = ["2016D"]
+dataEras = ["2016"]
 #dataEras = ["2015B","2015C"]
 searchModes = ["80to1000"]
 
@@ -16,7 +16,6 @@ from HiggsAnalysis.NtupleAnalysis.main import Process, PSet, Analyzer
 from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import obtainAnalysisSuffix
 process = Process("QCDMeasurement"+obtainAnalysisSuffix(sys.argv))
 process.addDatasetsFromMulticrab(sys.argv[1], 
-<<<<<<< HEAD
 blacklist=["ChargedHiggs",
         "Tau_Run2016C_23Sep2016_v1_275420_276283",
         "Tau_Run2016D_23Sep2016_v1_276315_276437",

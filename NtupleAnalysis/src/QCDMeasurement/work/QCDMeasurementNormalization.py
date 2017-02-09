@@ -29,8 +29,8 @@ analysis = "QCDMeasurement"
 #==== Set rebin factor for normalization plots 
 # Histograms are generated with 1 GeV bin width, i.e. putting 10 here means 
 # that the fit is done on 10 GeV bins
-_rebinFactor = 10 
-#_rebinFactor = 20 # changing to this can solve fitting problems by smoothing fluctuations
+#_rebinFactor = 10 
+_rebinFactor = 20 # changing to this can solve fitting problems by smoothing fluctuations
 
 print "Analysis name:", analysis
 
