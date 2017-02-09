@@ -1,7 +1,7 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
-Path = 'limits'
+Path='./limits'
 LightAnalysis = not True # set True for light H+
 
 
@@ -15,14 +15,18 @@ else:
     HeavyMassPoints=[220]
 
 #LightMassPoints=[120] # for control plots
-#HeavyMassPoints=[500] # for control plots
+HeavyMassPoints=[220] # for control plots
 
 MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
 ##############################################################################
 # Options
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
+<<<<<<< HEAD
 OptionDoControlPlots=  True #FIXME: if you want control plots, switch this to true!
+=======
+OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+>>>>>>> master
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
@@ -203,8 +207,14 @@ myQCDSystematics+=["CMS_scale_ttbar_forQCD","CMS_pdf_ttbar_forQCD","CMS_mass_ttb
 #approximation 2: myLeptonVetoSystematics neglected for QCD
 
 if OptionIncludeSystematics: 
+<<<<<<< HEAD
     myQCDSystematics += ["CMS_eff_t_highpt"]
     myQCDSystematics += ["CMS_Hptntj_QCDbkg_templateFit","CMS_Hptntj_QCDkbg_metshape"] #these can be used only if QCDMeasurement has been run with systematics
+=======
+    if not LightAnalysis:
+        myQCDSystematics += ["CMS_eff_t_highpt"]
+    myQCDSystematics += ["CMS_Hptntj_FakeTauBG_templateFit","CMS_Hptntj_QCDkbg_metshape"] #these can be used only if QCDMeasurement has been run with systematics
+>>>>>>> master
 
 labelPrefix="CMS_Hptntj_"
 if LightAnalysis:
