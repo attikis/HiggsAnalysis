@@ -41,15 +41,15 @@ blacklist = ["ChargedHiggs_TTToHplusBWB",
 #        "DYJetsToLL_M_50_ext",
         "DYJetsToQQ_HT180",
 #	"DYJetsToLL_M_50",
-        "ST_tW_antitop_5f_inclusiveDecays_ext",
-        "ST_tW_top_5f_inclusiveDecays_ext",
-        "ST_tW_antitop_5f_inclusiveDecays",
-        "ST_tW_top_5f_inclusiveDecays",
-        "ST_t_channel_antitop_4f_inclusiveDecays",
-        "ST_t_channel_top_4f_inclusiveDecays",
-        "WJetsToLNu_ext",
-        "WZ_ext",
-        "WZ"
+#        "ST_tW_antitop_5f_inclusiveDecays_ext",
+#        "ST_tW_top_5f_inclusiveDecays_ext",
+#        "ST_tW_antitop_5f_inclusiveDecays",
+#        "ST_tW_top_5f_inclusiveDecays",
+#        "ST_t_channel_antitop_4f_inclusiveDecays",
+#        "ST_t_channel_top_4f_inclusiveDecays",
+#        "WJetsToLNu_ext",
+#        "WZ_ext",
+#        "WZ"
 ]
 
 if lightAnalysis:
