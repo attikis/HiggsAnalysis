@@ -13,14 +13,14 @@ else:
     HeavyMassPoints=[180,200,220,250,300,350,400,500,750,800,1000,2000,3000]
 
 #LightMassPoints=[120] # for control plots
-HeavyMassPoints=[220] # for control plots
-
+HeavyMassPoints=[180,220,250,300] # for control plots
+#HeavyMassPoints=[220]
 MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
 ##############################################################################
 # Options
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+OptionDoControlPlots=not True #FIXME: if you want control plots, switch this to true!
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 BlindAnalysis=True
 OptionBlindThreshold=None # If signal exceeds this fraction of expected events, data is blinded; set to None to disable
@@ -247,14 +247,14 @@ else:
                                 nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
                                   +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
                                   +["CMS_scale_Wjets","CMS_pdf_Wjets","lumi_13TeV"]))
-    DataGroups.append(DataGroup(label=labelPrefix+"singleTop_t_genuine", landsProcess=5,
-                                shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus,
-                                datasetType="Embedding",
-                                datasetDefinition="SingleTop",
-                                validMassPoints=MassPoints,
-                                nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
-                                  +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
-                                  +["CMS_scale_singleTop","CMS_pdf_singleTop","lumi_13TeV"]))
+#    DataGroups.append(DataGroup(label=labelPrefix+"singleTop_t_genuine", landsProcess=5,
+#                                shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus,
+#                                datasetType="Embedding",
+#                                datasetDefinition="SingleTop",
+#                                validMassPoints=MassPoints,
+#                                nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
+#                                  +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
+#                                  +["CMS_scale_singleTop","CMS_pdf_singleTop","lumi_13TeV"]))
     DataGroups.append(DataGroup(label=labelPrefix+"DY_t_genuine", landsProcess=6,
                                 shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus,
                                 datasetType="Embedding",
@@ -264,14 +264,14 @@ else:
                                 nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
                                   +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
                                   +["CMS_scale_DY","CMS_pdf_DY","lumi_13TeV"]))
-    DataGroups.append(DataGroup(label=labelPrefix+"VV_t_genuine", landsProcess=7,
-                                shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus, 
-                                datasetType="Embedding", 
-                                datasetDefinition="Diboson",
-                                validMassPoints=MassPoints,
-                                nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
-                                  +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
-                                  +["CMS_scale_VV","CMS_pdf_VV","lumi_13TeV"]))
+#    DataGroups.append(DataGroup(label=labelPrefix+"VV_t_genuine", landsProcess=7,
+#                                shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus, 
+#                                datasetType="Embedding", 
+#                                datasetDefinition="Diboson",
+#                                validMassPoints=MassPoints,
+#                                nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
+#                                  +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
+#                                  +["CMS_scale_VV","CMS_pdf_VV","lumi_13TeV"]))
     # Merge EWK as one column or not
     #if not OptionSeparateFakeTtbarFromFakeBackground:
         #mergeColumnsByLabel.append({"label": "EWKnontt_faketau", "mergeList": ["tt_EWK_faketau","W_EWK_faketau","t_EWK_faketau","DY_EWK_faketau","VV_EWK_faketau"]})

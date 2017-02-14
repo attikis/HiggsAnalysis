@@ -472,9 +472,8 @@ class DatacardColumn():
                 self._rateResult.setPurityHistogram(myDsetRootHisto.getHistogram())
                 myAveragePurity = myShapeExtractor.extractQCDPurityAsValue(myRateHistograms[0], self.getPurityHistogram())
                 print "*** Average QCD purity", myAveragePurity
-		if(myAveragePurity==1.0){
+		if myAveragePurity==1.0:
 			myAveragePurity=0.99
-		}
         except:
             print "ERROR: It looks like the purity histogram does not exist!"
             raise

@@ -16,9 +16,9 @@ from HiggsAnalysis.NtupleAnalysis.main import Process, PSet, Analyzer
 from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import obtainAnalysisSuffix 
 process = Process("SignalAnalysis"+obtainAnalysisSuffix(sys.argv))
 blacklist = ["ChargedHiggs_TTToHplusBWB",
-        "ChargedHiggs_HplusTB_HplusToTauNu_M_180",
-        "ChargedHiggs_HplusTB_HplusToTauNu_M_250",
-        "ChargedHiggs_HplusTB_HplusToTauNu_M_300",
+#        "ChargedHiggs_HplusTB_HplusToTauNu_M_180",
+#        "ChargedHiggs_HplusTB_HplusToTauNu_M_250",
+#        "ChargedHiggs_HplusTB_HplusToTauNu_M_300",
         "ChargedHiggs_HplusTB_HplusToTauNu_M_350",
         "ChargedHiggs_HplusTB_HplusToTauNu_M_400",
         "ChargedHiggs_HplusTB_HplusToTauNu_M_500",
@@ -41,15 +41,15 @@ blacklist = ["ChargedHiggs_TTToHplusBWB",
 #        "DYJetsToLL_M_50_ext",
         "DYJetsToQQ_HT180",
 #	"DYJetsToLL_M_50",
-#        "ST_tW_antitop_5f_inclusiveDecays_ext",
-#        "ST_tW_top_5f_inclusiveDecays_ext",
-#        "ST_tW_antitop_5f_inclusiveDecays",
-#        "ST_tW_top_5f_inclusiveDecays",
-#        "ST_t_channel_antitop_4f_inclusiveDecays",
-#        "ST_t_channel_top_4f_inclusiveDecays",
-#        "WJetsToLNu_ext",
-#        "WZ_ext",
-#        "WZ"
+        "ST_tW_antitop_5f_inclusiveDecays_ext",
+        "ST_tW_top_5f_inclusiveDecays_ext",
+        "ST_tW_antitop_5f_inclusiveDecays",
+        "ST_tW_top_5f_inclusiveDecays",
+        "ST_t_channel_antitop_4f_inclusiveDecays",
+        "ST_t_channel_top_4f_inclusiveDecays",
+        "WJetsToLNu_ext",
+        "WZ_ext",
+        "WZ"
 ]
 
 if lightAnalysis:
