@@ -62,9 +62,9 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   Float_t Jet3_pt, Jet3_phi, Jet3_eta, Jet3_IncSecVer_Btag, Jet3_MVA_Btag;
   Float_t nTaus, nJets, nMuons, nElectrons;
 */
-  reader->AddVariable("R_bb",&R_bb);
+//  reader->AddVariable("R_bb",&R_bb);
   reader->AddVariable("MET",&MET);
-  reader->AddVariable("TransMass",&TransMass);
+//  reader->AddVariable("TransMass",&TransMass);
   reader->AddVariable("TransMass_jj",&TransMass_jj);
   reader->AddVariable("TransMass_muEt",&TransMass_muEt);
 
@@ -104,20 +104,20 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("Jet1_pt",&Jet1_pt);
   reader->AddVariable("Jet1_phi",&Jet1_phi);
   reader->AddVariable("Jet1_eta",&Jet1_eta);
-  reader->AddVariable("Jet1_IncSecVer_Btag",&Jet1_IncSecVer_Btag);
-  reader->AddVariable("Jet1_MVA_Btag",&Jet1_MVA_Btag);
+//  reader->AddVariable("Jet1_IncSecVer_Btag",&Jet1_IncSecVer_Btag);
+//  reader->AddVariable("Jet1_MVA_Btag",&Jet1_MVA_Btag);
 
   reader->AddVariable("Jet2_pt",&Jet2_pt);
   reader->AddVariable("Jet2_phi",&Jet2_phi);
   reader->AddVariable("Jet2_eta",&Jet2_eta);
-  reader->AddVariable("Jet2_IncSecVer_Btag",&Jet2_IncSecVer_Btag);
-  reader->AddVariable("Jet2_MVA_Btag",&Jet2_MVA_Btag);
+//  reader->AddVariable("Jet2_IncSecVer_Btag",&Jet2_IncSecVer_Btag);
+//  reader->AddVariable("Jet2_MVA_Btag",&Jet2_MVA_Btag);
 
   reader->AddVariable("Jet3_pt",&Jet3_pt);
   reader->AddVariable("Jet3_phi",&Jet3_phi);
   reader->AddVariable("Jet3_eta",&Jet3_eta);
-  reader->AddVariable("Jet3_IncSecVer_Btag",&Jet3_IncSecVer_Btag);
-  reader->AddVariable("Jet3_MVA_Btag",&Jet3_MVA_Btag);
+//  reader->AddVariable("Jet3_IncSecVer_Btag",&Jet3_IncSecVer_Btag);
+//  reader->AddVariable("Jet3_MVA_Btag",&Jet3_MVA_Btag);
 
   reader->AddVariable("Electron_pt",&Electron_pt);
   reader->AddVariable("Electron_phi",&Electron_phi);

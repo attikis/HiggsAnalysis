@@ -15,14 +15,14 @@ else:
     HeavyMassPoints=[220]
 
 #LightMassPoints=[120] # for control plots
-HeavyMassPoints=[220] # for control plots
+HeavyMassPoints=[180,220,250,300] # for control plots
 
 MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
 ##############################################################################
 # Options
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+OptionDoControlPlots= not True #FIXME: if you want control plots, switch this to true!
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
