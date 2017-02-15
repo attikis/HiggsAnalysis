@@ -1,7 +1,7 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
-Path='./limits'
+Path='./limits_noMVA'
 LightAnalysis = not True # set True for light H+
 
 # Set mass points
@@ -13,7 +13,7 @@ else:
     HeavyMassPoints=[180,200,220,250,300,350,400,500,750,800,1000,2000,3000]
 
 #LightMassPoints=[120] # for control plots
-HeavyMassPoints=[180,220,250,300] # for control plots
+HeavyMassPoints=[180,220,250,300,400,500] # for control plots
 #HeavyMassPoints=[220]
 MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
