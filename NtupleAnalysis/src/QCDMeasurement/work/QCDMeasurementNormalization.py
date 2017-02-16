@@ -112,6 +112,9 @@ def main(argv, dsetMgr, moduleInfoString):
     #myMergeList.append("WJetsHT")
     myMergeList.append("WJets")
     myMergeList.append("DYJetsToLL")
+#    if "DYJetsToQQ" in dsetMgr.getMCDatasetNames():
+    myMergeList.append("DYJetsToQQHT")
+
 
     if "SingleTop" in dsetMgr.getMCDatasetNames():
         myMergeList.append("SingleTop")
