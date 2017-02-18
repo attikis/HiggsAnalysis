@@ -1,7 +1,7 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
-Path='./limits_noMVA'
+Path='./limits_NoMVA_All'
 LightAnalysis = not True # set True for light H+
 
 # Set mass points
