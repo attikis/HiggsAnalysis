@@ -51,22 +51,15 @@ MVASelection::~MVASelection() {
 
 void MVASelection::initialize(const ParameterSet& config, const std::string& postfix) {
   reader = new TMVA::Reader( "!Color:Silent" );
-/*
-  Float_t R_bb, MET, TransMass, TransMass_jj, TransMass_muEt;
-  Float_t tjDist, jjDist, mujDist, ejDist;
-  Float_t SelectedTau_pt, SelectedTau_eta, SelectedTau_phi;
-  Float_t Muon_pt, Muon_eta, Muon_phi;
-  Float_t Electron_pt, Electron_eta, Electron_phi;
-  Float_t Jet1_pt, Jet1_phi, Jet1_eta, Jet1_IncSecVer_Btag, Jet1_MVA_Btag;
-  Float_t Jet2_pt, Jet2_phi, Jet2_eta, Jet2_IncSecVer_Btag, Jet2_MVA_Btag;
-  Float_t Jet3_pt, Jet3_phi, Jet3_eta, Jet3_IncSecVer_Btag, Jet3_MVA_Btag;
-  Float_t nTaus, nJets, nMuons, nElectrons;
-*/
-//  reader->AddVariable("R_bb",&R_bb);
+  reader->AddVariable("R_bb",&R_bb);
   reader->AddVariable("MET",&MET);
-//  reader->AddVariable("TransMass",&TransMass);
+  reader->AddVariable("TransMass",&TransMass);
   reader->AddVariable("TransMass_jj",&TransMass_jj);
   reader->AddVariable("TransMass_muEt",&TransMass_muEt);
+
+  reader->AddVariable("pv_x",&pv_x);
+  reader->AddVariable("pv_y",&pv_y);
+  reader->AddVariable("pv_z",&pv_z);
 
   reader->AddVariable("tj1Dist",&tj1Dist);
   reader->AddVariable("tj2Dist",&tj2Dist);
@@ -93,12 +86,9 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("j1etaj3eta",&j1etaj3eta);
   reader->AddVariable("j2etaj3eta",&j2etaj3eta);
 
-
-//  reader->AddVariable("nJets",&nJets);
-
-  reader->AddVariable("SelectedTau_pt",&SelectedTau_pt);
-  reader->AddVariable("SelectedTau_phi",&SelectedTau_phi);
-  reader->AddVariable("SelectedTau_eta",&SelectedTau_eta);
+  reader->AddVariable("Tau_pt",&Tau_pt);
+  reader->AddVariable("Tau_phi",&Tau_phi);
+  reader->AddVariable("Tau_eta",&Tau_eta);
   reader->AddVariable("nTaus",&nTaus);
 
   reader->AddVariable("Jet1_pt",&Jet1_pt);
@@ -119,6 +109,8 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
 //  reader->AddVariable("Jet3_IncSecVer_Btag",&Jet3_IncSecVer_Btag);
 //  reader->AddVariable("Jet3_MVA_Btag",&Jet3_MVA_Btag);
 
+  reader->AddVariable("nJets",&nJets);
+
   reader->AddVariable("Electron_pt",&Electron_pt);
   reader->AddVariable("Electron_phi",&Electron_phi);
   reader->AddVariable("Electron_eta",&Electron_eta);
@@ -129,8 +121,8 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("Muon_eta",&Muon_eta);
   reader->AddVariable("nMuons",&nMuons);
 
-//  reader->BookMVA( "BDTG method","MyClassification_BDTG.weights.xml");
-  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
+  reader->BookMVA("BDTG method","MyClassification_BDTG.weights.xml");
+//  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
 
 }
 
@@ -161,9 +153,9 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
   bool passedMVA = false;
   Data output;
 
-  SelectedTau_pt=event.taus()[0].pt();
-  SelectedTau_eta=event.taus()[0].eta();
-  SelectedTau_phi=event.taus()[0].phi();
+  Tau_pt=event.taus()[0].pt();
+  Tau_eta=event.taus()[0].eta();
+  Tau_phi=event.taus()[0].phi();
   nTaus=event.taus().size();
 
   nMuons=event.muons().size();
@@ -172,9 +164,9 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
     Muon_eta=event.muons()[0].eta();
     Muon_phi=event.muons()[0].phi();
   }else{
-    Muon_pt=0;
-    Muon_eta=0;
-    Muon_phi=0;
+    Muon_pt=-99;
+    Muon_eta=-99;
+    Muon_phi=-99;
   }
 
   nElectrons=event.electrons().size();
@@ -183,27 +175,27 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
     Electron_eta=event.electrons()[0].eta();
     Electron_phi=event.electrons()[0].phi();
   }else{
-    Electron_pt=0;
-    Electron_eta=0;
-    Electron_phi=0;
+    Electron_pt=-99;
+    Electron_eta=-99;
+    Electron_phi=-99;
   }
   Jet1_pt=event.jets()[0].pt();
   Jet1_eta=event.jets()[0].eta();
   Jet1_phi=event.jets()[0].phi();
-  Jet1_IncSecVer_Btag=event.jets()[0].pfCombinedInclusiveSecondaryVertexV2BJetTags();
-  Jet1_MVA_Btag=event.jets()[0].pfCombinedMVAV2BJetTags();
+//  Jet1_IncSecVer_Btag=event.jets()[0].pfCombinedInclusiveSecondaryVertexV2BJetTags();
+//  Jet1_MVA_Btag=event.jets()[0].pfCombinedMVAV2BJetTags();
 
   Jet2_pt=event.jets()[1].pt();
   Jet2_eta=event.jets()[1].eta();
   Jet2_phi=event.jets()[1].phi();
-  Jet2_IncSecVer_Btag=event.jets()[1].pfCombinedInclusiveSecondaryVertexV2BJetTags();
-  Jet2_MVA_Btag=event.jets()[1].pfCombinedMVAV2BJetTags();
+//  Jet2_IncSecVer_Btag=event.jets()[1].pfCombinedInclusiveSecondaryVertexV2BJetTags();
+//  Jet2_MVA_Btag=event.jets()[1].pfCombinedMVAV2BJetTags();
 
   Jet3_pt=event.jets()[2].pt();
   Jet3_eta=event.jets()[2].eta();
   Jet3_phi=event.jets()[2].phi();
-  Jet3_IncSecVer_Btag=event.jets()[2].pfCombinedInclusiveSecondaryVertexV2BJetTags();
-  Jet3_MVA_Btag=event.jets()[2].pfCombinedMVAV2BJetTags();
+//  Jet3_IncSecVer_Btag=event.jets()[2].pfCombinedInclusiveSecondaryVertexV2BJetTags();
+//  Jet3_MVA_Btag=event.jets()[2].pfCombinedMVAV2BJetTags();
 
   nJets=event.jets().size();
 
@@ -211,22 +203,31 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
   met_x=event.met().x();
   met_y=event.met().y();
   MET=sqrt(pow(met_x,2)+pow(met_y,2));
+  double METphi=atan2(met_y,met_x);
 
-  TransMass=sqrt(2*SelectedTau_pt*MET*(1-cos(atan2(met_y,met_x)+SelectedTau_phi)));
+  TransMass=sqrt(2*Tau_pt*MET*(1-cos(METphi+Tau_phi)));
   TransMass_jj=sqrt(2*Jet1_pt*Jet2_pt*(1-cos(Jet2_phi+Jet1_phi)));
-  TransMass_muEt=sqrt(2*Muon_pt*MET*(1-cos(atan2(met_y,met_x)+Muon_phi)));
+  if(nMuons>0){
+  	TransMass_muEt=sqrt(2*Muon_pt*MET*(1-cos(METphi+Muon_phi)));
+  }else{
+	TransMass_muEt=-99;
+  }
 
-  tj1Dist=sqrt(pow(SelectedTau_phi-Jet1_phi,2)+pow(SelectedTau_eta-Jet1_eta,2));
-  tj2Dist=sqrt(pow(SelectedTau_phi-Jet2_phi,2)+pow(SelectedTau_eta-Jet2_eta,2));
-  tj3Dist=sqrt(pow(SelectedTau_phi-Jet3_phi,2)+pow(SelectedTau_eta-Jet3_eta,2));
+  pv_x=event.vertexInfo().pvX();
+  pv_y=event.vertexInfo().pvY();
+  pv_z=event.vertexInfo().pvZ();
+
+  tj1Dist=sqrt(pow(Tau_phi-Jet1_phi,2)+pow(Tau_eta-Jet1_eta,2));
+  tj2Dist=sqrt(pow(Tau_phi-Jet2_phi,2)+pow(Tau_eta-Jet2_eta,2));
+  tj3Dist=sqrt(pow(Tau_phi-Jet3_phi,2)+pow(Tau_eta-Jet3_eta,2));
 
   j1j2Dist=sqrt(pow(Jet2_phi-Jet1_phi,2)+pow(Jet2_eta-Jet1_eta,2));
   j1j3Dist=sqrt(pow(Jet3_phi-Jet1_phi,2)+pow(Jet3_eta-Jet1_eta,2));  
   j2j3Dist=sqrt(pow(Jet2_phi-Jet3_phi,2)+pow(Jet2_eta-Jet3_eta,2));
 
-  tetaj1eta=SelectedTau_eta*Jet1_eta;
-  tetaj1eta=SelectedTau_eta*Jet2_eta;
-  tetaj1eta=SelectedTau_eta*Jet3_eta;
+  tetaj1eta=Tau_eta*Jet1_eta;
+  tetaj1eta=Tau_eta*Jet2_eta;
+  tetaj1eta=Tau_eta*Jet3_eta;
 
   j1etaj2eta=Jet1_eta*Jet2_eta;
   j1etaj3eta=Jet1_eta*Jet3_eta;
@@ -238,24 +239,25 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
     muj2Dist=sqrt(pow(Muon_phi-Jet2_phi,2)+pow(Muon_eta-Jet2_eta,2));
     muj3Dist=sqrt(pow(Muon_phi-Jet3_phi,2)+pow(Muon_eta-Jet3_eta,2));
   }else{
-    muj1Dist=0;
-    muj2Dist=0;
-    muj3Dist=0;
+    muj1Dist=-99;
+    muj2Dist=-99;
+    muj3Dist=-99;
   }
   if(nElectrons>0){
     ej1Dist=sqrt(pow(Electron_phi-Jet1_phi,2)+pow(Electron_eta-Jet1_eta,2));
     ej2Dist=sqrt(pow(Electron_phi-Jet2_phi,2)+pow(Electron_eta-Jet2_eta,2));
     ej3Dist=sqrt(pow(Electron_phi-Jet3_phi,2)+pow(Electron_eta-Jet3_eta,2));
   }else{
-    ej1Dist=0;
-    ej2Dist=0;
-    ej3Dist=0;
+    ej1Dist=-99;
+    ej2Dist=-99;
+    ej3Dist=-99;
   }
 
-//  output.setValue(reader->EvaluateMVA("BDTG method"));
-  output.setValue(reader->EvaluateMVA("DNN method"));
+  output.setValue(reader->EvaluateMVA("BDTG method"));
+//  output.setValue(reader->EvaluateMVA("DNN method"));
   hMVAValueAll->Fill(output.mvaValue());
-  passedMVA=(output.mvaValue()>0.6);
+  passedMVA=(output.mvaValue()>0.3);
+//  passedMVA=(output.mvaValue()>0.4);
   if(passedMVA){
     output.setTrue();
     cPassedMVASelection.increment();

@@ -34,7 +34,7 @@ _rebinFactor = 10
 
 print "Analysis name:", analysis
 
-selectOnlyBins =["Inclusive"] #["1"]
+selectOnlyBins =[] #["Inclusive"] #["1"]
 
 def usage():
     print "\n"
@@ -113,7 +113,6 @@ def main(argv, dsetMgr, moduleInfoString):
     myMergeList.append("WJets")
     myMergeList.append("DYJetsToLL")
 #    if "DYJetsToQQ" in dsetMgr.getMCDatasetNames():
-    myMergeList.append("DYJetsToQQHT")
 
 
     if "SingleTop" in dsetMgr.getMCDatasetNames():
@@ -143,8 +142,8 @@ def main(argv, dsetMgr, moduleInfoString):
     for HISTONAME in comparisonList:
         BASELINETAUHISTONAME = "NormalizationMETBaselineTau"+HISTONAME+"/NormalizationMETBaselineTau"+HISTONAME
         INVERTEDTAUHISTONAME = "NormalizationMETInvertedTau"+HISTONAME+"/NormalizationMETInvertedTau"+HISTONAME
-        FITMIN = 0 #None
-        FITMAX = 400 #None
+        FITMIN = None #0 #None
+        FITMAX = None #400 #None
       
         #===== Infer binning information and labels
         histonames = dsetMgr.getDataset("Data").getDirectoryContent(COMBINEDHISTODIR+"/NormalizationMETBaselineTau"+HISTONAME)

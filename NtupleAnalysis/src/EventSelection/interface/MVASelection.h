@@ -62,13 +62,14 @@ public:
 
   TMVA::Reader *reader;
   Float_t R_bb, MET, TransMass, TransMass_jj, TransMass_muEt;
+  Float_t pv_x, pv_y, pv_z;
   Float_t tj1Dist,tj2Dist,tj3Dist;
   Float_t j1j2Dist,j1j3Dist,j2j3Dist;
   Float_t muj1Dist,muj2Dist,muj3Dist;
   Float_t ej1Dist,ej2Dist,ej3Dist;
   Float_t tetaj1eta,tetaj2eta,tetaj3eta;
   Float_t j1etaj2eta,j1etaj3eta,j2etaj3eta;
-  Float_t SelectedTau_pt, SelectedTau_eta, SelectedTau_phi;
+  Float_t Tau_pt, Tau_eta, Tau_phi;
   Float_t Muon_pt, Muon_eta, Muon_phi;
   Float_t Electron_pt, Electron_eta, Electron_phi;
   Float_t Jet1_pt, Jet1_phi, Jet1_eta, Jet1_IncSecVer_Btag, Jet1_MVA_Btag;
