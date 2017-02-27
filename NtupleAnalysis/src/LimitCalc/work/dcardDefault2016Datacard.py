@@ -24,8 +24,13 @@ MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
 ##############################################################################
 # Options
+<<<<<<< HEAD
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
 OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+=======
+OptionIncludeSystematics= True # Set to true if you produced multicrabs with doSystematics=True
+OptionDoControlPlots= not True #FIXME: if you want control plots, switch this to true!
+>>>>>>> slaurila/master
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
