@@ -61,7 +61,7 @@ public:
   Data silentAnalyze(const Event& event, TMVA::Reader& reader);
 
   TMVA::Reader *reader;
-  Float_t R_bb, MET, TransMass, TransMass_jj, TransMass_muEt;
+  Float_t R_bb,R_coll, MET, TransMass, TransMass_jj, TransMass_muEt;
   Float_t pv_x, pv_y, pv_z;
   Float_t tj1Dist,tj2Dist,tj3Dist;
   Float_t j1j2Dist,j1j3Dist,j2j3Dist;

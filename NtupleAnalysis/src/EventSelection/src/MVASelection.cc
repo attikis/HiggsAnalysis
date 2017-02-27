@@ -52,6 +52,7 @@ MVASelection::~MVASelection() {
 void MVASelection::initialize(const ParameterSet& config, const std::string& postfix) {
   reader = new TMVA::Reader( "!Color:Silent" );
   reader->AddVariable("R_bb",&R_bb);
+  reader->AddVariable("R_coll",&R_coll);
   reader->AddVariable("MET",&MET);
   reader->AddVariable("TransMass",&TransMass);
   reader->AddVariable("TransMass_jj",&TransMass_jj);
@@ -205,8 +206,32 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
   MET=sqrt(pow(met_x,2)+pow(met_y,2));
   double METphi=atan2(met_y,met_x);
 
+  double R_bb_min=99999;
+  double R_coll_min=99999;
+  std::vector<double> JetPhi;
+  JetPhi.push_back(event.jets()[0].phi());
+  JetPhi.push_back(event.jets()[1].phi());
+  JetPhi.push_back(event.jets()[2].phi());
+  JetPhi.push_back(event.jets()[3].phi());
+//  for(double phi:*JetPhi){
+  double phi=0;
+  for(int i = 0; i<4;i++){
+	phi=JetPhi[i];
+  	double apu_bb=sqrt(pow(METphi-phi,2)+pow(3.14-(Tau_phi-METphi),2));
+        double apu_coll=sqrt(pow(3.14-(METphi-phi),2)+pow(Tau_phi-METphi,2));
+        	if(apu_bb<R_bb_min){
+                	R_bb_min=apu_bb;
+                }
+                if(apu_coll<R_coll_min){
+                        R_coll_min=apu_coll;
+                }
+  }
+  R_bb=R_bb_min*2*TMath::Pi();
+  R_coll=R_coll_min*2*TMath::Pi();
+
   TransMass=sqrt(2*Tau_pt*MET*(1-cos(METphi+Tau_phi)));
   TransMass_jj=sqrt(2*Jet1_pt*Jet2_pt*(1-cos(Jet2_phi+Jet1_phi)));
+
   if(nMuons>0){
   	TransMass_muEt=sqrt(2*Muon_pt*MET*(1-cos(METphi+Muon_phi)));
   }else{
@@ -256,7 +281,7 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
   output.setValue(reader->EvaluateMVA("BDTG method"));
 //  output.setValue(reader->EvaluateMVA("DNN method"));
   hMVAValueAll->Fill(output.mvaValue());
-  passedMVA=(output.mvaValue()>0.3);
+  passedMVA=(output.mvaValue()>-0.3);
 //  passedMVA=(output.mvaValue()>0.4);
   if(passedMVA){
     output.setTrue();

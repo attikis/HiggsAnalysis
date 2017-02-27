@@ -25,7 +25,7 @@ blacklist=["ChargedHiggs",
 #        "Tau_Run2016F_23Sep2016_v1_278801_278808",
 #        "Tau_Run2016G_23Sep2016_v1_278816_280385",
         "Tau_Run2016H_PromptReco_v1_281010_281202",
-        "Tau_Run2016H_PromptReco_v2_281207_284035",
+#        "Tau_Run2016H_PromptReco_v2_281207_284035",
 #        "Tau_Run2016H_PromptReco_v3_271036_284044",
 #	"DYJetsToLL_M_50_ext",
 	"DYJetsToQQ_HT180",
@@ -55,15 +55,15 @@ allSelections.TauSelection.prongs = 1
 if lightAnalysis:
     allSelections.TauSelection.tauPtCut = 50.0 #uncomment for light H+ (default 60.0 for heavy H+)
     allSelections.METSelection.METCutValue = 80.0 #uncomment for light H+ (default 100.0 for heavy H+)
-allSelections.METSelection.METCutValue = 80.0
-allSelections.AngularCutsBackToBack.cutValueJet1 = 0.0
-allSelections.AngularCutsBackToBack.cutValueJet2 = 0.0
-allSelections.AngularCutsBackToBack.cutValueJet3 = 0.0
-allSelections.AngularCutsBackToBack.cutValueJet4 = 0.0
-#allSelections.AngularCutsCollinear.cutValueJet1 = 80.0
-#allSelections.AngularCutsCollinear.cutValueJet2 = 80.0
-#allSelections.AngularCutsCollinear.cutValueJet3 = 80.0
-#allSelections.AngularCutsCollinear.cutValueJet4 = 80.0
+#allSelections.METSelection.METCutValue = 80.0
+#allSelections.AngularCutsBackToBack.cutValueJet1 = 0.0
+#allSelections.AngularCutsBackToBack.cutValueJet2 = 0.0
+#allSelections.AngularCutsBackToBack.cutValueJet3 = 0.0
+#allSelections.AngularCutsBackToBack.cutValueJet4 = 0.0
+allSelections.AngularCutsCollinear.cutValueJet1 = 80.0
+allSelections.AngularCutsCollinear.cutValueJet2 = 80.0
+allSelections.AngularCutsCollinear.cutValueJet3 = 80.0
+allSelections.AngularCutsCollinear.cutValueJet4 = 80.0
 
 #allSelections.TauSelection.rtau = 0.7
 #allSelections.BJetSelection.bjetDiscrWorkingPoint = "Medium"
