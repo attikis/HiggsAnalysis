@@ -2,7 +2,9 @@ import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
 #Path='./limits_AllMVA_BDTGv2'
-Path='./limits_AllMVA_BDTGv2'
+#Path='./limits_BDTG'
+Path='./limits_NoMVA'
+
 LightAnalysis = not True # set True for light H+
 
 
@@ -13,24 +15,19 @@ if LightAnalysis:
     LightMassPoints=[80,90,100,120,140,150,155,160]
 else:
 #    HeavyMassPoints=[180,200,220,250,300,350,400,500,750,1000,2000,3000]
-    HeavyMassPoints=[220]
+    HeavyMassPoints=[250]
 
 #LightMassPoints=[120] # for control plots
 #HeavyMassPoints=[180,220,250,300,400,500] # for control plots
 
-HeavyMassPoints=[220]
+HeavyMassPoints=[250]
 
 MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 
 ##############################################################################
 # Options
-<<<<<<< HEAD
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
 OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
-=======
-OptionIncludeSystematics= True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots= not True #FIXME: if you want control plots, switch this to true!
->>>>>>> slaurila/master
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
@@ -131,7 +128,8 @@ Observation=ObservationInput(datasetDefinition="Data", shapeHistoName=shapeHisto
 
 ##############################################################################
 # Define systematics lists commmon to datasets
-myTrgSystematics=["CMS_eff_MVA","CMS_eff_t_trg_data","CMS_eff_t_trg_MC", # Trigger tau part
+#myTrgSystematics=["CMS_eff_MVA","CMS_eff_t_trg_data","CMS_eff_t_trg_MC", # Trigger tau part
+myTrgSystematics=["CMS_eff_t_trg_data","CMS_eff_t_trg_MC",
                   "CMS_eff_met_trg_data","CMS_eff_met_trg_MC"] # Trigger MET part
 myTauIDSystematics=["CMS_eff_t"] #tau ID
 if not LightAnalysis and OptionIncludeSystematics:
@@ -310,8 +308,8 @@ Nuisances=[]
 
 #=====tau ID and mis-ID
 #MVA guesstimate of error
-Nuisances.append(Nuisance(id="CMS_eff_MVA",label="MVA uncertainty",
-    distr="lnN", function="Constant", value=0.20))
+#Nuisances.append(Nuisance(id="CMS_eff_MVA",label="MVA uncertainty",
+#    distr="lnN", function="Constant", value=0.20))
 
 # tau ID
 Nuisances.append(Nuisance(id="CMS_eff_t", label="tau-jet ID (no Rtau) uncertainty for genuine taus",
@@ -1009,7 +1007,7 @@ ControlPlots.append(ControlPlotInput(
         		 "log": True,
 			 "legendPosition": "NW",
         		 "opts": {"ymin": 0.09} },
-    flowPlotCaption  = "MVA Cut",
+    flowPlotCaption  = " " #"MVA Cut",
 ))
 
 if OptionMassShape =="TransverseMass":

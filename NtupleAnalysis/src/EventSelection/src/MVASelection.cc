@@ -54,13 +54,13 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("R_bb",&R_bb);
   reader->AddVariable("R_coll",&R_coll);
   reader->AddVariable("MET",&MET);
-  reader->AddVariable("TransMass",&TransMass);
-  reader->AddVariable("TransMass_jj",&TransMass_jj);
-  reader->AddVariable("TransMass_muEt",&TransMass_muEt);
+//  reader->AddVariable("TransMass",&TransMass);
+//  reader->AddVariable("TransMass_jj",&TransMass_jj);
+//  reader->AddVariable("TransMass_muEt",&TransMass_muEt);
 
-  reader->AddVariable("pv_x",&pv_x);
-  reader->AddVariable("pv_y",&pv_y);
-  reader->AddVariable("pv_z",&pv_z);
+//  reader->AddVariable("pv_x",&pv_x);
+//  reader->AddVariable("pv_y",&pv_y);
+//  reader->AddVariable("pv_z",&pv_z);
 
   reader->AddVariable("tj1Dist",&tj1Dist);
   reader->AddVariable("tj2Dist",&tj2Dist);
@@ -122,8 +122,8 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("Muon_eta",&Muon_eta);
   reader->AddVariable("nMuons",&nMuons);
 
-  reader->BookMVA("BDTG method","MyClassification_BDTG.weights.xml");
-//  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
+//  reader->BookMVA("BDTG method","MyClassification_BDTG.weights.xml");
+  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
 
 }
 
@@ -278,11 +278,11 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
     ej3Dist=-99;
   }
 
-  output.setValue(reader->EvaluateMVA("BDTG method"));
-//  output.setValue(reader->EvaluateMVA("DNN method"));
+//  output.setValue(reader->EvaluateMVA("BDTG method"));
+  output.setValue(reader->EvaluateMVA("DNN method"));
   hMVAValueAll->Fill(output.mvaValue());
-  passedMVA=(output.mvaValue()>-0.3);
-//  passedMVA=(output.mvaValue()>0.4);
+//  passedMVA=(output.mvaValue()>-0.3);
+  passedMVA=(output.mvaValue()>0.4);
   if(passedMVA){
     output.setTrue();
     cPassedMVASelection.increment();

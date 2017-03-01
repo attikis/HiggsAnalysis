@@ -119,11 +119,6 @@ def main(argv, dsetMgr, moduleInfoString):
 
     # Always use WJets as a part of the EWK background    
     myMergeList.append("WJets")
-<<<<<<< HEAD
-    myMergeList.append("DYJetsToLL")
-#    if "DYJetsToQQ" in dsetMgr.getMCDatasetNames():
-
-=======
 
     # For SY, single top and diboson, use only if available:
     if "DYJetsToQQHT" in dsetMgr.getMCDatasetNames():
@@ -133,7 +128,6 @@ def main(argv, dsetMgr, moduleInfoString):
         myMergeList.append("DYJetsToLL")
     else:
         print "Warning: ignoring DYJetsToLL sample (since merged sample does not exist) ..."
->>>>>>> slaurila/master
 
     if "SingleTop" in dsetMgr.getMCDatasetNames():
         myMergeList.append("SingleTop")

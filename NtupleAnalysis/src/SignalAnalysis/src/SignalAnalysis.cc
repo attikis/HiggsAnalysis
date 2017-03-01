@@ -261,9 +261,9 @@ void SignalAnalysis::process(Long64_t entry) {
     //    hTransverseMass_WRegion_bbcuts->Fill(myTransverseMass);
   }
 
-  const MVASelection::Data mvaData = fMVASelection.analyze(fEvent, *fMVASelection.reader);
-  if(!mvaData.passedSelection())
-    return;
+//  const MVASelection::Data mvaData = fMVASelection.analyze(fEvent, *fMVASelection.reader);
+//  if(!mvaData.passedSelection())
+//    return;
 
 //====== All cuts passed
   cSelected.increment();

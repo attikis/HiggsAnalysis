@@ -67,7 +67,7 @@ allSelections.AngularCutsCollinear.cutValueJet4 = 80.0
 
 #allSelections.TauSelection.rtau = 0.7
 #allSelections.BJetSelection.bjetDiscrWorkingPoint = "Medium"
-allSelections.BJetSelection.numberOfBJetsCutValue = 0
+#allSelections.BJetSelection.numberOfBJetsCutValue = 0
 #allSelections.BJetSelection.numberOfBJetsCutDirection = "=="
 #setAngularCutsWorkingPoint(allSelections.AngularCutsCollinear, "Loose")
 #===== End of selection customisations
