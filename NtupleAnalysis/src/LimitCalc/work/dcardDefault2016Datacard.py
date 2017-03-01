@@ -10,7 +10,7 @@ HeavyMassPoints=[]
 if LightAnalysis:
     LightMassPoints=[80,90,100,120,140,150,155,160]
 else:
-    HeavyMassPoints=[180,200,220,250,300,350,400,500,750,800,1000,2000,3000]
+    HeavyMassPoints=[180,200,220,250,300,400,500,750,800,1000,2000,3000]
 
 #LightMassPoints=[120] # for control plots
 HeavyMassPoints=[180,220,250,300,400,500] # for control plots
@@ -19,8 +19,8 @@ HeavyMassPoints=[180,220,250,300,400,500] # for control plots
 MassPoints=HeavyMassPoints
 ##############################################################################
 # Options
-OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots=not True #FIXME: if you want control plots, switch this to true!
+OptionIncludeSystematics= True # Set to true if you produced multicrabs with doSystematics=True
+OptionDoControlPlots= not True #FIXME: if you want control plots, switch this to true!
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 BlindAnalysis=True
 OptionBlindThreshold=None # If signal exceeds this fraction of expected events, data is blinded; set to None to disable
