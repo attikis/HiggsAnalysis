@@ -17,8 +17,8 @@ from HiggsAnalysis.NtupleAnalysis.parameters.signalAnalysisParameters import obt
 process = Process("SignalAnalysis"+obtainAnalysisSuffix(sys.argv))
 blacklist = ["ChargedHiggs_TTToHplusBWB",
 #        "ChargedHiggs_HplusTB_HplusToTauNu_M_180",
-	"ChargedHiggs_HplusTB_HplusToTauNu_M_200",
-#	"ChargedHiggs_HplusTB_HplusToTauNu_M_220",
+#	"ChargedHiggs_HplusTB_HplusToTauNu_M_200",
+	"ChargedHiggs_HplusTB_HplusToTauNu_M_220",
 #        "ChargedHiggs_HplusTB_HplusToTauNu_M_250",
 #        "ChargedHiggs_HplusTB_HplusToTauNu_M_300",
 #        "ChargedHiggs_HplusTB_HplusToTauNu_M_350",
