@@ -78,9 +78,10 @@ void HplusEventCountProducer::endLuminosityBlockProduce(LuminosityBlock & theLum
   LogTrace("EventCounting") << "endLumi: adding +" << positiveEventsProcessedInLumi_
                             << " -" << negativeEventsProcessedInLumi_ << " events" << endl;
 
-  auto_ptr<edm::MergeableCounter> numEventsPtr(new edm::MergeableCounter);
+  unique_ptr<edm::MergeableCounter> numEventsPtr(new edm::MergeableCounter);
+  //auto_ptr<edm::MergeableCounter> numEventsPtr(new edm::MergeableCounter);
   numEventsPtr->value = positiveEventsProcessedInLumi_ - negativeEventsProcessedInLumi_;
-  theLuminosityBlock.put(numEventsPtr);
+  theLuminosityBlock.put(std::move(numEventsPtr),"Lumi");
 }
 
 //define this as a plug-in

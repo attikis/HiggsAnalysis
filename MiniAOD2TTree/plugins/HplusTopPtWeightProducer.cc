@@ -115,9 +115,10 @@ void HplusTopPtWeightProducer::produce(edm::Event& iEvent, const edm::EventSetup
       hTopPtWeightAllEvents->SetBinContent(2, hTopPtWeightAllEvents->GetBinContent(2) + sign*weight);
       hTopPtWeightAllEvents->SetBinContent(3, hTopPtWeightAllEvents->GetBinContent(3) + sign*weight*weight);
       // Save weight
-      std::auto_ptr<double> w(new double);
+      std::unique_ptr<double> w(new double);
+      //std::auto_ptr<double> w(new double);
       *w = weight*sign;
-      iEvent.put(w);
+      iEvent.put(std::move(w),"Event");
     }
   }
 }
