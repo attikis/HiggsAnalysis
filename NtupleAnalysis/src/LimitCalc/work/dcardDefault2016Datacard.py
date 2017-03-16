@@ -1,7 +1,7 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
-Path='./limits_NoMVA_All'
+Path='./limits_BJet'
 LightAnalysis = not True # set True for light H+
 
 # Set mass points
@@ -19,8 +19,8 @@ HeavyMassPoints=[180,220,250,300,400,500] # for control plots
 MassPoints=HeavyMassPoints
 ##############################################################################
 # Options
-OptionIncludeSystematics= True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots= not True #FIXME: if you want control plots, switch this to true!
+OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
+OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 BlindAnalysis=True
 OptionBlindThreshold=None # If signal exceeds this fraction of expected events, data is blinded; set to None to disable
