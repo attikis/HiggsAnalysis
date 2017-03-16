@@ -42,7 +42,7 @@ using namespace std;
 
 HplusEventCountProducer::HplusEventCountProducer(const edm::ParameterSet& iConfig):
   eventInfoToken(consumes<GenEventInfoProduct>(edm::InputTag("generator"))) {
-  produces<edm::MergeableCounter, edm::InLumi>();
+  produces<edm::MergeableCounter, edm::InLumi>("Counter");
 }
 
 HplusEventCountProducer::~HplusEventCountProducer(){}
@@ -81,7 +81,7 @@ void HplusEventCountProducer::endLuminosityBlockProduce(LuminosityBlock & theLum
   unique_ptr<edm::MergeableCounter> numEventsPtr(new edm::MergeableCounter);
   //auto_ptr<edm::MergeableCounter> numEventsPtr(new edm::MergeableCounter);
   numEventsPtr->value = positiveEventsProcessedInLumi_ - negativeEventsProcessedInLumi_;
-  theLuminosityBlock.put(std::move(numEventsPtr),"Lumi");
+  theLuminosityBlock.put(std::move(numEventsPtr),"Counter");
 }
 
 //define this as a plug-in

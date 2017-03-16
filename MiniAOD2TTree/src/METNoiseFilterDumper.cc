@@ -65,21 +65,22 @@ bool METNoiseFilterDumper::fill(edm::Event& iEvent, const edm::EventSetup& iSetu
       throw cms::Exception("Assert") << "METFilters: key '" << fFilters[i] << "' not found in TriggerResults (see above list for available filters)!";
     }
   }
+  int i = 0;
   edm::Handle<bool> hbheNoiseLooseHandle;
   iEvent.getByToken(hbheNoiseTokenRun2LooseToken, hbheNoiseLooseHandle);
-  bFilters[fFilters.size()] = *hbheNoiseLooseHandle;
+  if(hbheNoiseLooseHandle.isValid()) bFilters[fFilters.size()+i++] = *hbheNoiseLooseHandle;
   edm::Handle<bool> hbheNoiseTightHandle;
   iEvent.getByToken(hbheNoiseTokenRun2TightToken, hbheNoiseTightHandle);
-  bFilters[fFilters.size()+1] = *hbheNoiseTightHandle;
+  if(hbheNoiseTightHandle.isValid()) bFilters[fFilters.size()+i++] = *hbheNoiseTightHandle;
   edm::Handle<bool> hbheIsoNoiseHandle;
   iEvent.getByToken(hbheIsoNoiseToken, hbheIsoNoiseHandle);
-  bFilters[fFilters.size()+2] = *hbheIsoNoiseHandle;
+  if(hbheIsoNoiseHandle.isValid()) bFilters[fFilters.size()+i++] = *hbheIsoNoiseHandle;
   edm::Handle<bool> badPFMuonFilterHandle;
   iEvent.getByToken(badPFMuonFilterToken,badPFMuonFilterHandle);
-  bFilters[fFilters.size()+3] = *badPFMuonFilterHandle;
+  if(badPFMuonFilterHandle.isValid()) bFilters[fFilters.size()+i++] = *badPFMuonFilterHandle;
   edm::Handle<bool> badChargedCandidateFilterHandle;
   iEvent.getByToken(badChargedCandidateFilterToken,badChargedCandidateFilterHandle);
-  bFilters[fFilters.size()+4] = *badChargedCandidateFilterHandle;
+  if(badChargedCandidateFilterHandle.isValid()) bFilters[fFilters.size()+i++] = *badChargedCandidateFilterHandle;
   return filter();
 }
 
