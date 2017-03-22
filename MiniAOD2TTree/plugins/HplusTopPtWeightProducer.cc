@@ -60,7 +60,7 @@ HplusTopPtWeightProducer::HplusTopPtWeightProducer(const edm::ParameterSet& iCon
   fParA(iConfig.getParameter<double>("parameterA")),
   fParB(iConfig.getParameter<double>("parameterB"))
 {
-  produces<double>();
+  produces<double>("TopPt");
   hTopPtWeightAllEvents = new TH1F("topPtWeightAllEvents","topPtWeightAllEvents",3,0,3);
   hTopPtWeightAllEvents->GetXaxis()->SetBinLabel(1, "control");
   hTopPtWeightAllEvents->GetXaxis()->SetBinLabel(2, "NAllEventsTopPtReweighted");
@@ -118,7 +118,7 @@ void HplusTopPtWeightProducer::produce(edm::Event& iEvent, const edm::EventSetup
       std::unique_ptr<double> w(new double);
       //std::auto_ptr<double> w(new double);
       *w = weight*sign;
-      iEvent.put(std::move(w),"Event");
+      iEvent.put(std::move(w),"TopPt");
     }
   }
 }
