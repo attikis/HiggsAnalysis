@@ -160,7 +160,7 @@ produceCustomisations(process,dataVersion.isData()) # This produces process.Cust
 process.runEDFilter = cms.Path(process.PUInfo*
                                process.TopPtProducer*
                                process.skimCounterAll*
-                               process.skim*
+####                               process.skim*
                                process.skimCounterPassed*
                                process.CustomisationsSequence*
                                process.dump)
