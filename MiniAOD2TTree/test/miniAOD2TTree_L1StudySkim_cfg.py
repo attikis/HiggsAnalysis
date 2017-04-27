@@ -80,10 +80,20 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
 	TriggerBits = cms.vstring(
         ),
 	TriggerObjects = cms.InputTag("selectedPatTrigger"),
+        L1TauObjects = cms.InputTag("caloStage2Digis:Tau"),
+        L1JetObjects = cms.InputTag("caloStage2Digis:Jet"),
+        L1EtSumObjects = cms.InputTag("caloStage2Digis:EtSum"),
 	TriggerMatch = cms.untracked.vstring(),
 	filter = cms.untracked.bool(False)
     ),
-    METNoiseFilter = process.METNoiseFilter
+    METNoiseFilter = process.METNoiseFilter,
+    GenWeights = cms.VPSet(  
+        cms.PSet(   
+            branchname = cms.untracked.string("GenWeights"),
+            src = cms.InputTag("generator"),
+            filter = cms.untracked.bool(False)
+        ) 
+    ),
 )
 
 process.skimCounterAll        = cms.EDProducer("HplusEventCountProducer")

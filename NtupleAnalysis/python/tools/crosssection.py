@@ -197,6 +197,9 @@ backgroundCrossSections = CrossSectionList(
     CrossSection("QCD_Pt_470to600_MuEnrichedPt5", {
             "13": 7.921e+01, # 7.921e+01 +- 5.425e-02 [14]
     }),
+    CrossSection("SingleNeutrino", {
+            "13": 1.0, # Unknown. Dummy value.                                                                                                                                           
+    }),
     CrossSection("WW", {
             "7": 43.0, # [3]
             "8": 54.838, # [9], took value for CTEQ PDF since CTEQ6L1 was used in pythia simulation
@@ -301,6 +304,11 @@ backgroundCrossSections = CrossSectionList(
             }),
     # end W+Njets 
     CrossSection("DYJetsToLL_M_50", {
+            "7": 3048.0, # [4], NNLO
+            "8": 3531.9, # [9], NNLO
+            "13": 2008.4*3.0 # [14]
+            }),
+    CrossSection("DYJetsToLL_M_50_HERWIGPP", {
             "7": 3048.0, # [4], NNLO
             "8": 3531.9, # [9], NNLO
             "13": 2008.4*3.0 # [14]

@@ -18,8 +18,8 @@ BJetSelection::Data::~Data() { }
 
 BJetSelection::BJetSelection(const ParameterSet& config, EventCounter& eventCounter, HistoWrapper& histoWrapper, CommonPlots* commonPlots, const std::string& postfix)
 : BaseSelection(eventCounter, histoWrapper, commonPlots, postfix),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")),
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")),
   fNumberOfJetsCut(config, "numberOfBJetsCut"),
   fDisriminatorValue(-1.0),
   // Event counter for passing selection
@@ -35,8 +35,8 @@ BJetSelection::BJetSelection(const ParameterSet& config, EventCounter& eventCoun
 
 BJetSelection::BJetSelection(const ParameterSet& config)
 : BaseSelection(),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")),
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")),
   fNumberOfJetsCut(config, "numberOfBJetsCut"),
   fDisriminatorValue(-1.0),
   // Event counter for passing selection
@@ -142,40 +142,80 @@ BJetSelection::Data BJetSelection::privateAnalyze(const Event& iEvent, const Jet
   Data output;
   cSubAll.increment();
   bool passedEta = false;
-  bool passedPt = false;
+  bool passedPt  = false;
   bool passedDisr = false;
-  // Loop over muons
+  unsigned int jet_index    = -1;
+  unsigned int ptCut_index  = 0;
+  unsigned int etaCut_index = 0;
+
+  // Loop over selected jets
   for(const Jet& jet: jetData.getSelectedJets()) {
+
+    // Jet index (for pT and eta cuts)
     // jet pt and eta cuts can differ from the jet selection
+    jet_index++;
+
     //=== Apply cut on eta   
-    if (std::fabs(jet.eta()) > fJetEtaCut)
-      continue;
+    const float jetEtaCut = fJetEtaCuts.at(etaCut_index);
+    if (std::fabs(jet.eta()) > jetEtaCut)
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedEta = true;  
+
     //=== Apply cut on pt
-    if (jet.pt() < fJetPtCut)
-      continue;
+    const float jetPtCut = fJetPtCuts.at(ptCut_index);
+    if (jet.pt() < jetPtCut)
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedPt = true;
+
     //=== Apply discriminator
     if (!(jet.bjetDiscriminator() > fDisriminatorValue))
-      continue;
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedDisr = true;
+
     // jet identified as b jet
     output.fSelectedBJets.push_back(jet);
+    // Increment cut index only. Cannot be bigger than the size of the cut list provided
+    if (ptCut_index  < fJetPtCuts.size()-1  ) ptCut_index++;
+    if (etaCut_index < fJetEtaCuts.size()-1 ) etaCut_index++;
   }
+
   // Fill counters so far
   if (passedEta&&passedPt&&passedDisr)
     cSubPassedDiscriminator.increment();
+
+  // Sort jets by descending b-discriminator value (http://en.cppreference.com/w/cpp/algorithm/sort)
+  output.fFailedBJetCandsDescendingDiscr = output.fFailedBJetCands;
+  std::sort(output.fFailedBJetCandsDescendingDiscr.begin(), output.fFailedBJetCandsDescendingDiscr.end(), [](const Jet& a, const Jet& b){return a.bjetDiscriminator() > b.bjetDiscriminator();});
+
+  // Sort jets by ascending b-discriminator value (http://en.cppreference.com/w/cpp/algorithm/sort)
+  output.fFailedBJetCandsAscendingDiscr = output.fFailedBJetCands;
+  std::sort(output.fFailedBJetCandsAscendingDiscr.begin(), output.fFailedBJetCandsAscendingDiscr.end(), [](const Jet& a, const Jet& b){return a.bjetDiscriminator() < b.bjetDiscriminator();});
+
   //=== Apply cut on number of selected b jets
   if (!fNumberOfJetsCut.passedCut(output.getNumberOfSelectedBJets()))
     return output;
+
   //=== Passed b-jet selection
   output.bPassedSelection = true;
   cPassedBJetSelection.increment();
+  // Sort bjets by pt (Sortign operator defined in Jet.h)
   std::sort(output.fSelectedBJets.begin(), output.fSelectedBJets.end());
   cSubPassedNBjets.increment();
+
   // Fill pt and eta of jets
   size_t i = 0;
+  //std::cout << "\nSelected bjets:" << std::endl;
   for (Jet jet: output.fSelectedBJets) {
+    //std::cout << "\tpT = " << jet.pt() << ", eta = " << jet.eta() << std::endl;
     if (i < 4) {
       hSelectedBJetPt[i]->Fill(jet.pt());
       hSelectedBJetEta[i]->Fill(jet.eta());
