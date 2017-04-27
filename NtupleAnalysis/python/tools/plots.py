@@ -88,12 +88,33 @@ _physicalMcAdd = {
     "WJetsToLNu_ext1": "WJetsToLNu",
     "WJetsToLNu_ext2": "WJetsToLNu",
 
+    "WJetsToLNu_HT_100To200"       : "WJetsToLNu_HT_100To200",
+    "WJetsToLNu_HT_100To200_ext1"  : "WJetsToLNu_HT_100To200",
+    "WJetsToLNu_HT_100To200_ext2"  : "WJetsToLNu_HT_100To200",
+    "WJetsToLNu_HT_200To400"       : "WJetsToLNu_HT_200To400",
+    "WJetsToLNu_HT_200To400_ext1"  : "WJetsToLNu_HT_200To400",
+    "WJetsToLNu_HT_200To400_ext2"  : "WJetsToLNu_HT_200To400",
+    "WJetsToLNu_HT_400To600"       : "WJetsToLNu_HT_400To600",
+    "WJetsToLNu_HT_400To600_ext1"  : "WJetsToLNu_HT_400To600",
+    "WJetsToLNu_HT_600To800"       : "WJetsToLNu_HT_600To800",
+    "WJetsToLNu_HT_600To800_ext1"  : "WJetsToLNu_HT_600To800",
+    "WJetsToLNu_HT_800To1200"      : "WJetsToLNu_HT_800To1200",
+    "WJetsToLNu_HT_800To1200_ext1" : "WJetsToLNu_HT_800To1200",
+    "WJetsToLNu_HT_1200To2500"     : "WJetsToLNu_HT_1200To2500",
+    "WJetsToLNu_HT_1200To2500_ext1": "WJetsToLNu_HT_1200To2500",
+    "WJetsToLNu_HT_2500ToInf"      : "WJetsToLNu_HT_2500ToInf",
+    "WJetsToLNu_HT_2500ToInf_ext1" : "WJetsToLNu_HT_2500ToInf",
+
     "DYJetsToLL_M_50"            : "DYJetsToLL_M_50",
     "DYJetsToLL_M_50_ext"        : "DYJetsToLL_M_50",
     "DYJetsToLL_M_50_ext1"       : "DYJetsToLL_M_50",
 
     "ChargedHiggs_HplusTB_HplusToTauNu_M_500_ext1" : "ChargedHiggs_HplusTB_HplusToTauNu_M_500",
-
+    "ChargedHiggs_HplusTB_HplusToTauNu_M_750_reHLT" : "ChargedHiggs_HplusTB_HplusToTauNu_M_750",
+    "ChargedHiggs_HplusTB_HplusToTauNu_M_800_reHLT" : "ChargedHiggs_HplusTB_HplusToTauNu_M_800",
+    "ChargedHiggs_HplusTB_HplusToTauNu_M_1000_reHLT" : "ChargedHiggs_HplusTB_HplusToTauNu_M_1000",
+    "ChargedHiggs_HplusTB_HplusToTauNu_M_2000_reHLT" : "ChargedHiggs_HplusTB_HplusToTauNu_M_2000",
+    "ChargedHiggs_HplusTB_HplusToTauNu_M_3000_reHLT" : "ChargedHiggs_HplusTB_HplusToTauNu_M_3000",
 }
 
 #for mass in _lightHplusMasses:
@@ -286,6 +307,7 @@ _datasetMerge = {
     # "W2Jets"    : "WJets",
     # "W3Jets"    : "WJets",
     # "W4Jets"    : "WJets",
+    "WJetsToLNu_HT_70To100"   : "WJetsHT",
     "WJetsToLNu_HT_100To200"  : "WJetsHT",
     "WJetsToLNu_HT_200To400"  : "WJetsHT",
     "WJetsToLNu_HT_400To600"  : "WJetsHT",
@@ -700,9 +722,13 @@ in _physicalMcAdd (see python/tools/plots.py). This may lead to incorrect \
 normalization of background! \033[00m"""%datasetName
             raw_input("Press Enter to continue...")
     # merge XX_ext* datasets into XX datasets according to (_physicalMcAdd)
-    print "DEBUG: Datasets before _physicalMcAdd:"
-    print datasetMgr.getAllDatasetNames()
+#    print "DEBUG: Datasets before _physicalMcAdd:"
+#    print datasetMgr.getAllDatasetNames()
+#    print "\n"
     datasetMgr.mergeMany(_physicalMcAdd, addition=True)
+#    print "DEBUG: Datasets after _physicalMcAdd:"
+#    print datasetMgr.getAllDatasetNames()
+#    print "\n"
     # rename the datasets (according to _physicalToLogical and _physicalToLogical)
     datasetMgr.renameMany(_physicalToLogical, silent=True)
     datasetMgr.mergeMany(_datasetMerge, keepSources=keepSourcesMC)

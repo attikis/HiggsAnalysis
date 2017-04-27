@@ -1,11 +1,7 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
 DataCardName ='Default_13TeV'
-#Path='./limits_AllMVA_BDTGv2'
-#Path='./limits_BDTG_Retrain'
-Path='./limits_NoMVA'
-
-LightAnalysis = not True # set True for light H+
+LightAnalysis = False # FIXME set True for light H+
 
 
 # Set mass points
@@ -18,6 +14,7 @@ else:
     HeavyMassPoints=[250]
 
 #LightMassPoints=[120] # for control plots
+<<<<<<< HEAD
 #HeavyMassPoints=[180,250,300,400,500] # for control plots
 
 HeavyMassPoints=[250]
@@ -28,6 +25,22 @@ MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 # Options
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
 OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+=======
+HeavyMassPoints=[180,220,250,300,400,500] # for control plots
+#HeavyMassPoints=[220]
+#MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
+MassPoints=HeavyMassPoints
+##############################################################################
+# Options
+<<<<<<< HEAD
+OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
+OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
+=======
+OptionIncludeSystematics = True # Include shape systematics (multicrabs must beproduced with doSystematics=True)
+OptionDoControlPlots = not True #FIXME: If you want control plots, switch this to true!
+OptionUseWJetsHT = not True # Use HT binned WJets samples instead of inclusive for WJets background
+>>>>>>> slehti/master
+>>>>>>> master
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
@@ -225,6 +238,11 @@ myQCD=DataGroup(label=labelPrefix+"QCDandFakeTau", landsProcess=1, validMassPoin
                 shapeHistoName=shapeHistoName, histoPath=histoPathInclusive)
 DataGroups.append(myQCD)
 
+# Choose between WJets and WJetsHT dataset
+WJetsDataset = "WJets"
+if OptionUseWJetsHT:
+    WJetsDataset = "WJetsHT"
+
 if OptionGenuineTauBackgroundSource =="DataDriven":
     # EWK genuine taus from embedding
     myEmbDataDrivenNuisances=["CMS_EmbSingleMu_QCDcontam","CMS_EmbSingleMu_hybridCaloMET","CMS_Hptntj_taubkg_reweighting"] # EWK + ttbar with genuine taus
@@ -251,7 +269,7 @@ else:
     DataGroups.append(DataGroup(label=labelPrefix+"W_t_genuine", landsProcess=4,
                                 shapeHistoName=shapeHistoName, histoPath=histoPathGenuineTaus,
                                 datasetType="Embedding", 
-                                datasetDefinition="WJets",
+                                datasetDefinition=WJetsDataset, # can be WJets or WJetsHT
                                 validMassPoints=MassPoints,
                                 nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
                                   +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
@@ -281,6 +299,13 @@ else:
                                 nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
                                   +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
                                   +["CMS_scale_VV","CMS_pdf_VV","lumi_13TeV"]))
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> slehti/master
+>>>>>>> master
     # Merge EWK as one column or not
     #if not OptionSeparateFakeTtbarFromFakeBackground:
         #mergeColumnsByLabel.append({"label": "EWKnontt_faketau", "mergeList": ["tt_EWK_faketau","W_EWK_faketau","t_EWK_faketau","DY_EWK_faketau","VV_EWK_faketau"]})
