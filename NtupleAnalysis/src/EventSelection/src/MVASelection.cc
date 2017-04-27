@@ -122,8 +122,8 @@ void MVASelection::initialize(const ParameterSet& config, const std::string& pos
   reader->AddVariable("Muon_eta",&Muon_eta);
   reader->AddVariable("nMuons",&nMuons);
 
-  reader->BookMVA("BDTG method","MyClassification_BDTG.weights.xml");
-//  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
+//  reader->BookMVA("BDTG method","MyClassification_BDTG.weights.xml");
+  reader->BookMVA("DNN method","MyClassification_DNN.weights.xml");
 
 }
 
@@ -212,7 +212,6 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
   JetPhi.push_back(event.jets()[0].phi());
   JetPhi.push_back(event.jets()[1].phi());
   JetPhi.push_back(event.jets()[2].phi());
-  JetPhi.push_back(event.jets()[3].phi());
 //  for(double phi:*JetPhi){
   double phi=0;
   for(int i = 0; i<4;i++){
@@ -278,11 +277,11 @@ MVASelection::Data MVASelection::privateAnalyze(const Event& event) {
     ej3Dist=-99;
   }
 
-  output.setValue(reader->EvaluateMVA("BDTG method"));
-//  output.setValue(reader->EvaluateMVA("DNN method"));
+//  output.setValue(reader->EvaluateMVA("BDTG method"));
+  output.setValue(reader->EvaluateMVA("DNN method"));
   hMVAValueAll->Fill(output.mvaValue());
-  passedMVA=(output.mvaValue()>-0.3);
-//  passedMVA=(output.mvaValue()>0.4);
+//  passedMVA=(output.mvaValue()>-0.3);
+  passedMVA=(output.mvaValue()>0.21);
   if(passedMVA){
     output.setTrue();
     cPassedMVASelection.increment();
