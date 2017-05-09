@@ -6,8 +6,8 @@ from HiggsAnalysis.MiniAOD2TTree.tools.HChOptions import getOptionsDataVersion
 
 process = cms.Process("TTreeDump")
 
-#dataVersion = "80Xmc"
-dataVersion = "80Xdata"
+dataVersion = "80Xmc"
+#dataVersion = "80Xdata"
 
 options, dataVersion = getOptionsDataVersion(dataVersion)
 
@@ -28,9 +28,10 @@ process.options = cms.untracked.PSet(
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-       '/store/data/Run2016H/Tau/MINIAOD/03Feb2017_ver2-v1/100000/00A17AC6-8AEB-E611-9A86-A0369F83627E.root',
+#       '/store/data/Run2016H/Tau/MINIAOD/03Feb2017_ver2-v1/100000/00A17AC6-8AEB-E611-9A86-A0369F83627E.root',
 #       '/store/data/Run2016B/Tau/MINIAOD/PromptReco-v2/000/273/150/00000/64EFFDF2-D719-E611-A0C3-02163E01421D.root',
 #       '/store/mc/RunIISpring16MiniAODv2/ChargedHiggs_TTToHplusBWB_HplusToTauNu_M-120_13TeV_amcatnlo_pythia8/MINIAODSIM/PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14-v1/80000/003E6DB6-1E42-E611-AFBB-D4AE526A023A.root'
+       '/store/mc/RunIISummer16MiniAODv2/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/120000/002F2CE1-38BB-E611-AF9F-0242AC130005.root',
     )
 )
 
@@ -152,6 +153,8 @@ process.skimCounterAll        = cms.EDProducer("HplusEventCountProducer")
 process.skimCounterPassed     = cms.EDProducer("HplusEventCountProducer")
 process.skim.TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.getTriggerProcess()))
 
+process.load("HiggsAnalysis.MiniAOD2TTree.LheHTSkim_cfi")
+
 # === Setup customizations
 from HiggsAnalysis.MiniAOD2TTree.CommonFragments import produceCustomisations
 produceCustomisations(process,dataVersion.isData()) # This produces process.CustomisationsSequence which needs to be included to path
@@ -161,6 +164,7 @@ process.runEDFilter = cms.Path(process.PUInfo*
                                process.TopPtProducer*
                                process.skimCounterAll*
                                process.skim*
+                               process.lheHTskim*
                                process.skimCounterPassed*
                                process.CustomisationsSequence*
                                process.dump)
