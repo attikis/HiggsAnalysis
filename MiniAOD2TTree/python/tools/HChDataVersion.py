@@ -230,7 +230,7 @@ config = {
         "triggerProcess": "HLT",
         "recoProcess": "RECO",                                       
         "metFilteringProcess": "RECO",
-        "globalTag": "FIXME",
+        "globalTag": "92X_dataRun2_Prompt_v2",
     },
     "92Xmc": {
         "simProcess": "SIM",
