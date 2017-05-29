@@ -4,8 +4,8 @@ from HiggsAnalysis.MiniAOD2TTree.tools.HChOptions import getOptionsDataVersion
 
 process = cms.Process("TTreeDump")
 
-dataVersion = "80Xmc"
-#dataVersion = "80Xdata"
+dataVersion = "92Xmc"
+#dataVersion = "92Xdata"
 
 options, dataVersion = getOptionsDataVersion(dataVersion)
 print dataVersion
@@ -25,8 +25,7 @@ process.options = cms.untracked.PSet(
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-#       '/store/data/Run2016B/SingleMuon/MINIAOD/PromptReco-v2/000/273/150/00000/34A57FB8-D819-E611-B0A4-02163E0144EE.root',
-	'/store/mc/RunIISummer16MiniAODv2/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/MINIAODSIM/PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v2/120000/02A210D6-F5C3-E611-B570-008CFA197BD4.root'
+	'/store/relval/CMSSW_9_2_0/RelValTTbar_13/MINIAODSIM/91X_upgrade2017_realistic_v5-v1/10000/68990FD8-4B3C-E711-B7A4-0025905AA9CC.root',
     ),
     secondaryFileNames = cms.untracked.vstring(
     )
@@ -87,10 +86,8 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
 	TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.getTriggerProcess())),
 #        TriggerResults = cms.InputTag("TriggerResults::HLT25NSV4L1V5"),
 #        TriggerResults = cms.InputTag("TriggerResults::TauHLT"),
-
 	TriggerBits = cms.vstring(
-            "HLT_IsoMu16_eta2p1_MET30_v",
-            "HLT_IsoMu16_eta2p1_MET30_LooseIsoPFTau50_Trk30_eta2p1_v",
+            "MC_IsoMu_v7",
             "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v",
             "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v",
             "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v",
@@ -129,7 +126,7 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
 	),
 	filter = cms.untracked.bool(False)
     ),
-    METNoiseFilter = process.METNoiseFilter,
+####FIXME    METNoiseFilter = process.METNoiseFilter,
     Taus      = process.TausNoSysVariations,
 #    Electrons = process.Electrons,
     Muons     = process.Muons,
@@ -154,14 +151,14 @@ process.skim.TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.ge
 
 # === Setup customizations
 from HiggsAnalysis.MiniAOD2TTree.CommonFragments import produceCustomisations
-produceCustomisations(process,dataVersion.isData()) # This produces process.CustomisationsSequence which needs to be included to path
+####FIXME produceCustomisations(process,dataVersion.isData()) # This produces process.CustomisationsSequence which needs to be included to path
 
 # module execution
 process.runEDFilter = cms.Path(process.PUInfo*
                                process.skimCounterAll*
                                process.skim*
                                process.skimCounterPassed*
-                               process.CustomisationsSequence*
+####FIXME                               process.CustomisationsSequence*
                                process.dump)
 
 #process.output = cms.OutputModule("PoolOutputModule",

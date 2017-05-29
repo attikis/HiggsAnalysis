@@ -225,6 +225,20 @@ config = {
 #        "globalTag": "80X_mcRun2_asymptotic_2016_miniAODv2_v1",
         "globalTag": "80X_mcRun2_asymptotic_2016_TrancheIV_v6",
         "signalTrigger": "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80_v1",
+    },
+    "92Xdata": {
+        "triggerProcess": "HLT",
+        "recoProcess": "RECO",                                       
+        "metFilteringProcess": "RECO",
+        "globalTag": "FIXME",
+    },
+    "92Xmc": {
+        "simProcess": "SIM",
+        "triggerProcess": "HLT",
+        "recoProcess": "RECO",
+        "metFilteringProcess": "PAT",
+        "globalTag": "90X_upgrade2017_TSG_Hcal_V3",
+        "signalTrigger": "",
     }
 }
 

@@ -85,6 +85,7 @@ TauLegSkim::TauLegSkim(const edm::ParameterSet& iConfig)
       genWeightToken[i] = consumesCollector().consumes<GenEventInfoProduct>(inputtag);
     }
 
+    nRead           = 0;
     nEvents         = 0;
     nSelectedEvents = 0;
 }
