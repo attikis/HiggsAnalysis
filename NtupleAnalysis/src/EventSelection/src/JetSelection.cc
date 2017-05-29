@@ -31,8 +31,8 @@ const Jet& JetSelection::Data::getJetMatchedToTau() const {
 
 JetSelection::JetSelection(const ParameterSet& config, EventCounter& eventCounter, HistoWrapper& histoWrapper, CommonPlots* commonPlots, const std::string& postfix)
 : BaseSelection(eventCounter, histoWrapper, commonPlots, postfix),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")),
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")),
   fTauMatchingDeltaR(config.getParameter<float>("tauMatchingDeltaR")),
   fNumberOfJetsCut(config, "numberOfJetsCut"),
   fHTCut(config, "HTCut"),
@@ -57,8 +57,8 @@ JetSelection::JetSelection(const ParameterSet& config, EventCounter& eventCounte
 
 JetSelection::JetSelection(const ParameterSet& config)
 : BaseSelection(),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")), 
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")), 
   fTauMatchingDeltaR(config.getParameter<float>("tauMatchingDeltaR")),
   fNumberOfJetsCut(config, "numberOfJetsCut"),
   fHTCut(config, "HTCut"),
@@ -111,26 +111,28 @@ void JetSelection::bookHistograms(TDirectory* dir) {
   hJetEtaAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaAll", "Jet #eta, all;#eta", 50, -2.5, 2.5);
   hJetPtPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetPtPassed", "Jet pT, passed;p_{T} (GeV/c)", 50, 0.0, 500.0);
   hJetEtaPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaPassed", "Jet Eta, passed", 50, -2.5, 2.5);
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetPt" , "First jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetPt", "Second jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetPt" , "Third jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetPt", "Fourth jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetPt" , "Fifth jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetPt" , "Sixth jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetEta" , "First jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetEta", "Second jet #eta;#eta", 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetEta" , "Third jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetEta", "Fourth jet #eta;#eta", 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetEta" , "Fifth jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetEta" , "Sixth jet #eta;#eta" , 50, -2.5, +2.5) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetPt"  , "First jet pT;p_{T} (GeV/c)"  , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetPt" , "Second jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetPt"  , "Third jet pT;p_{T} (GeV/c)"  , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetPt" , "Fourth jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetPt"  , "Fifth jet pT;p_{T} (GeV/c)"  , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetPt"  , "Sixth jet pT;p_{T} (GeV/c)"  , 50, 0.0, 500.0) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSeventhJetPt", "Seventh jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetEta"  , "First jet #eta;#eta"  , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetEta" , "Second jet #eta;#eta" , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetEta"  , "Third jet #eta;#eta"  , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetEta" , "Fourth jet #eta;#eta" , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetEta"  , "Fifth jet #eta;#eta"  , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetEta"  , "Sixth jet #eta;#eta"  , 50, -2.5, +2.5) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSeventhJetEta", "Seventh jet #eta;#eta", 50, -2.5, +2.5) );
   hJetMatchingToTauDeltaR  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JetMatchingToTauDeltaR" , "#DeltaR(jet, #tau)", 40, 0, 2);
   hJetMatchingToTauPtRatio = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JetMatchingToTauPtRatio", "jet pT / #tau pT", 40, 0, 2);
-  hHTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "HTAll"    , ";H_{T}",  30, 0.0, 1500.0); 
-  hJTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "JTAll"    , ";J_{T}",  30, 0.0, 1500.0); 
-  hMHTAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "MHTAll"   , ";MHT"  ,  30, 0.0,  300.0);
-  hHTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "HTPassed" , ";H_{T}",  30, 0.0, 1500.0); 
-  hJTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "JTPassed" , ";J_{T}",  30, 0.0, 1500.0); 
-  hMHTPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kVital, subdir, "MHTPassed", ";MHT"  ,  30, 0.0,  300.0);
+  hHTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTAll"    , ";H_{T}",  30, 0.0, 1500.0); 
+  hJTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTAll"    , ";J_{T}",  30, 0.0, 1500.0); 
+  hMHTAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "MHTAll"   , ";MHT"  ,  30, 0.0,  300.0);
+  hHTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTPassed" , ";H_{T}",  30, 0.0, 1500.0); 
+  hJTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTPassed" , ";J_{T}",  30, 0.0, 1500.0); 
+  hMHTPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "MHTPassed", ";MHT"  ,  30, 0.0,  300.0);
 
   return;
 }
@@ -183,9 +185,15 @@ JetSelection::Data JetSelection::privateAnalyze(const Event& event, const math::
   bool passedDeltaRMatchWithTau = false;
   bool passedEta = false;
   bool passedPt  = false;
-  
-  // Loop over jets
+  unsigned int jet_index    = -1;
+  unsigned int ptCut_index  = 0;
+  unsigned int etaCut_index = 0;
+
+  // For-loop: All jets (pT-sorted)
   for(Jet jet: event.jets()) {
+    
+    // Jet index (for pT and eta cuts)
+    jet_index++;
 
     //=== Apply cut on jet ID
     if (!jet.jetIDDiscriminator())
@@ -210,18 +218,29 @@ JetSelection::Data JetSelection::privateAnalyze(const Event& event, const math::
     }
 
     //=== Apply cut on eta
-    if (std::fabs(jet.eta()) > fJetEtaCut)
+    const float jetEtaCut = fJetEtaCuts.at(etaCut_index);
+    // std::cout << jet_index << ") abs(eta)["<< etaCut_index << "] > " << jetEtaCut << " ( " << jet.eta() << ")" << std::endl;
+    if (std::fabs(jet.eta()) > jetEtaCut)
       continue;
     passedEta = true;
 
-    //=== Apply cut on pt
-    if (jet.pt() < fJetPtCut)
+
+    //=== Apply cut on pt   
+    const float jetPtCut = fJetPtCuts.at(ptCut_index);
+    // std::cout << jet_index << ") pT["<< ptCut_index << "] > " << jetPtCut << " GeV/c ( " << jet.pt() << ")" << std::endl;
+    if (jet.pt() < jetPtCut)
       continue;
     passedPt = true;
-    // Jet passed all cuts
+
+    // Jet passed all cuts   
     output.fSelectedJets.push_back(jet);
     hJetPtPassed->Fill(jet.pt());
     hJetEtaPassed->Fill(jet.eta());
+    // Increment cut index only. Cannot be bigger than the size of the cut list provided
+    if (ptCut_index  < fJetPtCuts.size()-1  ) ptCut_index++;
+    if (etaCut_index < fJetEtaCuts.size()-1 ) etaCut_index++;
+    // std::cout << jet_index+1 << ") pT = " << jet.pt() << std::endl;
+    // std::cout << jet_index+1 << ") |eta| = " << jet.eta() << std::endl;
   }
 
   // Fill counters so far
@@ -246,8 +265,10 @@ JetSelection::Data JetSelection::privateAnalyze(const Event& event, const math::
 
   // Calculate HT
   output.fHT = 0.0;
-  for(Jet jet: output.getSelectedJets()) {
-    output.fHT += jet.pt();
+  for(Jet jet: output.getSelectedJets()) 
+    {
+      // std::cout << "pT = " << jet.pt() << ", eta = " << jet.eta() << std::endl;
+      output.fHT += jet.pt();
   }
   if (tauPt > 0.0) output.fHT += tauPt;
   hHTAll->Fill(output.fHT);

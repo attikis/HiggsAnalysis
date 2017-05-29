@@ -87,6 +87,11 @@ void TriggerDumper::book(const edm::Run& iRun, HLTConfigProvider hltConfig){
     theTree->Branch("HLTTau_phi",&HLTTau_phi);
     theTree->Branch("HLTTau_e",&HLTTau_e);
 
+    theTree->Branch("HLTBJet_pt",&HLTBJet_pt);
+    theTree->Branch("HLTBJet_eta",&HLTBJet_eta); 
+    theTree->Branch("HLTBJet_phi",&HLTBJet_phi);
+    theTree->Branch("HLTBJet_e",&HLTBJet_e);
+
 //    std::vector<std::string> selectedTriggers;
 
     for(size_t i = 0; i < triggerBits.size(); ++i){
@@ -168,10 +173,21 @@ bool TriggerDumper::fill(edm::Event& iEvent, const edm::EventSetup& iSetup){
                     iBit[i] = trgResultsHandle->accept(j);
                     iCountAll[i] += 1;
                     if(trgResultsHandle->accept(j)) iCountPassed[i] += 1;
-                    continue;
+                    break;
                 }
             }
         }
+
+        std::vector<std::string> trgMatchPaths;
+        for(size_t i = 0; i < trgMatchStr.size(); ++i){
+            std::regex match_re(trgMatchStr[i]);
+            for(size_t j = 0; j < trgResultsHandle->size(); ++j){
+                if (std::regex_search(names.triggerName(j), match_re)) {
+                  trgMatchPaths.push_back(names.triggerName(j));
+                }
+            }
+        }
+
 
     	L1MET_x  = 0;  
     	L1MET_y  = 0;
@@ -204,11 +220,9 @@ bool TriggerDumper::fill(edm::Event& iEvent, const edm::EventSetup& iSetup){
                 }
 */
 	        if(patTriggerObject.id(trigger::TriggerTau)){
-
-                    std::vector<std::string> pathNamesAll  = patTriggerObject.pathNames(false);
 		    bool fired = false;
-                    for(size_t i = 0; i < pathNamesAll.size(); ++i){
-		      if(patTriggerObject.hasPathName( pathNamesAll[i], false, true )) fired = true;
+                    for(size_t i = 0; i < trgMatchPaths.size(); ++i){
+		      if(patTriggerObject.hasPathName( trgMatchPaths[i], false, true )) fired = true;
                     }
 		    if(fired){
                         HLTTau_pt.push_back(patTriggerObject.p4().Pt());
@@ -218,6 +232,20 @@ bool TriggerDumper::fill(edm::Event& iEvent, const edm::EventSetup& iSetup){
 		    }
 		//std::cout << "Trigger Tau " << patTriggerObject.p4().Pt() << std::endl;
 	        }
+
+                if(patTriggerObject.id(trigger::TriggerBJet)){
+                    bool fired = false;
+                    for(size_t i = 0; i < trgMatchPaths.size(); ++i){
+                      if(patTriggerObject.hasPathName( trgMatchPaths[i], false, true )) fired = true;
+                    }
+                    if(fired){
+                        HLTBJet_pt.push_back(patTriggerObject.p4().Pt());
+                        HLTBJet_eta.push_back(patTriggerObject.p4().Eta());
+                        HLTBJet_phi.push_back(patTriggerObject.p4().Phi());
+                        HLTBJet_e.push_back(patTriggerObject.p4().E());
+                    }
+                //std::cout << "Trigger bjet " << patTriggerObject.p4().Pt() << std::endl;
+                }
             }
 	}
 
@@ -333,6 +361,11 @@ void TriggerDumper::reset(){
       HLTTau_eta.clear();
       HLTTau_phi.clear();
       HLTTau_e.clear();
+
+      HLTBJet_pt.clear();
+      HLTBJet_eta.clear();
+      HLTBJet_phi.clear();
+      HLTBJet_e.clear();
 
       for(int i = 0; i < nTrgDiscriminators; ++i) trgdiscriminators[i].clear();
 

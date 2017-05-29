@@ -18,8 +18,8 @@ BJetSelection::Data::~Data() { }
 
 BJetSelection::BJetSelection(const ParameterSet& config, EventCounter& eventCounter, HistoWrapper& histoWrapper, CommonPlots* commonPlots, const std::string& postfix)
 : BaseSelection(eventCounter, histoWrapper, commonPlots, postfix),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")),
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")),
   fNumberOfJetsCut(config, "numberOfBJetsCut"),
   fDisriminatorValue(-1.0),
   // Event counter for passing selection
@@ -35,8 +35,8 @@ BJetSelection::BJetSelection(const ParameterSet& config, EventCounter& eventCoun
 
 BJetSelection::BJetSelection(const ParameterSet& config)
 : BaseSelection(),
-  fJetPtCut(config.getParameter<float>("jetPtCut")),
-  fJetEtaCut(config.getParameter<float>("jetEtaCut")),
+  fJetPtCuts(config.getParameter<std::vector<float>>("jetPtCuts")),
+  fJetEtaCuts(config.getParameter<std::vector<float>>("jetEtaCuts")),
   fNumberOfJetsCut(config, "numberOfBJetsCut"),
   fDisriminatorValue(-1.0),
   // Event counter for passing selection
@@ -54,6 +54,7 @@ BJetSelection::BJetSelection(const ParameterSet& config)
 BJetSelection::~BJetSelection() {
   for (auto p: hSelectedBJetPt) delete p;
   for (auto p: hSelectedBJetEta) delete p;
+  for (auto p: hSelectedBJetBDisc) delete p;
 }
 
 void BJetSelection::initialize(const ParameterSet& config) {
@@ -65,57 +66,42 @@ void BJetSelection::initialize(const ParameterSet& config) {
     throw hplus::Exception("config") << "b-tagging algorithm working point '" << sWorkingPoint
                                      << "' is not valid!\nValid values are: Loose, Medium, Tight";
 
-  if (sAlgorithm == "pfCombinedInclusiveSecondaryVertexV2BJetTags") {
-    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80XReReco (Moriond17)
-    if (sWorkingPoint == "Loose")
-      fDisriminatorValue = 0.5426;
-    else if (sWorkingPoint == "Medium")
-      fDisriminatorValue = 0.8484;
-    else if (sWorkingPoint == "Tight")
-      fDisriminatorValue = 0.9535;
-  } else if (sAlgorithm == "pfCombinedMVA2BJetTags") {
-    if (sWorkingPoint == "Loose")
-      fDisriminatorValue = -0.5884;
-    else if (sWorkingPoint == "Medium")
-      fDisriminatorValue = 0.4432;
-    else if (sWorkingPoint == "Tight")
-      fDisriminatorValue = 0.9432;
-  } else if (sAlgorithm == "pfCombinedCvsLJetTags") {
-    if (sWorkingPoint == "Loose")
-      fDisriminatorValue = -0.48;
-    else if (sWorkingPoint == "Medium")
-      fDisriminatorValue = -0.1;
-    else if (sWorkingPoint == "Tight")
-      fDisriminatorValue = 0.69;    
-  } else if (sAlgorithm == "pfCombinedCvsBJetTags") {
-    if (sWorkingPoint == "Loose")
-      fDisriminatorValue = -0.17;
-    else if (sWorkingPoint == "Medium")
-      fDisriminatorValue = 0.08;
-    else if (sWorkingPoint == "Tight")
-      fDisriminatorValue = -0.45; 
-    // Note: Events selected by the Tight WP are not a subsample of the events selected by the Medium WP, but it is because they WP definition have different goals:
-    // Loose to reduce b jets
-    // Medium to reduce both b and light jets
-    // Tight to reduce light jets
-  }
+  // Note: Events selected by the Tight WP are not a subsample of the events selected by the Medium WP, but it is because they WP definition have different goals:
+  // Loose to reduce b jets
+  // Medium to reduce both b and light jets
+  // Tight to reduce light jets
+  fDisriminatorValue = getDiscriminatorWP(sAlgorithm, sWorkingPoint);
   
-  if (fDisriminatorValue < 0.0) {
-    throw hplus::Exception("config") << "No discriminator value implemented in BJetSelection.cc constructor for algorithm '" << sAlgorithm
-                                     << "' and working point '" << sWorkingPoint << "'!";
-  }
+  if (fDisriminatorValue < 0.0)
+    {
+      throw hplus::Exception("config") << "No discriminator value implemented in BJetSelection.cc constructor for algorithm '" 
+				       << sAlgorithm << "' and working point '" << sWorkingPoint << "'!";
+    }
+
+  return;
 }
 
 void BJetSelection::bookHistograms(TDirectory* dir) {
   TDirectory* subdir = fHistoWrapper.mkdir(HistoLevel::kDebug, dir, "bjetSelection_"+sPostfix);
+
+  const int  nBinsBDisc= fCommonPlots->getBJetDiscBinSettings().bins();
+  const float minBDisc = fCommonPlots->getBJetDiscBinSettings().min();
+  const float maxBDisc = fCommonPlots->getBJetDiscBinSettings().max();
+
   hSelectedBJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFirstJetPt" , "First b-jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
   hSelectedBJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsSecondJetPt", "Second b-jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
   hSelectedBJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsThirdJetPt" , "Third b-jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
   hSelectedBJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFourthJetPt", "Fourth b-jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
+
   hSelectedBJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFirstJetEta" , "First b-jet eta;#eta" , 50, -2.5, 2.5) );
   hSelectedBJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsSecondJetEta", "Second b-jet eta;#eta", 50, -2.5, 2.5) );
   hSelectedBJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsThirdJetEta" , "Third b-jet eta;#eta" , 50, -2.5, 2.5) );
   hSelectedBJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFourthJetEta", "Fourth b-jet eta;#eta", 50, -2.5, 2.5) );
+
+  hSelectedBJetBDisc.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFirstJetBDisc" , "First b-jet BDisc;b-tag discriminator" , nBinsBDisc, minBDisc, maxBDisc) );
+  hSelectedBJetBDisc.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsSecondJetBDisc", "Second b-jet BDisc;b-tag discriminator", nBinsBDisc, minBDisc, maxBDisc) );
+  hSelectedBJetBDisc.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsThirdJetBDisc" , "Third b-jet BDisc;b-tag discriminator" , nBinsBDisc, minBDisc, maxBDisc) );
+  hSelectedBJetBDisc.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedBJetsFourthJetBDisc", "Fourth b-jet BDisc;b-tag discriminator", nBinsBDisc, minBDisc, maxBDisc) );
   fBTagSFCalculator.bookHistograms(subdir, fHistoWrapper);
 }
 
@@ -142,43 +128,84 @@ BJetSelection::Data BJetSelection::privateAnalyze(const Event& iEvent, const Jet
   Data output;
   cSubAll.increment();
   bool passedEta = false;
-  bool passedPt = false;
+  bool passedPt  = false;
   bool passedDisr = false;
-  // Loop over muons
+  unsigned int jet_index    = -1;
+  unsigned int ptCut_index  = 0;
+  unsigned int etaCut_index = 0;
+
+  // Loop over selected jets
   for(const Jet& jet: jetData.getSelectedJets()) {
+
+    // Jet index (for pT and eta cuts)
     // jet pt and eta cuts can differ from the jet selection
+    jet_index++;
+
     //=== Apply cut on eta   
-    if (std::fabs(jet.eta()) > fJetEtaCut)
-      continue;
+    const float jetEtaCut = fJetEtaCuts.at(etaCut_index);
+    if (std::fabs(jet.eta()) > jetEtaCut)
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedEta = true;  
+
     //=== Apply cut on pt
-    if (jet.pt() < fJetPtCut)
-      continue;
+    const float jetPtCut = fJetPtCuts.at(ptCut_index);
+    if (jet.pt() < jetPtCut)
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedPt = true;
+
     //=== Apply discriminator
     if (!(jet.bjetDiscriminator() > fDisriminatorValue))
-      continue;
+      {
+	output.fFailedBJetCands.push_back(jet);
+	continue;
+      }
     passedDisr = true;
+
     // jet identified as b jet
     output.fSelectedBJets.push_back(jet);
+    // Increment cut index only. Cannot be bigger than the size of the cut list provided
+    if (ptCut_index  < fJetPtCuts.size()-1  ) ptCut_index++;
+    if (etaCut_index < fJetEtaCuts.size()-1 ) etaCut_index++;
   }
+
   // Fill counters so far
   if (passedEta&&passedPt&&passedDisr)
     cSubPassedDiscriminator.increment();
+
+  // Sort jets by descending b-discriminator value (http://en.cppreference.com/w/cpp/algorithm/sort)
+  output.fFailedBJetCandsDescendingDiscr = output.fFailedBJetCands;
+  std::sort(output.fFailedBJetCandsDescendingDiscr.begin(), output.fFailedBJetCandsDescendingDiscr.end(), [](const Jet& a, const Jet& b){return a.bjetDiscriminator() > b.bjetDiscriminator();});
+
+  // Sort jets by ascending b-discriminator value (http://en.cppreference.com/w/cpp/algorithm/sort)
+  output.fFailedBJetCandsAscendingDiscr = output.fFailedBJetCands;
+  std::sort(output.fFailedBJetCandsAscendingDiscr.begin(), output.fFailedBJetCandsAscendingDiscr.end(), [](const Jet& a, const Jet& b){return a.bjetDiscriminator() < b.bjetDiscriminator();});
+
   //=== Apply cut on number of selected b jets
   if (!fNumberOfJetsCut.passedCut(output.getNumberOfSelectedBJets()))
     return output;
+
   //=== Passed b-jet selection
   output.bPassedSelection = true;
   cPassedBJetSelection.increment();
+  // Sort bjets by pt (Sortign operator defined in Jet.h)
   std::sort(output.fSelectedBJets.begin(), output.fSelectedBJets.end());
   cSubPassedNBjets.increment();
+
   // Fill pt and eta of jets
   size_t i = 0;
+  //std::cout << "\nSelected bjets:" << std::endl;
   for (Jet jet: output.fSelectedBJets) {
+    //std::cout << "\tpT = " << jet.pt() << ", eta = " << jet.eta() << std::endl;
     if (i < 4) {
       hSelectedBJetPt[i]->Fill(jet.pt());
       hSelectedBJetEta[i]->Fill(jet.eta());
+      hSelectedBJetBDisc[i]->Fill(jet.bjetDiscriminator());
     }
     ++i;
   }
@@ -196,4 +223,47 @@ BJetSelection::Data BJetSelection::privateAnalyze(const Event& iEvent, const Jet
 double BJetSelection::calculateBTagPassingProbability(const Event& iEvent, const JetSelection::Data& jetData) {
   // FIXME to be implemented
   return 1.0;
+}
+
+const double BJetSelection::getDiscriminatorWP(const std::string sAlgorithm, const std::string sWorkingPoint) {
+
+  // Decypher the actual discriminator value
+  if (sWorkingPoint != "Loose" && sWorkingPoint != "Medium" && sWorkingPoint != "Tight")
+    throw hplus::Exception("logic") << "b-tagging algorithm working point '" << sWorkingPoint
+				    << "' is not valid!\nValid values are: Loose, Medium, Tight";
+
+  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80XReReco (Moriond17)
+  if (sAlgorithm == "pfCombinedInclusiveSecondaryVertexV2BJetTags") 
+    {
+      if (sWorkingPoint == "Loose") return +0.5426;
+      else if (sWorkingPoint == "Medium") return +0.8484;
+      else if (sWorkingPoint == "Tight") return +0.9535;
+    } 
+  else if (sAlgorithm == "pfCombinedMVA2BJetTags") 
+    {
+      if (sWorkingPoint == "Loose") return -0.5884;
+      else if (sWorkingPoint == "Medium") return +0.4432;
+      else if (sWorkingPoint == "Tight") return +0.9432;
+    }
+  else if (sAlgorithm == "pfCombinedCvsLJetTags") 
+    {
+      if (sWorkingPoint == "Loose") return-0.48;
+      else if (sWorkingPoint == "Medium") return -0.1;
+      else if (sWorkingPoint == "Tight") return +0.69;    
+    } 
+  else if (sAlgorithm == "pfCombinedCvsBJetTags") 
+    {
+      // Note: Events selected by the Tight WP are not a subsample of the events selected by the Medium WP, but it is because they WP definition have different goals:
+      // Loose to reduce b jets
+      // Medium to reduce both b and light jets
+      // Tight to reduce light jets
+      if (sWorkingPoint == "Loose") return -0.17;
+      else if (sWorkingPoint == "Medium") return +0.08;
+      else if (sWorkingPoint == "Tight") return -0.45; 
+    }
+
+  throw hplus::Exception("logic") << "Invalid b-tagging algorithm  '" << sAlgorithm << "' with working point (WP) '" << sWorkingPoint << "'."
+				  << "\nValid WP values are: Loose, Medium, Tight." 
+				  << "\nValid algorithms are: pfCombinedInclusiveSecondaryVertexV2BJetTags, pfCombinedMVA2BJetTags, pfCombinedCvsLJetTags, pfCombinedCvsBJetTags";
+  return -1e6;
 }

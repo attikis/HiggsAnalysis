@@ -90,8 +90,8 @@ muVeto = PSet(
 #================================================================================================
 jetSelection = PSet(
     jetType                  = "Jets",    # options: Jets (AK4PFCHS), JetsPuppi (AK4Puppi)
-    jetPtCut                 = 40.0,
-    jetEtaCut                = 2.4,
+    jetPtCuts                = [40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 30.0],
+    jetEtaCuts               = [2.4],
     numberOfJetsCutValue     = 7,
     numberOfJetsCutDirection = ">=",      # options: ==, !=, <, <=, >, >=
     jetIDDiscr               = "IDloose", # options: IDloose, IDtight, IDtightLeptonVeto
@@ -103,25 +103,36 @@ jetSelection = PSet(
     JTCutDirection           = ">=",
     MHTCutValue              = 0.0,
     MHTCutDirection          = ">=",
-    # jetLdgPtCuts           = [70.0, 50.0, 40.0],
 )
 
 #================================================================================================
 # B-jet selection
 #================================================================================================
 bjetSelection = PSet(
-    jetPtCut                  = 30.0,
-    jetEtaCut                 = 2.5,
+    jetPtCuts                 = [40.0, 40.0, 30.0],
+    jetEtaCuts                = [2.4],
     bjetDiscr                 = "pfCombinedInclusiveSecondaryVertexV2BJetTags",
-    bjetDiscrWorkingPoint     = "Loose",
+    bjetDiscrWorkingPoint     = "Medium",
     numberOfBJetsCutValue     = 3,
     numberOfBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
 )
 
 scaleFactors.setupBtagSFInformation(btagPset               = bjetSelection, 
                                     btagPayloadFilename    = "CSVv2.csv",
-                                    btagEfficiencyFilename = "btageff_hybrid.json",
+                                    btagEfficiencyFilename = "btageff_hybrid.json", #fixme: update this!
                                     direction              = "nominal")
+
+#================================================================================================
+# Light-Jet selection
+#================================================================================================
+# ljetSelection = PSet(
+#     jetPtCut                 = 40.0,
+#     jetEtaCut                = 2.4,
+#     numberOfJetsCutValue     = 0,
+#     numberOfJetsCutDirection = ">=",      # options: ==, !=, <, <=, >, >=
+#     bjetMatchingDeltaR       = 0.1,
+# )
+
 
 #================================================================================================
 # MET selection
@@ -167,11 +178,19 @@ topologySelection = PSet(
 # Top selection
 #================================================================================================
 topSelection = PSet(
-    ChiSqrCutValue     = 0.0,
-    ChiSqrCutDirection = ">",    # options: ==, !=, <, <=, >, >=
+    ChiSqrCutValue     = 10.0,
+    ChiSqrCutDirection = "<",    # options: ==, !=, <, <=, >, >=
     MassW              = 80.385,
     DiJetSigma         = 10.2,
     TriJetSigma        = 27.2,
+    # Distance cut
+    dijetWithMaxDR_tetrajetBjet_dR_min          =  0.0, # Disable: 0.0, Default: +3.0
+    dijetWithMaxDR_tetrajetBjet_dR_yIntercept   = -1.0, # Disable:-1.0, Default: +4.0
+    dijetWithMaxDR_tetrajetBjet_dR_slopeCoeff   =  0.0, # Disable: 0.0, Default: -1.0
+    # Angular cut
+    dijetWithMaxDR_tetrajetBjet_dPhi_min        = +2.5, # Disable: 0.0, Default: +2.5
+    dijetWithMaxDR_tetrajetBjet_dPhi_yIntercept = +3.0, # Disable:-1.0, Default: +3.0
+    dijetWithMaxDR_tetrajetBjet_dPhi_slopeCoeff = -1.0, # Disable: 0.0, Default: -1.0
 )
 
 
@@ -179,6 +198,20 @@ topSelection = PSet(
 # MET trigger SF
 #================================================================================================
 scaleFactors.assignMETTriggerSF(metSelection, bjetSelection.bjetDiscrWorkingPoint, "nominal")
+
+
+#================================================================================================
+# FakeB Measurement Options
+#================================================================================================
+fakeBMeasurement = PSet(
+    numberOfBJetsCutValue             = 0,
+    numberOfBJetsCutDirection         = "==", # options: ==, !=, <, <=, >, >=
+    numberOfInvertedBJetsCutValue     = 3,
+    numberOfInvertedBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
+    invertedBJetDiscr                 = bjetSelection.bjetDiscr,
+    invertedBJetWorkingPoint          = "Loose",
+    maxNumberOfBJetsInTopFit          = 3,
+    )
 
 
 #================================================================================================
@@ -224,6 +257,7 @@ allSelections = PSet(
     ElectronSelection     = eVeto,
     HistogramAmbientLevel = histogramAmbientLevel,
     JetSelection          = jetSelection,
+    # LightJetSelection     = ljetSelection,
     TauSelection          = tauSelection,
     METFilter             = metFilter,
     METSelection          = metSelection,
@@ -232,5 +266,6 @@ allSelections = PSet(
     MuonSelection         = muVeto,
     Trigger               = trigger,
     Verbose               = verbose,
+    FakeBMeasurement      = fakeBMeasurement,
 )
 
