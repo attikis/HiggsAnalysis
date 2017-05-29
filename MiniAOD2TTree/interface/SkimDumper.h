@@ -11,6 +11,7 @@
 #include "DataFormats/Common/interface/View.h"
 #include "DataFormats/Common/interface/Ptr.h"
 #include "DataFormats/Common/interface/MergeableCounter.h"
+#include "FWCore/Framework/interface/LuminosityBlock.h"
 
 #include <string>
 #include <vector>
