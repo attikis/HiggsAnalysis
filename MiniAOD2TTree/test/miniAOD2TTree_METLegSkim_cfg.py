@@ -4,8 +4,8 @@ from HiggsAnalysis.MiniAOD2TTree.tools.HChOptions import getOptionsDataVersion
 
 process = cms.Process("TTreeDump")
 
-#dataVersion = "80Xmc"
-dataVersion = "80Xdata"
+#dataVersion = "83Xmc"
+dataVersion = "92Xdata"
 
 options, dataVersion = getOptionsDataVersion(dataVersion)
 print dataVersion
@@ -28,7 +28,12 @@ process.options = cms.untracked.PSet(
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-       '/store/data/Run2016B/Tau/MINIAOD/PromptReco-v2/000/273/150/00000/64EFFDF2-D719-E611-A0C3-02163E01421D.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/295/982/00000/3888C790-FA49-E711-B370-02163E01A35A.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/296/070/00000/5AAEE8E9-184B-E711-BAD6-02163E01A466.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/296/071/00000/4AA43EEE-194B-E711-934A-02163E013936.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/296/073/00000/24321ED0-1D4B-E711-A5BB-02163E01A6B8.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/296/074/00000/B276E85F-3C4B-E711-BDC9-02163E01A77D.root',
+	'/store/data/Run2017A/Tau/MINIAOD/PromptReco-v1/000/296/116/00000/0A498BF9-1F4C-E711-959D-02163E019CCE.root'
     )
 )
 
@@ -85,11 +90,9 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
     Trigger = cms.PSet(
 	TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.getTriggerProcess())),
 	TriggerBits = cms.vstring(
-            "HLT_LooseIsoPFTau50_Trk30_eta2p1_v",
-	    "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET80_v",
-            "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET90_v",
-            "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET110_v",
-            "HLT_LooseIsoPFTau50_Trk30_eta2p1_MET120_v",
+            "HLT_MediumIsoPFTau50_Trk30_eta2p1_v",
+            "HLT_MediumIsoPFTau50_Trk30_eta2p1_1pr_MET90_v",
+            "HLT_MediumIsoPFTau50_Trk30_eta2p1_1pr_MET100_v"
         ),
 	L1Extra = cms.InputTag("l1extraParticles:MET"),
 	TriggerObjects = cms.InputTag("selectedPatTrigger"),
@@ -129,7 +132,7 @@ process.runEDFilter = cms.Path(process.PUInfo*
                                process.skimCounterAll*  
                                process.skim*
                                process.skimCounterPassed*
-                               process.CustomisationsSequence*
+####FIXME                               process.CustomisationsSequence*
                                process.dump)
 
 #process.output = cms.OutputModule("PoolOutputModule",

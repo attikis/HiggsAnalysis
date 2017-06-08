@@ -1631,7 +1631,9 @@ def CreateCfgFile(dataset, taskDirName, requestName, infilePath, opts):
 	    match = crab_split_re.search(line)
 	    if match:
 		line = "config.Data.splitting = 'LumiBased'\n"
-		line+= "config.Data.lumiMask = '"+ dataset.lumiMask + "'\n"
+                print "check dataset.lumiMask",dataset.lumiMask
+                if os.path.isfile(dataset.lumiMask):
+		    line+= "config.Data.lumiMask = '"+ dataset.lumiMask + "'\n"
                 
 	    # Set the "unitsPerJob" field which suggests (but not impose) how many files, lumi sections or events to include in each job.
 	    match = crab_splitunits_re.search(line)	

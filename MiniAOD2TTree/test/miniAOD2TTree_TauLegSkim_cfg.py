@@ -4,8 +4,8 @@ from HiggsAnalysis.MiniAOD2TTree.tools.HChOptions import getOptionsDataVersion
 
 process = cms.Process("TTreeDump")
 
-dataVersion = "92Xmc"
-#dataVersion = "92Xdata"
+#dataVersion = "92Xmc"
+dataVersion = "92Xdata"
 
 options, dataVersion = getOptionsDataVersion(dataVersion)
 print dataVersion
@@ -25,7 +25,7 @@ process.options = cms.untracked.PSet(
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-	'/store/relval/CMSSW_9_2_0/RelValTTbar_13/MINIAODSIM/91X_upgrade2017_realistic_v5-v1/10000/68990FD8-4B3C-E711-B7A4-0025905AA9CC.root',
+
     ),
     secondaryFileNames = cms.untracked.vstring(
     )
@@ -87,23 +87,32 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
 #        TriggerResults = cms.InputTag("TriggerResults::HLT25NSV4L1V5"),
 #        TriggerResults = cms.InputTag("TriggerResults::TauHLT"),
 	TriggerBits = cms.vstring(
-            "MC_IsoMu_v7",
-            "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_v",
-            "HLT_IsoMu17_eta2p1_LooseIsoPFTau20_SingleL1_v",
-            "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_v",
-            "HLT_IsoMu19_eta2p1_LooseIsoPFTau20_SingleL1_v",
-            "HLT_IsoMu19_eta2p1_MediumIsoPFTau32_Trk1_eta2p1_Reg_v",
-            "HLT_IsoMu18_v",
-            "HLT_IsoMu20_v",
-            "HLT_IsoMu21_eta2p1_LooseIsoPFTau20_SingleL1_v",
-            "HLT_IsoMu21_eta2p1_MediumIsoPFTau32_Trk1_eta2p1_Reg_v",
-            "HLT_IsoMu21_eta2p1_LooseIsoPFTau50_Trk30_eta2p1_SingleL1_v",
-            "HLT_IsoMu22_v",
-            "HLT_IsoMu22_eta2p1_v",
-            "HLT_IsoMu24_v",
-            "HLT_VLooseIsoPFTau120_Trk50_eta2p1_v",
-            "HLT_VLooseIsoPFTau140_Trk50_eta2p1_v",
-            "HLT_LooseIsoPFTau50_Trk30_eta2p1_v",
+            "HLT_IsoMu24_eta2p1_v",
+            "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_CrossL1_v",
+            "HLT_IsoMu20_eta2p1_MediumChargedIsoPFTau27_eta2p1_CrossL1_v",
+            "HLT_IsoMu20_eta2p1_TightChargedIsoPFTau27_eta2p1_CrossL1_v",
+            "HLT_IsoMu20_eta2p1_LooseChargedIsoPFTau27_eta2p1_TightID_CrossL1_v",
+            "HLT_IsoMu20_eta2p1_MediumChargedIsoPFTau27_eta2p1_TightID_CrossL1_v",
+            "HLT_IsoMu20_eta2p1_TightChargedIsoPFTau27_eta2p1_TightID_CrossL1_v",
+
+            "HLT_IsoMu24_eta2p1_LooseChargedIsoPFTau20_eta2p1_SingleL1_v",
+            "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau20_eta2p1_SingleL1_v",
+            "HLT_IsoMu24_eta2p1_TightChargedIsoPFTau20_eta2p1_SingleL1_v",
+            "HLT_IsoMu24_eta2p1_LooseChargedIsoPFTau20_eta2p1_TightID_SingleL1_v",
+            "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau20_eta2p1_TightID_SingleL1_v",     
+            "HLT_IsoMu24_eta2p1_TightChargedIsoPFTau20_eta2p1_TightID_SingleL1_v",
+
+            "HLT_IsoMu24_eta2p1_LooseChargedIsoPFTau35_Trk1_eta2p1_Reg_CrossL1_v",
+            "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau35_Trk1_eta2p1_Reg_CrossL1_v",      
+            "HLT_IsoMu24_eta2p1_TightChargedIsoPFTau35_Trk1_eta2p1_Reg_CrossL1_v",      
+            "HLT_IsoMu24_eta2p1_LooseChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_CrossL1_v",      
+            "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_CrossL1_v",
+            "HLT_IsoMu24_eta2p1_TightChargedIsoPFTau35_Trk1_TightID_eta2p1_Reg_CrossL1_v",
+
+            "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau50_Trk30_eta2p1_1pr_v",
+
+            "HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_v",
+            "HLT_MediumChargedIsoPFTau100HighPtRelaxedIso_Trk50_eta2p1_1pr_v"
         ),
 	L1Extra = cms.InputTag("l1extraParticles:MET"),
 #        L1Extra = cms.InputTag("l1extraParticles:MET:HLT25NSV4L1V5"),
@@ -112,17 +121,10 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
         L1TauObjects = cms.InputTag("caloStage2Digis:Tau"),
         L1EtSumObjects = cms.InputTag("caloStage2Digis:EtSum"),
 	TriggerMatch = cms.untracked.vstring(
-	    "LooseIsoPFTau50_Trk30_eta2p1",
+	    "MediumChargedIsoPFTau50_Trk30_eta2p1_1pr",
 	    "LooseIsoPFTau20",
             "MediumIsoPFTau32_Trk1_eta2p1_Reg",
-	    "IsoMu16_eta2p1",
-            "IsoMu17_eta2p1",
-            "IsoMu19_eta2p1",
-            "IsoMu18",
-            "IsoMu20",
-            "IsoMu21_eta2p1",
-            "IsoMu22",
-            "IsoMu24",
+            "IsoMu24_eta2p1",
 	),
 	filter = cms.untracked.bool(False)
     ),
