@@ -1,6 +1,4 @@
-#lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-276811_13TeV_PromptReco_Collisions16_JSON.txt" # ICHEP dataset 271036-276811
-#lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/Cert_271036-284044_13TeV_PromptReco_Collisions16_JSON_NoL1T.txt"
-lumiMask = ""
+lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-299649_13TeV_PromptReco_Collisions17_JSON.txt"
 
 #================================================================================================ 
 # Class Definition
@@ -32,7 +30,9 @@ class Dataset:
 #================================================================================================ 
 datasetsTauData = []
 das = ""
-datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsTauData.append(Dataset('/Tau/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsTauData.append(Dataset('/Tau/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
 
 datasetsJetHTData = []
@@ -77,7 +77,7 @@ datasetsSingleTop = []
 
 datasetsTop = []
 das = ""
-#datasetsTop.append(Dataset('', dataVersion="83Xmc", dasQuery=das)) # new tune
+datasetsTop.append(Dataset('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/PhaseISpring17MiniAOD-FlatPU28to62_90X_upgrade2017_realistic_v20-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das)) # new tune
 
 
 datasetsTTJets = []
@@ -184,18 +184,16 @@ l1Datasets.extend(datasetsNeutrino)
 l1Datasets.extend(datasetsQCD)
 
 signalAnalysisDatasets = []
-"""
 signalAnalysisDatasets.extend(datasetsTauData)
-signalAnalysisDatasets.extend(datasetsDY) 
+#signalAnalysisDatasets.extend(datasetsDY) 
 signalAnalysisDatasets.extend(datasetsTop)
-signalAnalysisDatasets.extend(datasetsSingleTop)
-signalAnalysisDatasets.extend(datasetsWJets)  
-signalAnalysisDatasets.extend(datasetsDiboson)
+#signalAnalysisDatasets.extend(datasetsSingleTop)
+#signalAnalysisDatasets.extend(datasetsWJets)  
+#signalAnalysisDatasets.extend(datasetsDiboson)
 #signalAnalysisDatasets.extend(datasetsQCD)
-signalAnalysisDatasets.extend(datasetsSignalTauNu)
+#signalAnalysisDatasets.extend(datasetsSignalTauNu)
 #signalAnalysisDatasets.extend(datasetsSignalTB)
-"""
-signalAnalysisDatasets.extend(datasetsSignalTauNu_TRGdev)
+#signalAnalysisDatasets.extend(datasetsSignalTauNu_TRGdev)
 
 #signalAnalysisDatasets.extend(datasetsDY_reHLT)
 #signalAnalysisDatasets.extend(datasetsTop_reHLT)

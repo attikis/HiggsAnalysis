@@ -230,14 +230,14 @@ config = {
         "triggerProcess": "HLT",
         "recoProcess": "RECO",                                       
         "metFilteringProcess": "RECO",
-        "globalTag": "92X_dataRun2_Prompt_v2",
+        "globalTag": "92X_dataRun2_Prompt_v8",
     },
     "92Xmc": {
         "simProcess": "SIM",
         "triggerProcess": "HLT",
         "recoProcess": "RECO",
         "metFilteringProcess": "PAT",
-        "globalTag": "90X_upgrade2017_TSG_Hcal_V3",
+        "globalTag": "90X_upgrade2017_realistic_v20",
         "signalTrigger": "",
     }
 }

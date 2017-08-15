@@ -7,8 +7,8 @@ import FWCore.ParameterSet.Config as cms
 
 def produceCustomisations(process,isData):
     process.CustomisationsSequence = cms.Sequence()
-#    reproduceJEC(process)
-#    reproduceElectronID(process)
+    reproduceJEC(process)
+    reproduceElectronID(process)
     reproduceMETNoiseFilters(process)
     reproduceMET(process,isData)
     reproduceJEC(process)
@@ -21,8 +21,8 @@ def reproduceJEC(process):
     from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
     updateJetCollection(
         process,
-#        jetSource = cms.InputTag('slimmedJets'),
-        jetSource = cms.InputTag('cleanedPatJets'),
+        jetSource = cms.InputTag('slimmedJets'),
+#        jetSource = cms.InputTag('cleanedPatJets'),
         labelName = 'UpdatedJEC',
         jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
     )
