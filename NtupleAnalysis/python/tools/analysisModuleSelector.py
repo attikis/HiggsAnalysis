@@ -104,6 +104,17 @@ class AnalysisModuleSelector:
             print "Will run over %d modules (%d eras x %d searchModes x %d optimizationModes)" % (count, len(self.getSelectedEras()), len(self.getSelectedSearchModes()), len(self.getSelectedOptimizationModes()))
         return count
 
+    def getSelectedCombinationCountIndividually(self):
+        count        = self.getSelectedCombinationCount()
+        nEras        = len(self.getSelectedEras())
+        nSearchModes = len(self.getSelectedSearchModes())
+        nOptModes    = len(self.getSelectedOptimizationModes())
+        if self._disableSystematicsList:
+            nSysVars = 0
+        else:
+            nSysVars = len(self.getSelectedSystematicVariations())
+        return count, nEras, nSearchModes, nOptModes, nSysVars
+
     def iterSelectedCombinations(self):
         def gen3(lst1, lst2, lst3):
             for x1 in lst1:
@@ -135,7 +146,7 @@ class AnalysisModuleSelector:
     def addOtherSource(self, label, dsetMgrCreator):
         self._otherSources.append(AnalysisModuleSelectorSource(dsetMgrCreator, label))
 
-    def doSelect(self, opts=None):
+    def doSelect(self, opts=None, printSelections=True):
         # Find available modules
         self._findCommonAvailableEras()
         self._findCommonAvailableSearchModes()
@@ -161,7 +172,8 @@ class AnalysisModuleSelector:
             if not self._disableSystematicsList:
                 self._selectedSystematicVariations = self._applySelectionOnModules("SystematicVariation", opts.systematicVariation, self._availableSystematicVariations, [""]) # pick only the nominal as default
             # Print as information a breakdown of selected eras, search modes, and optimization modes
-            self._printSelection()
+            if printSelections:
+                self._printSelection()
             # Now, the selected eras, search modes, and optimization modes are available with the getters
 
     def _findCommonAvailableEras(self):
