@@ -1,4 +1,5 @@
-lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-299649_13TeV_PromptReco_Collisions17_JSON.txt"
+lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-302654_13TeV_PromptReco_Collisions17_JSON.txt"
+
 
 #================================================================================================ 
 # Class Definition
@@ -33,7 +34,7 @@ das = ""
 datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 datasetsTauData.append(Dataset('/Tau/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 datasetsTauData.append(Dataset('/Tau/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-
+datasetsTauData.append(Dataset('/Tau/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
 datasetsJetHTData = []
 das = ""
@@ -41,7 +42,11 @@ das = ""
 
 datasetsMuonData = []
 das = ""
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
 
 datasetsZeroBiasData = []
@@ -161,8 +166,8 @@ datasetsSignalTauNu_TRGdev.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-
 # Dataset Grouping
 #================================================================================================ 
 tauLegDatasets = []
-tauLegDatasets.extend(datasetsZeroBiasData)
-#tauLegDatasets.extend(datasetsMuonData)
+#tauLegDatasets.extend(datasetsZeroBiasData)
+tauLegDatasets.extend(datasetsMuonData)
 #tauLegDatasets.extend(datasetsDY)
 #tauLegDatasets.extend(datasetsZprime)
 # tauLegDatasets.extend(datasetsWJets_reHLT)
@@ -186,7 +191,7 @@ l1Datasets.extend(datasetsQCD)
 signalAnalysisDatasets = []
 signalAnalysisDatasets.extend(datasetsTauData)
 #signalAnalysisDatasets.extend(datasetsDY) 
-signalAnalysisDatasets.extend(datasetsTop)
+#signalAnalysisDatasets.extend(datasetsTop)
 #signalAnalysisDatasets.extend(datasetsSingleTop)
 #signalAnalysisDatasets.extend(datasetsWJets)  
 #signalAnalysisDatasets.extend(datasetsDiboson)
