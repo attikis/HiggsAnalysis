@@ -48,6 +48,11 @@ datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', da
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
+datasetsElectronData = []
+das = ""
+datasetsElectronData.append(Dataset('/SingleElectron/Run2017C-PromptReco-v3/AOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsElectronData.append(Dataset('/SingleElectron/Run2017D-PromptReco-v1/AOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+
 
 datasetsZeroBiasData = []
 das = ""
@@ -165,7 +170,8 @@ datasetsSignalTauNu_TRGdev.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-
 #================================================================================================ 
 tauLegDatasets = []
 #tauLegDatasets.extend(datasetsZeroBiasData)
-tauLegDatasets.extend(datasetsMuonData)
+#tauLegDatasets.extend(datasetsMuonData)
+tauLegDatasets.extend(datasetsElectronData)
 #tauLegDatasets.extend(datasetsDY)
 #tauLegDatasets.extend(datasetsZprime)
 # tauLegDatasets.extend(datasetsWJets_reHLT)
