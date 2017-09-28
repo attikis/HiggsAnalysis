@@ -112,7 +112,8 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
             "HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau50_Trk30_eta2p1_1pr_v",
 
             "HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_v",
-            "HLT_MediumChargedIsoPFTau100HighPtRelaxedIso_Trk50_eta2p1_1pr_v"
+            "HLT_MediumChargedIsoPFTau100HighPtRelaxedIso_Trk50_eta2p1_1pr_v",
+            "HLT_MediumChargedIsoPFTau180HighPtRelaxedIso_Trk50_eta2p1_1pr_v",
         ),
 	L1Extra = cms.InputTag("l1extraParticles:MET"),
 #        L1Extra = cms.InputTag("l1extraParticles:MET:HLT25NSV4L1V5"),
