@@ -170,14 +170,15 @@ datasetsSignalTauNu_TRGdev.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-
 #================================================================================================ 
 tauLegDatasets = []
 #tauLegDatasets.extend(datasetsZeroBiasData)
-#tauLegDatasets.extend(datasetsMuonData)
-tauLegDatasets.extend(datasetsElectronData)
+tauLegDatasets.extend(datasetsMuonData)
 #tauLegDatasets.extend(datasetsDY)
 #tauLegDatasets.extend(datasetsZprime)
 # tauLegDatasets.extend(datasetsWJets_reHLT)
 # tauLegDatasets.extend(datasetsQCDMuEnriched_reHLT)
 # tauLegDatasets.extend(datasetsH125)
 
+tauLegSingleElectronDatasets = []
+tauLegSingleElectronDatasets.extend(datasetsElectronData)
 
 metLegDatasets = []
 metLegDatasets.extend(datasetsTauData)
@@ -278,13 +279,14 @@ class DatasetGroup:
         Create dataset grouping in a dictionary for easy access.
         '''
 
-        analyses = ["SignalAnalysis", "Hplus2tbAnalysis", "TauLeg", "METLeg", "L1Study", "All"]
+        analyses = ["SignalAnalysis", "Hplus2tbAnalysis", "TauLeg", "TauLegSingleElectron", "METLeg", "L1Study", "All"]
         if self.analysis not in analyses:
             raise Exception("Unknown analysis \"%s\". Please select one of the following: \"%s" % (self.analysis, "\", \"".join(analyses) + "\".") )
 
         self.GroupDict["SignalAnalysis"]   = signalAnalysisDatasets
         self.GroupDict["Hplus2tbAnalysis"] = hplus2tbAnalysisDatasets
         self.GroupDict["TauLeg"]           = tauLegDatasets
+        self.GroupDict["TauLegSingleElectron"] = tauLegSingleElectronDatasets
         self.GroupDict["METLeg"]           = metLegDatasets
         self.GroupDict["L1Study"]          = l1Datasets
         self.GroupDict["All"]              = signalAnalysisDatasets + hplus2tbAnalysisDatasets + metLegDatasets + metLegDatasets
