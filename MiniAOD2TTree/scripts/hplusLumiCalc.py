@@ -77,9 +77,7 @@ import socket
 from optparse import OptionParser
 from collections import OrderedDict
 import ROOT
-from HiggsAnalysis.NtupleAnalysis.tools.aux import execute
 
-import HiggsAnalysis.NtupleAnalysis.tools.multicrab as multicrab
 
 #================================================================================================
 # Global Definitions
@@ -90,7 +88,9 @@ PBARLENGTH  = 10
 minBiasXsecNominal = 69200 #from https://twiki.cern.ch/twiki/bin/viewauth/CMS/POGRecipesICHEP2016
 
 # JSON files
-NormTagJSON     = "/afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json"
+NormTagJSON     = "" # FIXME, in Sept2017 normtag_DATACERT.json gives: "Failed to find data table for the requested time range." 28092017/SL
+#NormTagJSON     = "/afs/cern.ch/user/l/lumipro/public/normtag_file/normtag_DATACERT.json"
+PileUpJSON_2017 = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PileUp/pileup_latest.txt"
 PileUpJSON_2016 = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/pileup_latest.txt"
 PileUpJSON_2015 = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions15/13TeV/PileUp/pileup_latest.txt"
 
@@ -102,6 +102,16 @@ pu_re = re.compile("\|\s+\S+\s+\|\s+\S+\s+\|\s+.*\s+\|\s+.*\s+\|\s+\S+\s+\|\s+\S
 #================================================================================================
 # Function Definition
 #================================================================================================
+
+def checkCrabInPath():
+    try:
+        retcode = subprocess.call(["crab"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except OSError, e:
+        if e.errno == errno.ENOENT:
+            raise Exception("crab executable not found in $PATH. Is the crab environment loaded?")
+        else:
+            raise e
+
 def ConvertCommandToEOS(cmd, opts):
     '''
     Convert a given command to EOS-path. Used when working solely with EOS
@@ -419,7 +429,7 @@ def isEmpty(taskdir, opts):
     if opts.transferToEOS:
         return False
     path  = os.path.join(taskdir, "results")
-    files = execute("ls %s"%path)
+    files = Execute("ls %s"%path)
     return len(files)==0
 
 
@@ -447,7 +457,8 @@ def GetCrabDirectories(opts):
     '''
     Verbose("GetCrabDirectories()", True)
 
-    crabdirs = multicrab.getTaskDirectories(opts)
+    crabdirs = dirs = glob.glob(os.path.join("", "*"))
+    crabdirs = filter(lambda d: os.path.isdir(d), crabdirs)
     crabdirs = filter(lambda x: "multicrab_" not in x, crabdirs) # Remove "multicrab_" directory from list 
 
     crabdirs = GetIncludeExcludeDatasets(crabdirs, opts)
@@ -551,6 +562,9 @@ def CallBrilcalc(task, BeamStatus, CorrectionTag, LumiUnit, InputFile, printOutp
 
     # Execute the command
     cmd     = [exe,"lumi", "-b", BeamStatus, "--normtag", CorrectionTag, "-u", LumiUnit, "-i", InputFile]
+    if len(CorrectionTag) == 0:
+	print "Warning, no normtag file used."
+	cmd     = [exe,"lumi", "-b", BeamStatus, "-u", LumiUnit, "-i", InputFile]
     cmd_ssh = ["-c", "offsite"]
     if opts.offsite:
         cmd.extend(cmd_ssh)
@@ -736,8 +750,10 @@ def main(opts, args):
     
     cell = "\|\s+(?P<%s>\S+)\s+"
 
-    allowedColl = ["2015", "2016"]
-    if opts.collisions == "2016":
+    allowedColl = ["2015", "2016", "2017"]
+    if opts.collisions == "2017":   
+        PileUpJSON = PileUpJSON_2017
+    elif opts.collisions == "2016":
         PileUpJSON = PileUpJSON_2016
     elif opts.collisions == "2015":
         PileUpJSON = PileUpJSON_2015
@@ -774,7 +790,7 @@ def main(opts, args):
                 continue
     
             if opts.report:
-                multicrab.checkCrabInPath()
+                checkCrabInPath()
                 cmd = ["crab", "report", d]
                 Verbose(" ".join(cmd) )
                 p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -955,13 +971,13 @@ if __name__ == "__main__":
     REPORT        = True
     VERBOSE       = False
     OFFSITE       = False
-    COLLISIONS    = "2016"
+    COLLISIONS    = "2017"
     DIRNAME       = ""
     TRANSFERTOEOS = False
 
     parser = OptionParser(usage="Usage: %prog [options] [crab task dirs]\n\nCRAB task directories can be given either as the last arguments, or with -d.")
 
-    multicrab.addOptions(parser)
+####    multicrab.addOptions(parser)
 
     parser.add_option("-f", "--files", dest="files", type="string", action="append", default=FILES,
                       help="JSON files to calculate the luminosity for (this or -d is required) [default: %s]" % (FILES) )
@@ -1006,6 +1022,8 @@ if __name__ == "__main__":
 
 
     (opts, args) = parser.parse_args()
+    if not parser.has_option("dirs"):
+        opts.dirs = []
     opts.dirs.extend(args)
     
     if opts.dirName == "":
