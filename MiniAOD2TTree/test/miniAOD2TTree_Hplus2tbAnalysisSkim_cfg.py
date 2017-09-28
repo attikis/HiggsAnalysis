@@ -17,11 +17,17 @@ maxWarnings  = 100
 reportEvery  = 100
 dataVersion  = "80Xdata"
 datasetFiles = [
-    '/store/data/Run2016B/JetHT/MINIAOD/03Feb2017_ver2-v2/110000/003A92CA-6FED-E611-82CD-0025905B8590.root',
-    '/store/data/Run2016B/JetHT/MINIAOD/03Feb2017_ver2-v2/110000/0099149C-4EED-E611-8A63-0025905B85C6.root',
-    '/store/data/Run2016B/JetHT/MINIAOD/03Feb2017_ver2-v2/110000/00EADFD5-4DED-E611-AFAD-0CC47A4D7658.root',
-    '/store/data/Run2016B/JetHT/MINIAOD/03Feb2017_ver2-v2/110000/04037BCA-A6EC-E611-A7B1-0CC47A4D76C0.root',
-    '/store/data/Run2016B/JetHT/MINIAOD/03Feb2017_ver2-v2/110000/045EEFD5-4DED-E611-B5A5-0CC47A7C357E.root']
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/000C9243-5634-E711-A2A8-0CC47A7C3612.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/04BFE78E-5D34-E711-BCA5-0025905A48D8.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/0A3F8104-6434-E711-9E9A-0CC47A4D76C6.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/0C95C3F7-3534-E711-8FBB-0CC47A7C3612.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/1032026F-4334-E711-84CE-0CC47A4C8E3C.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/10898316-5034-E711-8167-0CC47A4D7644.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/12062AF2-3A34-E711-BA6A-003048FFD79E.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/12A273CE-2235-E711-A7C7-0025905A605E.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/12CED57A-4334-E711-961B-003048FFD734.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/14BEF0C3-4234-E711-B811-0025905A48E4.root',
+'/store/data/Run2016C/JetHT/MINIAOD/18Apr2017-v1/100000/16E75845-5634-E711-915E-0025905A60DE.root']
 
 #dataVersion  = "80Xmc" 
 #datasetFiles = [
@@ -148,33 +154,22 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
     Trigger = cms.PSet(
 	TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.getTriggerProcess())),
 	TriggerBits    = cms.vstring(
-            "HLT_QuadJet45_DoubleBTagCSV_p087_v",
-            "HLT_QuadPFJet_VBF_v",
             "HLT_PFHT300_v",
+            "HLT_PFHT350_v",
             "HLT_PFHT400_v",
-            "HLT_PFHT475_v",
-            "HLT_PFHT600_v",
-            "HLT_PFHT650_v",
+            #"HLT_PFHT475_v",
+            #"HLT_PFHT600_v",
+            #"HLT_PFHT650_v",
             "HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v",
             "HLT_PFHT450_SixJet40_BTagCSV_p056_v",
             "HLT_PFHT400_SixJet30_v",
             "HLT_PFHT450_SixJet40_v",
-            "HLT_HT200_v",
-            "HLT_HT275_v",
-            "HLT_HT325_v",
-            "HLT_HT425_v",
-            "HLT_HT575_v",
-            "HLT_HT650_v",
-            "HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200_v",
-            "HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq460_v",
-            "HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq240_v",
-            "HLT_QuadPFJet_BTagCSV_p016_VBF_Mqq500_v",
-            "HLT_QuadPFJet_VBF_v",
         ),
 	L1Extra        = cms.InputTag("l1extraParticles:MET"),
 	TriggerObjects = cms.InputTag("selectedPatTrigger"),
         TriggerMatch   = cms.untracked.vstring(
-            #"LooseIsoPFTau50_Trk30_eta2p1",
+            "HLT_PFHT400_SixJet30_DoubleBTagCSV_p056_v",
+            "HLT_PFHT450_SixJet40_BTagCSV_p056_v",
         ),
 	filter = cms.untracked.bool(False)
     ),

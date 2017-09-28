@@ -31,9 +31,12 @@ public:
     ~Data();
 
     // Status of passing event selection
-    bool passedSelection() const { return bPassedSelection; }
+    bool passedSelection() const { return bPassedSelection; } 
+    /// Status of GenuineB event (if false event is FakeB)
+    bool isGenuineB() const { return bIsGenuineB; }
     // Trijet-1
     const std::vector<Jet>& getJetsUsedAsBJetsInFit() const { return fJetsUsedAsBJetsInFit;}
+    const std::vector<Jet>& getFailedBJetsUsedAsBJetsInFit() const { return fFailedBJetsUsedAsBJetsInFit;}
     const Jet getTrijet1Jet1() const { return fTrijet1Jet1; } 
     const Jet getTrijet1Jet2() const { return fTrijet1Jet2; } 
     const Jet getTrijet1BJet() const { return fTrijet1BJet; } 
@@ -45,26 +48,66 @@ public:
     const Jet getTrijet2BJet() const { return fTrijet2BJet; } 
     const math::XYZTLorentzVector getTrijet2Dijet() const {return fTrijet2Dijet_p4; }
     const math::XYZTLorentzVector getTriJet2() const {return fTrijet2_p4; }
-    // Leading/Subleading Trijets
+    // Leading/Subleading Tetrajet
+    const math::XYZTLorentzVector getLdgTetrajet() const {return fLdgTetrajet_p4;} // uses ldg-trijet and tetrajetBjet (NOT the tetrajet with largest pt)
+    const math::XYZTLorentzVector getSubldgTetrajet() const {return fSubldgTetrajet_p4;}
+    const Jet getTetrajetBJet() const {return fTetrajetBJet;}
+    // Leading/Subleading Trijet
     const math::XYZTLorentzVector getLdgTrijet() const 
     { 
       if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) return fTrijet1_p4; 
       else return fTrijet2_p4; 
     }
+    const Jet getLdgTrijetBJet() const 
+    { 
+      if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) return fTrijet1BJet;
+      else return fTrijet2BJet;
+    }
+    const math::XYZTLorentzVector getLdgTrijetDijet() const
+    { 
+      if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) return fTrijet1Dijet_p4;
+      else return fTrijet2Dijet_p4;
+    }
+    const double getLdgTrijetTopMassWMassRatio() const
+    { 
+      double R = -1.0;
+      if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) R = fTrijet1_p4.mass()/fTrijet1Dijet_p4.mass();
+      else R = fTrijet2_p4.mass()/fTrijet2Dijet_p4.mass();
+      return R;
+    }
+
     const math::XYZTLorentzVector getSubldgTrijet() const
     { 
       if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) return fTrijet2_p4;
       else return fTrijet1_p4; 
     }
+    const Jet getSubldgTrijetBJet() const 
+    { 
+      if (fTrijet1_p4.pt() < fTrijet2_p4.pt()) return fTrijet1BJet;
+      else return fTrijet2BJet;
+    } 
+    const math::XYZTLorentzVector getSubldgTrijetDijet() const
+    { 
+      if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) return fTrijet2Dijet_p4;
+      else return fTrijet1Dijet_p4;
+    }
+    const double getSubldgTrijetTopMassWMassRatio() const
+    { 
+      double R = -1.0;
+      if (fTrijet1_p4.pt() > fTrijet2_p4.pt()) R = fTrijet2_p4.mass()/fTrijet2Dijet_p4.mass();
+      else R = fTrijet1_p4.mass()/fTrijet1Dijet_p4.mass();
+      return R;
+    }
+
     // Leading/Subleading Dijets
     const math::XYZTLorentzVector getLdgDijet() const 
     { 
-      if (fTrijet1Dijet_p4.pt() > fTrijet1Dijet_p4.pt()) return fTrijet1Dijet_p4; 
+      if (fTrijet1Dijet_p4.pt() > fTrijet2Dijet_p4.pt()) return fTrijet1Dijet_p4; 
       else return fTrijet2Dijet_p4; 
     }
     const math::XYZTLorentzVector getSubldgDijet() const 
     {
-      if (fTrijet2Dijet_p4.pt() > fTrijet1Dijet_p4.pt()) return fTrijet2Dijet_p4; 
+      if (fTrijet1Dijet_p4.pt() > fTrijet2Dijet_p4.pt()) return fTrijet2Dijet_p4; 
       else return fTrijet1Dijet_p4;
     }
 
@@ -77,10 +120,13 @@ public:
   private:
     /// Boolean for passing selection
     bool bPassedSelection;
+    // GenuineB = All selected b-jets are genuine, FakeB=At least one selected b-jet is not genuine
+    bool bIsGenuineB;
     /// Fit properties
     double fChiSqr;
     unsigned int fNumberOfFits;
     std::vector<Jet> fJetsUsedAsBJetsInFit;
+    std::vector<Jet> fFailedBJetsUsedAsBJetsInFit;
     /// Trijet-1
     Jet fTrijet1Jet1;
     Jet fTrijet1Jet2;
@@ -117,11 +163,11 @@ public:
   /// Use silentAnalyze if you do not want to fill histograms or increment counters
   Data silentAnalyze(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData);
   // silentAnalyze for FakeBMeasurement
-  Data silentAnalyzeWithoutBJets(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData, const unsigned int maxNumberOfBJetsInTopFit=3);
+  Data silentAnalyzeWithoutBJets(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData, const std::string failedBJetsSortType="Random");
   /// analyze does fill histograms and incrementes counters
   Data analyze(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData);
   // analyze for FakeBMeasurement
-  Data analyzeWithoutBJets(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData, const unsigned int maxNumberOfBJetsInTopFit=3);
+  Data analyzeWithoutBJets(const Event& event, const JetSelection::Data& jetData, const BJetSelection::Data& bjetData, const std::string failedBJetsSortType="Random");
 
 private:
   /// Initialisation called from constructor
@@ -134,6 +180,8 @@ private:
   bool areSameJets(const Jet& jet1, const Jet& jet2);
   // Return true if a selected jet matches a selected bjet
   bool isBJet(const Jet& jet1, const std::vector<Jet>& bjets);
+  // Replaces all output objects with MCJet information (N.B: Wherever possible!)
+  void ReplaceJetsWithGenJets(Data &output);
   // Calculates the index combinations for the di-top fit
   void GetJetIndicesForChiSqrFit(const std::vector<Jet> jets,
 				 const std::vector<Jet> bjets,
@@ -155,14 +203,20 @@ private:
 				 const Jet& jet2,
 				 const Jet& jet3, 
 				 const Jet& jet4);
-  //const math::XYZTLorentzVector dijetWithMinDR_p4,
-  //				 const math::XYZTLorentzVector dijetWithMaxDR_p4);
-  
+
+  /// Determine if event is GenuineB or FakeB  and store internally
+  bool _getIsGenuineB(bool bIsMC, const std::vector<Jet>& selectedBjets);  
 
  
+  const std::vector<Jet> GetJetsToBeUsedInFit(const JetSelection::Data& jetData,
+					      const unsigned int maxNumberOfJets);
+
   const std::vector<Jet> GetBjetsToBeUsedInFit(const BJetSelection::Data& bjetData,
-					       const unsigned int maxNumberOfBJets);
-  // Input parameters
+					       const unsigned int maxNumberOfBJets,
+					       const std::string jetSortType="Random");
+
+  const std::vector<Jet>& GetFailedBJetsUsedAsBJetsInFit(void) const { return myFailedBJetsUsedAsBJetsInFit;} 
+
   // Input parameters
   int nSelectedBJets;
   const double cfg_MassW;
@@ -175,6 +229,12 @@ private:
   const double cfg_dijetWithMaxDR_tetrajetBjet_dPhi_slopeCoeff;
   const double cfg_dijetWithMaxDR_tetrajetBjet_dPhi_yIntercept;
   const DirectionalCut<double> cfg_ChiSqrCut;
+  const DirectionalCut<double> cfg_LowLdgTrijetMassCut;
+  const DirectionalCut<double> cfg_HighLdgTrijetMassCut;
+  const int cfg_MaxJetsToUseInFit;
+  const int cfg_MaxBJetsToUseInFit;
+  const bool cfg_ReplaceJetsWithGenJets;
+  std::vector<Jet> myFailedBJetsUsedAsBJetsInFit;
 
   // Event counter for passing selection
   Count cPassedTopSelection;
@@ -182,161 +242,94 @@ private:
   // Sub counters
   Count cSubAll;
   Count cSubPassedChiSqCut;
+  Count cSubPassedLowLdgTrijetMassCut;
+  Count cSubPassedHighLdgTrijetMassCut;
 
   // Histograms (1D)
-  WrappedTH1 *hChiSqr_Before;
-  WrappedTH1 *hChiSqr_After;
-  WrappedTH1 *hNJetsUsedAsBJetsInFit_Before;
-  WrappedTH1 *hNJetsUsedAsBJetsInFit_After;
-  WrappedTH1 *hNumberOfFits_Before;
-  WrappedTH1 *hNumberOfFits_After;
+  WrappedTH1 *hChiSqr;
+  WrappedTH1 *hNJetsUsedAsBJetsInFit;
+  WrappedTH1 *hNumberOfFits;
 
-  WrappedTH1 *hTetrajetBJetPt_Before;
-  WrappedTH1 *hTetrajetBJetEta_Before;
-  WrappedTH1 *hTetrajetBJetBDisc_Before;
-  WrappedTH1 *hTetrajetBJetPt_After;
-  WrappedTH1 *hTetrajetBJetEta_After;
-  WrappedTH1 *hTetrajetBJetBDisc_After;
-  WrappedTH1 *hTetrajet1Pt_Before;
-  WrappedTH1 *hTetrajet1Mass_Before;
-  WrappedTH1 *hTetrajet1Eta_Before;
-  WrappedTH1 *hTetrajet2Pt_Before;
-  WrappedTH1 *hTetrajet2Mass_Before;
-  WrappedTH1 *hTetrajet2Eta_Before;
-  WrappedTH1 *hLdgTetrajetPt_Before;
-  WrappedTH1 *hLdgTetrajetMass_Before;
-  WrappedTH1 *hLdgTetrajetEta_Before;
-  WrappedTH1 *hSubldgTetrajetPt_Before;
-  WrappedTH1 *hSubldgTetrajetMass_Before;
-  WrappedTH1 *hSubldgTetrajetEta_Before;
-  WrappedTH1 *hTetrajet1Pt_After;
-  WrappedTH1 *hTetrajet1Mass_After;
-  WrappedTH1 *hTetrajet1Eta_After;
-  WrappedTH1 *hTetrajet2Pt_After;
-  WrappedTH1 *hTetrajet2Mass_After;
-  WrappedTH1 *hTetrajet2Eta_After;
-  WrappedTH1 *hLdgTetrajetPt_After;
-  WrappedTH1 *hLdgTetrajetMass_After;
-  WrappedTH1 *hLdgTetrajetEta_After;
-  WrappedTH1 *hSubldgTetrajetPt_After;
-  WrappedTH1 *hSubldgTetrajetMass_After;
-  WrappedTH1 *hSubldgTetrajetEta_After;
+  WrappedTH1 *hTetrajetBJetPt;
+  WrappedTH1 *hTetrajetBJetEta;
+  WrappedTH1 *hTetrajetBJetBDisc;
+  WrappedTH1 *hTetrajet1Pt;
+  WrappedTH1 *hTetrajet1Mass;
+  WrappedTH1 *hTetrajet1Eta;
+  WrappedTH1 *hTetrajet2Pt;
+  WrappedTH1 *hTetrajet2Mass;
+  WrappedTH1 *hTetrajet2Eta;
+  WrappedTH1 *hLdgTetrajetPt;
+  WrappedTH1 *hLdgTetrajetMass;
+  WrappedTH1 *hLdgTetrajetEta;
+  WrappedTH1 *hSubldgTetrajetPt;
+  WrappedTH1 *hSubldgTetrajetMass;
+  WrappedTH1 *hSubldgTetrajetEta;
   
-  WrappedTH1 *hTrijet1Mass_Before;
-  WrappedTH1 *hTrijet2Mass_Before;
-  WrappedTH1 *hTrijet1Mass_After;
-  WrappedTH1 *hTrijet2Mass_After;
-  WrappedTH1 *hTrijet1Pt_Before;
-  WrappedTH1 *hTrijet2Pt_Before;
-  WrappedTH1 *hTrijet1Pt_After;
-  WrappedTH1 *hTrijet2Pt_After;
+  WrappedTH1 *hTrijet1Mass;
+  WrappedTH1 *hTrijet2Mass;
+  WrappedTH1 *hTrijet1Pt;
+  WrappedTH1 *hTrijet2Pt;
 
-  WrappedTH1 *hTrijet1DijetMass_Before;
-  WrappedTH1 *hTrijet2DijetMass_Before;
-  WrappedTH1 *hTrijet1DijetMass_After;
-  WrappedTH1 *hTrijet2DijetMass_After;
-  WrappedTH1 *hTrijet1DijetPt_Before;
-  WrappedTH1 *hTrijet2DijetPt_Before;
-  WrappedTH1 *hTrijet1DijetPt_After;
-  WrappedTH1 *hTrijet2DijetPt_After;
-  WrappedTH1 *hTrijet1DijetDEta_Before;
-  WrappedTH1 *hTrijet2DijetDEta_Before;
-  WrappedTH1 *hTrijet1DijetDEta_After;
-  WrappedTH1 *hTrijet2DijetDEta_After;
-  WrappedTH1 *hTrijet1DijetDPhi_Before;
-  WrappedTH1 *hTrijet2DijetDPhi_Before;
-  WrappedTH1 *hTrijet1DijetDPhi_After;
-  WrappedTH1 *hTrijet2DijetDPhi_After;
-  WrappedTH1 *hTrijet1DijetDR_Before;
-  WrappedTH1 *hTrijet2DijetDR_Before;
-  WrappedTH1 *hTrijet1DijetDR_After;
-  WrappedTH1 *hTrijet2DijetDR_After;
+  WrappedTH1 *hTrijet1DijetMass;
+  WrappedTH1 *hTrijet2DijetMass;
+  WrappedTH1 *hTrijet1DijetPt;
+  WrappedTH1 *hTrijet2DijetPt;
+  WrappedTH1 *hTrijet1DijetDEta;
+  WrappedTH1 *hTrijet2DijetDEta;
+  WrappedTH1 *hTrijet1DijetDPhi;
+  WrappedTH1 *hTrijet2DijetDPhi;
+  WrappedTH1 *hTrijet1DijetDR;
+  WrappedTH1 *hTrijet2DijetDR;
 
-  WrappedTH1 *hTrijet1DijetBJetDR_Before;
-  WrappedTH1 *hTrijet2DijetBJetDR_Before;
-  WrappedTH1 *hTrijet1DijetBJetDR_After;
-  WrappedTH1 *hTrijet2DijetBJetDR_After;
-  WrappedTH1 *hTrijet1DijetBJetDPhi_Before;
-  WrappedTH1 *hTrijet2DijetBJetDPhi_Before;
-  WrappedTH1 *hTrijet1DijetBJetDPhi_After;
-  WrappedTH1 *hTrijet2DijetBJetDPhi_After;
-  WrappedTH1 *hTrijet1DijetBJetDEta_Before;
-  WrappedTH1 *hTrijet2DijetBJetDEta_Before;
-  WrappedTH1 *hTrijet1DijetBJetDEta_After;
-  WrappedTH1 *hTrijet2DijetBJetDEta_After;
+  WrappedTH1 *hTrijet1DijetBJetDR;
+  WrappedTH1 *hTrijet2DijetBJetDR;
+  WrappedTH1 *hTrijet1DijetBJetDPhi;
+  WrappedTH1 *hTrijet2DijetBJetDPhi;
+  WrappedTH1 *hTrijet1DijetBJetDEta;
+  WrappedTH1 *hTrijet2DijetBJetDEta;
 
-  WrappedTH1 *hLdgTrijetPt_Before;
-  WrappedTH1 *hLdgTrijetPt_After;
-  WrappedTH1 *hLdgTrijetMass_Before;
-  WrappedTH1 *hLdgTrijetMass_After;
-  WrappedTH1 *hLdgTrijetJet1Pt_Before;
-  WrappedTH1 *hLdgTrijetJet1Pt_After;
-  WrappedTH1 *hLdgTrijetJet1Eta_Before;
-  WrappedTH1 *hLdgTrijetJet1Eta_After;
-  WrappedTH1 *hLdgTrijetJet1BDisc_Before;
-  WrappedTH1 *hLdgTrijetJet1BDisc_After;
-  WrappedTH1 *hLdgTrijetJet2Pt_Before;
-  WrappedTH1 *hLdgTrijetJet2Pt_After;
-  WrappedTH1 *hLdgTrijetJet2Eta_Before;
-  WrappedTH1 *hLdgTrijetJet2Eta_After;
-  WrappedTH1 *hLdgTrijetJet2BDisc_Before;
-  WrappedTH1 *hLdgTrijetJet2BDisc_After;
-  WrappedTH1 *hLdgTrijetBJetPt_Before;
-  WrappedTH1 *hLdgTrijetBJetPt_After;
-  WrappedTH1 *hLdgTrijetBJetEta_Before;
-  WrappedTH1 *hLdgTrijetBJetEta_After;
-  WrappedTH1 *hLdgTrijetBJetBDisc_Before;
-  WrappedTH1 *hLdgTrijetBJetBDisc_After;
-  WrappedTH1 *hLdgTrijetDiJetPt_Before;
-  WrappedTH1 *hLdgTrijetDiJetPt_After;
-  WrappedTH1 *hLdgTrijetDiJetEta_Before;
-  WrappedTH1 *hLdgTrijetDiJetEta_After;
-  WrappedTH1 *hLdgTrijetDiJetMass_Before;
-  WrappedTH1 *hLdgTrijetDiJetMass_After;
+  WrappedTH1 *hLdgTrijetPt;
+  WrappedTH1 *hLdgTrijetMass;
+  WrappedTH1 *hLdgTrijetTopMassWMassRatio;
+  WrappedTH1 *hLdgTrijetJet1Pt;
+  WrappedTH1 *hLdgTrijetJet1Eta;
+  WrappedTH1 *hLdgTrijetJet1BDisc;
+  WrappedTH1 *hLdgTrijetJet2Pt;
+  WrappedTH1 *hLdgTrijetJet2Eta;
+  WrappedTH1 *hLdgTrijetJet2BDisc;
+  WrappedTH1 *hLdgTrijetBJetPt;
+  WrappedTH1 *hLdgTrijetBJetEta;
+  WrappedTH1 *hLdgTrijetBJetBDisc;
+  WrappedTH1 *hLdgTrijetDiJetPt;
+  WrappedTH1 *hLdgTrijetDiJetEta;
+  WrappedTH1 *hLdgTrijetDiJetMass;
 
-  WrappedTH1 *hSubldgTrijetPt_Before;
-  WrappedTH1 *hSubldgTrijetPt_After;
-  WrappedTH1 *hSubldgTrijetMass_Before;
-  WrappedTH1 *hSubldgTrijetMass_After;
-  WrappedTH1 *hSubldgTrijetJet1Pt_Before;
-  WrappedTH1 *hSubldgTrijetJet1Pt_After;
-  WrappedTH1 *hSubldgTrijetJet1Eta_Before;
-  WrappedTH1 *hSubldgTrijetJet1Eta_After;
-  WrappedTH1 *hSubldgTrijetJet1BDisc_Before;
-  WrappedTH1 *hSubldgTrijetJet1BDisc_After;
-  WrappedTH1 *hSubldgTrijetJet2Pt_Before;
-  WrappedTH1 *hSubldgTrijetJet2Pt_After;
-  WrappedTH1 *hSubldgTrijetJet2Eta_Before;
-  WrappedTH1 *hSubldgTrijetJet2Eta_After;
-  WrappedTH1 *hSubldgTrijetJet2BDisc_Before;
-  WrappedTH1 *hSubldgTrijetJet2BDisc_After;
-  WrappedTH1 *hSubldgTrijetBJetPt_Before;
-  WrappedTH1 *hSubldgTrijetBJetPt_After;
-  WrappedTH1 *hSubldgTrijetBJetEta_Before;
-  WrappedTH1 *hSubldgTrijetBJetEta_After;
-  WrappedTH1 *hSubldgTrijetBJetBDisc_Before;
-  WrappedTH1 *hSubldgTrijetBJetBDisc_After;
-  WrappedTH1 *hSubldgTrijetDiJetPt_Before;
-  WrappedTH1 *hSubldgTrijetDiJetPt_After;
-  WrappedTH1 *hSubldgTrijetDiJetEta_Before;
-  WrappedTH1 *hSubldgTrijetDiJetEta_After;
-  WrappedTH1 *hSubldgTrijetDiJetMass_Before;
-  WrappedTH1 *hSubldgTrijetDiJetMass_After;
+  WrappedTH1 *hSubldgTrijetPt;
+  WrappedTH1 *hSubldgTrijetTopMassWMassRatio;
+  WrappedTH1 *hSubldgTrijetMass;
+  WrappedTH1 *hSubldgTrijetJet1Pt;
+  WrappedTH1 *hSubldgTrijetJet1Eta;
+  WrappedTH1 *hSubldgTrijetJet1BDisc;
+  WrappedTH1 *hSubldgTrijetJet2Pt;
+  WrappedTH1 *hSubldgTrijetJet2Eta;
+  WrappedTH1 *hSubldgTrijetJet2BDisc;
+  WrappedTH1 *hSubldgTrijetBJetPt;
+  WrappedTH1 *hSubldgTrijetBJetEta;
+  WrappedTH1 *hSubldgTrijetBJetBDisc;
+  WrappedTH1 *hSubldgTrijetDiJetPt;
+  WrappedTH1 *hSubldgTrijetDiJetEta;
+  WrappedTH1 *hSubldgTrijetDiJetMass;
 
   // Histograms (2D)
-  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DPhiVsDPhi_Before;
-  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DPhiVsDPhi_After;
-  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DRVsDR_Before;
-  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DRVsDR_After;
-  WrappedTH2 *hTrijet1MassVsChiSqr_Before;
-  WrappedTH2 *hTrijet2MassVsChiSqr_Before;
-  WrappedTH2 *hTrijet1MassVsChiSqr_After;
-  WrappedTH2 *hTrijet2MassVsChiSqr_After;
-  WrappedTH2 *hTrijet1DijetPtVsDijetDR_Before;
-  WrappedTH2 *hTrijet2DijetPtVsDijetDR_Before;
-  WrappedTH2 *hTrijet1DijetPtVsDijetDR_After;
-  WrappedTH2 *hTrijet2DijetPtVsDijetDR_After;
-
+  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DPhiVsDPhi;
+  WrappedTH2 *hTetrajetBJetDijetWithMaxDR_TetrajetBJetDijetWithMinDR_DRVsDR;
+  WrappedTH2 *hTrijet1MassVsChiSqr;
+  WrappedTH2 *hTrijet2MassVsChiSqr;
+  WrappedTH2 *hTrijet1DijetPtVsDijetDR;
+  WrappedTH2 *hTrijet2DijetPtVsDijetDR;
+  WrappedTH2 *hLdgTrijetPt_Vs_LdgTrijetDijetPt;
+  WrappedTH2 *hSubldgTrijetPt_Vs_SubldgTrijetDijetPt;
 };
 
 #endif
