@@ -39,6 +39,10 @@ eras["2016ICHEP"] = "SingleMuon_Run2016B|SingleMuon_Run2016C|SingleMuon_Run2016D
 eras["2016HIP"] = "SingleMuon_Run2016B|SingleMuon_Run2016C|SingleMuon_Run2016D|SingleMuon_Run2016E|277816_278800"
 eras["2016HIPFIXED"] = "278801_278808|SingleMuon_Run2016G|SingleMuon_Run2016H"
 eras["2016"] = "SingleMuon_Run2016"
+eras["2017C"] = "SingleMuon_Run2017C"
+eras["2017D"] = "SingleMuon_Run2017D"
+eras["2017"] = "SingleMuon_Run2017"
+
 runmin = -1
 runmax = -1
 
@@ -151,6 +155,10 @@ def createAnalyzer(dataVersion,era):
 
 #        runmin,runmax = process.getRuns()
 #        a.lumi    = lumi
+        if "2017" in era:
+            a.Trigger.triggerOR = ["HLT_IsoMu24_eta2p1_vx"]
+            a.Trigger.triggerOR2= ["HLT_IsoMu24_eta2p1_MediumChargedIsoPFTau50_Trk30_eta2p1_1pr_vx"]
+
         a.runMin  = runmin
         a.runMax  = runmax
     else:
@@ -195,7 +203,8 @@ def addAnalyzer(era):
 #addAnalyzer("2016ICHEP")
 #addAnalyzer("2016HIP")
 #addAnalyzer("2016HIPFIXED")
-addAnalyzer("2016")
+#addAnalyzer("2016")
+addAnalyzer("2017")
 
 # Run the analysis
 #process.run()

@@ -16,7 +16,8 @@ from PythonWriter import PythonWriter
 pythonWriter = PythonWriter()
 
 ROOT.gROOT.SetBatch(True)
-plotDir = "TauLeg2016"
+#plotDir = "TauLeg2016"
+plotDir = "TauLeg2017"
 
 formats = [".pdf",".png"]
 
@@ -153,9 +154,9 @@ def analyze(analysis=None):
         datasets = dataset.getDatasetsFromMulticrabDirs(paths,excludeTasks="Silver|GluGluHToTauTau_M125")
         analysis = datasets.getAllDatasets()[0].getAnalysisName()
 
-#    datasetsDY = None
-    datasetsDY = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="DYJetsToLL")
-    datasetsDY = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="DYJetsToLL|Zprime")
+    datasetsDY = None
+#    datasetsDY = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="DYJetsToLL")
+#    datasetsDY = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="DYJetsToLL|Zprime")
 #    datasets = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,excludeTasks="GluGluHToTauTau_M125|TTJets")
     datasetsH125 = None
 #    datasetsH125 = dataset.getDatasetsFromMulticrabDirs(paths,analysisName=analysis,includeOnlyTasks="GluGluHToTauTau_M125",emptyDatasetsAsNone=True)
@@ -238,7 +239,8 @@ def analyze(analysis=None):
         p.getFrame2().GetYaxis().SetTitle("Ratio")
         p.getFrame2().GetYaxis().SetTitleOffset(1.6)
 
-    histograms.addText(0.5, 0.6, "LooseIsoPFTau50_Trk30_eta2p1", 17)
+#    histograms.addText(0.5, 0.6, "LooseIsoPFTau50_Trk30_eta2p1", 17)
+    histograms.addText(0.5, 0.6, "MediumChargedIsoPFTau50_Trk30_eta2p1_1pr", 17)
 #    histograms.addText(0.5, 0.6, "VLooseIsoPFTau120_Trk50_eta2p1", 17)
 #    histograms.addText(0.5, 0.6, "VLooseIsoPFTau140_Trk50_eta2p1", 17)
 #    label = analysis.split("_")[len(analysis.split("_")) -1]
