@@ -25,7 +25,7 @@ process.options = cms.untracked.PSet(
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-
+	'/store/data/Run2017D/Tau/MINIAOD/PromptReco-v1/000/302/031/00000/323EDA17-438F-E711-8394-02163E019E12.root',
     ),
     secondaryFileNames = cms.untracked.vstring(
     )
@@ -129,9 +129,9 @@ process.dump = cms.EDFilter('MiniAOD2TTreeFilter',
 	),
 	filter = cms.untracked.bool(False)
     ),
-####FIXME    METNoiseFilter = process.METNoiseFilter,
+    METNoiseFilter = process.METNoiseFilter,
     Taus      = process.TausNoSysVariations,
-#    Electrons = process.Electrons,
+    Electrons = process.Electrons,
     Muons     = process.Muons,
     Jets      = process.JetsNoSysVariations,
     METs      = process.METsNoSysVariations,
@@ -154,14 +154,14 @@ process.skim.TriggerResults = cms.InputTag("TriggerResults::"+str(dataVersion.ge
 
 # === Setup customizations
 from HiggsAnalysis.MiniAOD2TTree.CommonFragments import produceCustomisations
-####FIXME produceCustomisations(process,dataVersion.isData()) # This produces process.CustomisationsSequence which needs to be included to path
+produceCustomisations(process,dataVersion.isData()) # This produces process.CustomisationsSequence which needs to be included to path
 
 # module execution
 process.runEDFilter = cms.Path(process.PUInfo*
                                process.skimCounterAll*
                                process.skim*
                                process.skimCounterPassed*
-####FIXME                               process.CustomisationsSequence*
+                               process.CustomisationsSequence*
                                process.dump)
 
 #process.output = cms.OutputModule("PoolOutputModule",
