@@ -825,6 +825,8 @@ def replaceQCDFromData(datasetMgr, datasetQCDdata):
 # done via TGraphAsymmErrors and Clopper-Pearson method (one of the
 # methods recommended by statistics committee).
 def _createRatio(rootHisto1, rootHisto2, ytitle, isBinomial=False):
+    print "Funktio: CREATERATIO"
+
     if isBinomial:
         function = _createRatioBinomial
     else:
@@ -832,18 +834,22 @@ def _createRatio(rootHisto1, rootHisto2, ytitle, isBinomial=False):
     return function(rootHisto1, rootHisto2, ytitle)
 
 def _createRatioHistos(histo1, histo2, ytitle, ratioType=None, ratioErrorOptions={}):
+    print "Funktio: CREATERATIOHISTOS"
+
     if ratioType is None:
         ratioType = "errorPropagation"
 
     ret = []
     if ratioType == "errorPropagation":
         ret.extend(_createRatioErrorPropagation(histo1, histo2, ytitle, returnHisto=True))
+	print "Funktio: CREATERATIOERRORPROPAGATION"
     elif ratioType == "binomial":
         h = _createHisto(_createRatioBinomial(histo1, histo2, ytitle))
         h.setDrawStyle("EP")
         h.setLegendLabel(None)
         ret.append(h)
     elif ratioType == "errorScale":
+	print "Funktio: errorScale"
         ret.extend(_createRatioHistosErrorScale(histo1, histo2, ytitle, **ratioErrorOptions))
     else:
         raise Exception("Invalid value for argument ratioType '%s', valid are 'errorPropagation', 'binomial', 'errorScale'")
@@ -860,6 +866,8 @@ def _createRatioHistos(histo1, histo2, ytitle, ratioType=None, ratioErrorOptions
 # In case of asymmetric uncertainties, the uncertainties are added in
 # quadrature for both sides separately (a rather crude approximation).
 def _createRatioErrorPropagation(histo1, histo2, ytitle, returnHisto=False):
+
+
     if isinstance(histo1, ROOT.TH1) and isinstance(histo2, ROOT.TH1):
         ratio = histo1.Clone()
         ratio.SetDirectory(0)
@@ -870,6 +878,10 @@ def _createRatioErrorPropagation(histo1, histo2, ytitle, returnHisto=False):
 
         _plotStyles["Ratio"].apply(ratio)
         ratio.GetYaxis().SetTitle(ytitle)
+
+	content=[]
+	for i in range(0,ratio.GetN()):
+		content.append(ratio.GetBinContent(i))
 
         if returnHisto:
             return [_createHisto(ratio, drawStyle="EP", legendLabel=None)]
@@ -896,7 +908,6 @@ def _createRatioErrorPropagation(histo1, histo2, ytitle, returnHisto=False):
                 err2 = max(histo2.GetErrorYhigh(i), histo2.GetErrorYlow(i))
                 yerrs.append( yvalue * math.sqrt( _divideOrZero(err1, histo1.GetY()[i])**2 +
                                                   _divideOrZero(err2, histo2.GetY()[i])**2 ) )
-
         if len(xvalues) > 0:
             gr = ROOT.TGraphAsymmErrors(len(xvalues), array.array("d", xvalues), array.array("d", yvalues),
                                         histo1.GetEXlow(), histo1.GetEXhigh(),
@@ -1113,20 +1124,26 @@ def _createRatioHistosErrorScale(histo1, histo2, ytitle, numeratorStatSyst=True,
                     return
                 # No more items in the numerator
                 if bin >= self._gr.GetN():
+		    print "No more items in the numerator"
                     return
                 # denominator is missing an item
                 trueBin = bin + self.binOffset
                 xval = self._gr.GetX()[trueBin]
-                epsilon = 1e-3 * xval # to allow floating-point difference between TGraph and TH1
+                epsilon = 1e-3 * abs(xval) # to allow floating-point difference between TGraph and TH1
                 if xval+epsilon < xcenter:
                     self.binOffset -= 1
+		    print "Denominator missing an item"
+		    print "xval: "+str(xval)
+		    print "xcenter: "+str(xcenter)
                     return
                 # numerator is missing an item
                 elif xval-epsilon > xcenter:
                     self.binOffset += 1
+		    print "Numerator missing an item"
                     return
 
                 if numeratorOriginatesFromTH1 and self._gr.GetY()[trueBin] == 0 and self._gr.GetErrorYlow(trueBin) == 0 and self._gr.GetErrorYhigh(trueBin) == 0:
+		    print "Weird error"
                     return
 
                 self.xvalues.append(xval)
@@ -1139,6 +1156,7 @@ def _createRatioHistosErrorScale(histo1, histo2, ytitle, numeratorStatSyst=True,
                 self.yvalues.append(self._gr.GetY()[trueBin] / scale)
                 self.yerrslow.append(self._gr.GetErrorYlow(trueBin) / scale)
                 self.yerrshigh.append(self._gr.GetErrorYhigh(trueBin) / scale)
+		print "Got through"
             def getRatio(self):
                 self._ensureRatio()
                 if len(self.xvalues) == 0:
@@ -1170,7 +1188,10 @@ def _createRatioHistosErrorScale(histo1, histo2, ytitle, numeratorStatSyst=True,
         for bin in xrange(h2.begin(), h2.end()): # important to use h2 because of TGraph logic
             (scale, ylow, yhigh) = h2.yvalues(bin)
             (xval, xlow, xhigh) = h2.xvalues(bin)
+	    print ratioWrapped.y(bin)
+	    print scale
             ratioWrapped.divide(bin, scale, xval)
+	    print ratioWrapped.y(bin)
 
             xvalues.append(xval)
             xerrlow.append(xlow)
@@ -1180,6 +1201,10 @@ def _createRatioHistosErrorScale(histo1, histo2, ytitle, numeratorStatSyst=True,
             yerrhigh.append(_divideOrZero(yhigh, scale))
 
         ratio = ratioWrapped.getRatio()
+
+	for x_ in xvalues:
+		print "x: "+str(x_)+" ratio: "+str(ratio.Eval(x_))
+
         ratioErr = ROOT.TGraphAsymmErrors(len(xvalues), array.array("d", xvalues), array.array("d", yvalues),
                                           array.array("d", xerrlow), array.array("d", xerrhigh),
                                           array.array("d", yerrlow), array.array("d", yerrhigh))

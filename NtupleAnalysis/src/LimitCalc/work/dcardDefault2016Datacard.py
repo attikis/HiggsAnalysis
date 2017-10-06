@@ -1,5 +1,6 @@
 import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 
+Path='limits_DNN' #'limits_BDTG_Retrain'
 DataCardName ='Default_13TeV'
 LightAnalysis = False # FIXME set True for light H+
 
@@ -14,7 +15,6 @@ else:
     HeavyMassPoints=[250]
 
 #LightMassPoints=[120] # for control plots
-<<<<<<< HEAD
 #HeavyMassPoints=[180,250,300,400,500] # for control plots
 
 HeavyMassPoints=[250]
@@ -25,26 +25,11 @@ MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
 # Options
 OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
 OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
-=======
-HeavyMassPoints=[180,220,250,300,400,500] # for control plots
-#HeavyMassPoints=[220]
-#MassPoints=LightMassPoints[:]+HeavyMassPoints[:]
-MassPoints=HeavyMassPoints
-##############################################################################
-# Options
-<<<<<<< HEAD
-OptionIncludeSystematics=not True # Set to true if you produced multicrabs with doSystematics=True
-OptionDoControlPlots= True #FIXME: if you want control plots, switch this to true!
-=======
-OptionIncludeSystematics = True # Include shape systematics (multicrabs must beproduced with doSystematics=True)
-OptionDoControlPlots = not True #FIXME: If you want control plots, switch this to true!
 OptionUseWJetsHT = not True # Use HT binned WJets samples instead of inclusive for WJets background
->>>>>>> slehti/master
->>>>>>> master
 OptionDoMergeEWKttbar = False #FIXME: if true, Wjets+DY+diboson into one background and for heavy H+, also merges ttbar and singleTop into one background
 
 BlindAnalysis=True
-OptionBlindThreshold=None # If signal exceeds this fraction of expected events, data is blinded; set to None to disable
+OptionBlindThreshold=0.01 # If signal exceeds this fraction of expected events, data is blinded; set to None to disable
 
 OptionMassShape="TransverseMass"
 #OptionMassShape="FullMass"
@@ -299,13 +284,6 @@ else:
                                 nuisances=myTrgSystematics[:]+myTauIDSystematics[:]
                                   +myESSystematics[:]+myBtagSystematics[:]+myPileupSystematics[:]+myLeptonVetoSystematics[:]
                                   +["CMS_scale_VV","CMS_pdf_VV","lumi_13TeV"]))
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> slehti/master
->>>>>>> master
     # Merge EWK as one column or not
     #if not OptionSeparateFakeTtbarFromFakeBackground:
         #mergeColumnsByLabel.append({"label": "EWKnontt_faketau", "mergeList": ["tt_EWK_faketau","W_EWK_faketau","t_EWK_faketau","DY_EWK_faketau","VV_EWK_faketau"]})
@@ -1025,13 +1003,13 @@ ControlPlots.append(ControlPlotInput(
 ControlPlots.append(ControlPlotInput(
     title	     = "MVA",
     histoName	     = "MVA",
-    details	     = { "xlabel": "MVA",
+    details	     = { "xlabel": "MVA discr.",
         		 "ylabel": "Events",
         		 "divideByBinWidth": False,
-        		 "unit": " ",
+        		 "unit": "",
         		 "log": True,
 			 "legendPosition": "NW",
-        		 "opts": {"ymin": 0.09} },
+        		 "opts": {"ymin": 0.09,"ymax":150000,"xmin": -1.0,"xmax":1.0} },
     flowPlotCaption  = "MVA Cut",
 ))
 
