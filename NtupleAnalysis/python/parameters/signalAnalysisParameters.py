@@ -40,7 +40,7 @@ tauSelection = PSet(
         tauLdgTrkPtCut = 30.0,
 #                prongs = 13,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
                 prongs = 1,    # options: 1, 2, 3, 12, 13, 23, 123 or -1 (all)
-                  rtau = 0.0,   # to disable set to 0.0
+                  rtau = 0.7,   # to disable set to 0.0
   againstElectronDiscr = "againstElectronTightMVA6",
 #  againstElectronDiscr = "",
       againstMuonDiscr = "againstMuonLoose3",
@@ -71,6 +71,14 @@ muVeto = PSet(
             muonEtaCut = 2.5,
                 muonID = "muIDLoose", # loosest option for vetoing (options: muIDLoose, muIDMedium, muIDTight)
          muonIsolation = "veto", # loosest possible for vetoing ("veto"), "tight" for selecting
+)
+
+#====== Muon selection (for embedding)
+muForEmbedding = PSet(
+             muonPtCut = 40.0,
+            muonEtaCut = 2.5,
+                muonID = "muIDTight", # options: muIDLoose, muIDMedium, muIDTight
+         muonIsolation = "tight", # for selecting, not vetoing
 )
 
 #====== Jet selection
@@ -108,11 +116,13 @@ mvaSelection = PSet(
 
 #====== B-jet selection
 bjetSelection = PSet(
+    triggerMatchingApply= False,
+    triggerMatchingCone = 0.1,  # DeltaR for matching offline bjet with trigger::TriggerBjet 
               jetPtCuts = [30.0],
              jetEtaCuts = [2.5],
              #bjetDiscr = "combinedInclusiveSecondaryVertexV2BJetTags",
              bjetDiscr  = "pfCombinedInclusiveSecondaryVertexV2BJetTags",
- bjetDiscrWorkingPoint  = "Loose",
+ bjetDiscrWorkingPoint  = "Medium",
  numberOfBJetsCutValue  = 1,
  numberOfBJetsCutDirection = ">=", # options: ==, !=, <, <=, >, >=
 )
@@ -126,7 +136,7 @@ scaleFactors.setupBtagSFInformation(btagPset=bjetSelection,
 
 #====== MET selection
 metSelection = PSet(
-           METCutValue = 100.0, #for heavy H+, overriden in signalAnalysis.py for light H+
+           METCutValue = 90.0,
        METCutDirection = ">", # options: ==, !=, <, <=, >, >=
   METSignificanceCutValue = -1000.0,
   METSignificanceCutDirection = ">", # options: ==, !=, <, <=, >, >=
@@ -140,10 +150,10 @@ scaleFactors.assignMETTriggerSF(metSelection, bjetSelection.bjetDiscrWorkingPoin
 angularCutsBackToBack = PSet(
        nConsideredJets = 3,    # Number of highest-pt jets to consider (excluding jet corresponding to tau)
 enableOptimizationPlots = True, # 2D histograms for optimizing angular cuts
-        cutValueJet1 = 0.0,   # Cut value in degrees (circular cut)
-        cutValueJet2 = 0.0,   # Cut value in degrees (circular cut)
-        cutValueJet3 = 0.0,   # Cut value in degrees (circular cut)
-        cutValueJet4 = 0.0,   # Cut value in degrees (circular cut)
+        cutValueJet1 = 40.0,   # Cut value in degrees (circular cut)
+        cutValueJet2 = 40.0,   # Cut value in degrees (circular cut)
+        cutValueJet3 = 40.0,   # Cut value in degrees (circular cut)
+        cutValueJet4 = 40.0,   # Cut value in degrees (circular cut)
 )
 #====== Experimental
 jetCorrelations = PSet (
@@ -192,6 +202,7 @@ commonPlotsOptions = PSet(
               ptBins = PSet(nBins=500, axisMin=0., axisMax=5000.),
              etaBins = PSet(nBins=60, axisMin=-3.0, axisMax=3.0),
              phiBins = PSet(nBins=72, axisMin=-3.1415926, axisMax=3.1415926),
+        deltaEtaBins = PSet(nBins=50, axisMin=0., axisMax=10.0),
         deltaPhiBins = PSet(nBins=18, axisMin=0., axisMax=180.), # used in 2D plots, i.e. putting high number of bins here will cause troubles
         deltaRBins   = PSet(nBins=50, axisMin=0., axisMax=10.),
             rtauBins = PSet(nBins=55, axisMin=0., axisMax=1.1),
@@ -202,9 +213,9 @@ commonPlotsOptions = PSet(
    angularCuts1DBins = PSet(nBins=52, axisMin=0., axisMax=260.),
 	     mvaBins = PSet(nBins=100, axisMin=-1.0, axisMax=1.0),
          topMassBins = PSet(nBins=60, axisMin=0., axisMax=600.),
-           WMassBins = PSet(nBins=60, axisMin=0., axisMax=300.),
+           wMassBins = PSet(nBins=60, axisMin=0., axisMax=300.),
               mtBins = PSet(nBins=1000, axisMin=0., axisMax=5000.), # 5 GeV bin width for tail fitter
-         invmassBins = PSet(nBins=500, axisMin=0., axisMax=5000.),
+         invMassBins = PSet(nBins=500, axisMin=0., axisMax=5000.),
   # Enable/Disable some debug-level plots
        enablePUDependencyPlots = True,
 )
@@ -217,6 +228,7 @@ allSelections = PSet(
           TauSelection = tauSelection,
      ElectronSelection = eVeto,
          MuonSelection = muVeto,
+      MuonForEmbedding = muForEmbedding,
           JetSelection = jetSelection,
   AngularCutsCollinear = angularCutsCollinear,
          BJetSelection = bjetSelection,

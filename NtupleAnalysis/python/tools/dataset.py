@@ -2849,7 +2849,8 @@ class Dataset:
 
     ## Get the ParameterSet stored in the ROOT file
     def getParameterSet(self):
-        (objs, realNames) = self.getRootObjects("configInfo/parameterSet")
+        # (objs, realNames) = self.getRootObjects("configInfo/parameterSet") #obsolete? alexandros 12/07/2017
+        (objs, realNames) = self.getRootObjects("config")
         return objs[0].GetTitle()        
 
     def getDataVersion(self):
@@ -3002,10 +3003,10 @@ class Dataset:
             self.nAllEventsUnweighted = -1
         # If normalization problem is spotted
         if not normalizationCheckStatus:
-            msg  = "Error in dset=%s: Base::AllEvents counter (=%s) is smaller than the Base::PUReweighting counter (=%s)" % (self.name, nAllEvts, nPUReEvts)
-            Print(msg)
-            raw_input("\tPress any key to continue: ")
-            # raise Exception(msg)
+            msg  = "ERROR! dset=%s\n\tBase::AllEvents counter (=%s) is smaller than the Base::PUReweighting counter (=%s)" % (self.name, nAllEvts, nPUReEvts)
+            # Known issue which was thoroughly tested. Fraction events are inform user difference is 1 event or more
+            if (nAllEvts-nPUReEvts) >= 1.0:
+                raise Exception(msg)
  
         # Try to read weighted counters
         if self._weightedCounters:
@@ -3950,7 +3951,7 @@ class DatasetManager:
         return
 
 
-    def merge(self, newName, nameList, keepSources=False, addition=False, silent=False, allowMissingDatasets=False):
+    def merge(self, newName, nameList, keepSources=False, addition=False, silent=True, allowMissingDatasets=False):
         '''
         Merge dataset.Dataset objects.
     
@@ -4667,7 +4668,7 @@ class DatasetManagerCreator:
                 value = _args[name]
                 if value is not None:
                     parameters.append("%s='%s'" % (name, value))
-        Print("Creating DatasetManager with %s" % (", ".join(parameters)), True )
+        Verbose("Creating DatasetManager with %s" % (", ".join(parameters)), True )
 
         # Create manager and datasets
         dataEra = _args.get("dataEra", None)
@@ -4727,7 +4728,7 @@ class DatasetManagerCreator:
         # Load luminosity automatically if the file exists
         lumiPath = self.getLumiFile()
         if os.path.exists(lumiPath):
-            Print("Loading data luminosities from %s" % (lumiPath), True)
+            Verbose("Loading data luminosities from %s" % (lumiPath), True)
             manager.loadLuminosities()
         return manager
 

@@ -100,36 +100,66 @@ JetSelection::~JetSelection() {
 }
 
 void JetSelection::initialize(const ParameterSet& config) {
-  
+
+  if(fCommonPlots){
+    nPtBins    = 2 * fCommonPlots->getPtBinSettings().bins();
+    fPtMin     = 2 * fCommonPlots->getPtBinSettings().min();
+    fPtMax     = 2 * fCommonPlots->getPtBinSettings().max();
+
+    nEtaBins   = fCommonPlots->getEtaBinSettings().bins();
+    fEtaMin    = fCommonPlots->getEtaBinSettings().min();
+    fEtaMax    = fCommonPlots->getEtaBinSettings().max();
+
+    nHtBins    = fCommonPlots->getHtBinSettings().bins();
+    fHtMin     = fCommonPlots->getHtBinSettings().min();
+    fHtMax     = fCommonPlots->getHtBinSettings().max();
+  }else{
+    nPtBins  = 50;
+    fPtMin   = 0;
+    fPtMax   = 500;
+
+    nEtaBins = 50;
+    fEtaMin  = -2.5;
+    fEtaMax  = 2.5;
+
+    nHtBins  = 240;
+    fHtMin   = 0;
+    fHtMax   = 2400;
+  }
 }
 
 void JetSelection::bookHistograms(TDirectory* dir) {
+
   TDirectory* subdir = fHistoWrapper.mkdir(HistoLevel::kDebug, dir, "jetSelection_"+sPostfix);
 
   // Histograms (1D)
-  hJetPtAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetPtAll", "Jet pT, all;p_{T} (GeV/c)", 50, 0.0, 500.0);
-  hJetEtaAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaAll", "Jet #eta, all;#eta", 50, -2.5, 2.5);
-  hJetPtPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetPtPassed", "Jet pT, passed;p_{T} (GeV/c)", 50, 0.0, 500.0);
-  hJetEtaPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaPassed", "Jet Eta, passed", 50, -2.5, 2.5);
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetPt" , "First jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetPt", "Second jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetPt" , "Third jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetPt", "Fourth jet pT;p_{T} (GeV/c)", 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetPt" , "Fifth jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetPt" , "Sixth jet pT;p_{T} (GeV/c)" , 50, 0.0, 500.0) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetEta" , "First jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetEta", "Second jet #eta;#eta", 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetEta" , "Third jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetEta", "Fourth jet #eta;#eta", 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetEta" , "Fifth jet #eta;#eta" , 50, -2.5, +2.5) );
-  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetEta" , "Sixth jet #eta;#eta" , 50, -2.5, +2.5) );
+  hJetPtAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetPtAll", "Jet pT, all;p_{T} (GeV/c)", nPtBins, fPtMin, fPtMax);
+  hJetEtaAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaAll", "Jet #eta, all;#eta", nEtaBins, fEtaMin, fEtaMax);
+  hJetPtPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetPtPassed", "Jet pT, passed;p_{T} (GeV/c)", nPtBins, fPtMin, fPtMax);
+  hJetEtaPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "jetEtaPassed", "Jet Eta, passed", nEtaBins, fEtaMin, fEtaMax);
+
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetPt"  , "First jet pT;p_{T} (GeV/c)"  , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetPt" , "Second jet pT;p_{T} (GeV/c)" , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetPt"  , "Third jet pT;p_{T} (GeV/c)"  , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetPt" , "Fourth jet pT;p_{T} (GeV/c)" , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetPt"  , "Fifth jet pT;p_{T} (GeV/c)"  , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetPt"  , "Sixth jet pT;p_{T} (GeV/c)"  , nPtBins, fPtMin, fPtMax) );
+  hSelectedJetPt.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSeventhJetPt", "Seventh jet pT;p_{T} (GeV/c)", nPtBins, fPtMin, fPtMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFirstJetEta"  , "First jet #eta;#eta"  , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSecondJetEta" , "Second jet #eta;#eta" , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsThirdJetEta"  , "Third jet #eta;#eta"  , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFourthJetEta" , "Fourth jet #eta;#eta" , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsFifthJetEta"  , "Fifth jet #eta;#eta"  , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSixthJetEta"  , "Sixth jet #eta;#eta"  , nEtaBins, fEtaMin, fEtaMax) );
+  hSelectedJetEta.push_back(fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "selectedJetsSeventhJetEta", "Seventh jet #eta;#eta", nEtaBins, fEtaMin, fEtaMax) );
   hJetMatchingToTauDeltaR  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JetMatchingToTauDeltaR" , "#DeltaR(jet, #tau)", 40, 0, 2);
   hJetMatchingToTauPtRatio = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JetMatchingToTauPtRatio", "jet pT / #tau pT", 40, 0, 2);
-  hHTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTAll"    , ";H_{T}",  30, 0.0, 1500.0); 
-  hJTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTAll"    , ";J_{T}",  30, 0.0, 1500.0); 
+
+  hHTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTAll"    , ";H_{T}",  nHtBins, fHtMin, fHtMax); 
+  hJTAll     = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTAll"    , ";J_{T}",  nHtBins, fHtMin, fHtMax); 
   hMHTAll    = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "MHTAll"   , ";MHT"  ,  30, 0.0,  300.0);
-  hHTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTPassed" , ";H_{T}",  30, 0.0, 1500.0); 
-  hJTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTPassed" , ";J_{T}",  30, 0.0, 1500.0); 
+  hHTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "HTPassed" , ";H_{T}",  nHtBins, fHtMin, fHtMax); 
+  hJTPassed  = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "JTPassed" , ";J_{T}",  nHtBins, fHtMin, fHtMax); 
   hMHTPassed = fHistoWrapper.makeTH<TH1F>(HistoLevel::kDebug, subdir, "MHTPassed", ";MHT"  ,  30, 0.0,  300.0);
 
   return;

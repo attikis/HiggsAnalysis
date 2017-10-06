@@ -99,11 +99,12 @@ if __name__ == "__main__":
         for l in myLabels:
             addToDatacards(myDir, myMassPoints, datacardPatterns, rootFilePatterns, "HpToSingleLepton_datacard_"+l+".txt", "HpToSingleLepton_HT_CR_"+l+".root")
 
-        print "The following masses are considered:",", ".join(map(str, myMassPoints))
+        if 0:
+            print "The following masses are considered:",", ".join(map(str, myMassPoints))
         if len(myMassPoints) > 0:
             if not main(opts, myDir, datacardPatterns, rootFilePatterns, myMassPoints):
-                print ""
+                #print ""
                 parser.print_help()
-                print ""
+                #print ""
                 raise Exception("You forgot to specify limit calculation method as a command line parameter!")
     
