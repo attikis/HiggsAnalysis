@@ -7,6 +7,7 @@
 #include "TDirectory.h"
 
 #include "TriggerEfficiency/interface/TauLegSelection.h"
+#include "TriggerEfficiency/interface/TauLegElectronTauSelection.h"
 #include "TriggerEfficiency/interface/METLegSelection.h"
 
 
@@ -107,6 +108,7 @@ TriggerEfficiency::TriggerEfficiency(const ParameterSet& config, const TH1* skim
   for(std::vector<std::string>::const_iterator i = signaltriggers.begin(); i != signaltriggers.end(); ++i)
   std::cout << "        SignalTrigger  " <<  *i << std::endl;
   if(fOfflineSelection == "taulegSelection") selection = new TauLegSelection(config,fEventCounter,fHistoWrapper);
+  if(fOfflineSelection == "taulegElectronTauSelection") selection = new TauLegElectronTauSelection(config,fEventCounter,fHistoWrapper);
   if(fOfflineSelection == "metlegSelection") selection = new METLegSelection(config,fEventCounter,fHistoWrapper);
 }
 
