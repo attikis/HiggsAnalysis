@@ -37,6 +37,8 @@ class ElectronDumper : public BaseDumper {
         edm::EDGetTokenT<double> *rhoToken;
         edm::EDGetTokenT<reco::GenParticleCollection> genParticleToken;
         edm::EDGetTokenT<edm::ValueMap<bool>> *electronIDToken;
+
+        std::vector<short> *q;
         
         std::vector<float> *relIsoDeltaBetaCorrected;
         std::vector<float> *effAreaIsoDeltaBetaCorrected;

@@ -11,6 +11,8 @@ ElectronDumper::ElectronDumper(edm::ConsumesCollector&& iConsumesCollector, std:
     phi = new std::vector<double>[inputCollections.size()];    
     e   = new std::vector<double>[inputCollections.size()];    
 
+    q   = new std::vector<short>[inputCollections.size()];
+
     //p4   = new std::vector<reco::Candidate::LorentzVector>[inputCollections.size()];                                                                                                          
     //pdgId = new std::vector<short>[inputCollections.size()];
 
@@ -60,6 +62,8 @@ void ElectronDumper::book(TTree* tree){
         tree->Branch((name+"_eta").c_str(),&eta[i]);
         tree->Branch((name+"_phi").c_str(),&phi[i]);
         tree->Branch((name+"_e").c_str(),&e[i]);
+
+        tree->Branch((name+"_charge").c_str(),&q[i]);
 
         tree->Branch((name+"_relIsoDeltaBeta").c_str(),&relIsoDeltaBetaCorrected[i]);
         tree->Branch((name+"_effAreaIsoDeltaBeta").c_str(),&effAreaIsoDeltaBetaCorrected[i]);
@@ -111,7 +115,7 @@ bool ElectronDumper::fill(edm::Event& iEvent, const edm::EventSetup& iSetup){
                 phi[ic].push_back(obj.p4().phi());
                 e[ic].push_back(obj.p4().energy());
 
-		//p4[ic].push_back(obj.p4());
+                q[ic].push_back(obj.charge());
 
                 // Calculate relative isolation for the electron (delta beta)
                 double isolation = obj.pfIsolationVariables().sumChargedHadronPt 
@@ -189,6 +193,8 @@ void ElectronDumper::reset(){
       eta[ic].clear();                                                                                                                                            
       phi[ic].clear();                                                                                                                                            
       e[ic].clear();                                                                                                                                              
+
+      q[ic].clear();
                                                                                                                                                                   
       relIsoDeltaBetaCorrected[ic].clear();
       effAreaIsoDeltaBetaCorrected[ic].clear();
