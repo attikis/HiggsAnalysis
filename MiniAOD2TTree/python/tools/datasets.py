@@ -1,4 +1,4 @@
-lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-302654_13TeV_PromptReco_Collisions17_JSON.txt"
+lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-302663_13TeV_PromptReco_Collisions17_JSON.txt"
 
 
 #================================================================================================ 
@@ -31,10 +31,10 @@ class Dataset:
 #================================================================================================ 
 datasetsTauData = []
 das = ""
-datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsTauData.append(Dataset('/Tau/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsTauData.append(Dataset('/Tau/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsTauData.append(Dataset('/Tau/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_294927-297723_13TeV_PromptReco_Collisions17_JSON_Run2017A.txt"))
+datasetsTauData.append(Dataset('/Tau/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298996-299185_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
+datasetsTauData.append(Dataset('/Tau/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299327-302019_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
+datasetsTauData.append(Dataset('/Tau/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_302023-302494_13TeV_PromptReco_Collisions17_JSON_Run2017D.txt"))
 
 datasetsJetHTData = []
 das = ""
@@ -42,16 +42,16 @@ das = ""
 
 datasetsMuonData = []
 das = ""
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_294927-297723_13TeV_PromptReco_Collisions17_JSON_Run2017A.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298996-299185_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299327-302019_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_302023-302494_13TeV_PromptReco_Collisions17_JSON_Run2017D.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
 datasetsElectronData = []
 das = ""
-datasetsElectronData.append(Dataset('/SingleElectron/Run2017C-PromptReco-v3/AOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
-datasetsElectronData.append(Dataset('/SingleElectron/Run2017D-PromptReco-v1/AOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsElectronData.append(Dataset('/SingleElectron/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsElectronData.append(Dataset('/SingleElectron/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
 
 
 datasetsZeroBiasData = []
