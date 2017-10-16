@@ -26,8 +26,8 @@ def reproduceJEC(process):
     from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
     updateJetCollection(
         process,
-        # jetSource = cms.InputTag('slimmedJets'),
-        jetSource = cms.InputTag('cleanedPatJets'),
+        jetSource = cms.InputTag('slimmedJets'),
+        #jetSource = cms.InputTag('cleanedPatJets'),
         labelName = 'UpdatedJEC',
         jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute']), 'None')  # Do not forget 'L2L3Residual' on data!
     )
@@ -72,20 +72,20 @@ def reproduceMETNoiseFilters(process):
     process.HBHENoiseFilterResultProducer.IgnoreTS4TS5ifJetInLowBVRegion=cms.bool(False)
     process.HBHENoiseFilterResultProducer.defaultDecision = cms.string("HBHENoiseFilterResultRun2Loose")
 
-####    process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
-####    process.BadPFMuonFilter.muons = cms.InputTag("slimmedMuons")
-####    process.BadPFMuonFilter.PFCandidates = cms.InputTag("packedPFCandidates")
-####    process.BadPFMuonFilter.taggingMode   = cms.bool(True)
+    process.load('RecoMET.METFilters.BadPFMuonFilter_cfi')
+    process.BadPFMuonFilter.muons = cms.InputTag("slimmedMuons")
+    process.BadPFMuonFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+    process.BadPFMuonFilter.taggingMode   = cms.bool(True)
 
-####    process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
-####    process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
-####    process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
-####    process.BadChargedCandidateFilter.taggingMode   = cms.bool(True)
+    process.load('RecoMET.METFilters.BadChargedCandidateFilter_cfi')
+    process.BadChargedCandidateFilter.muons = cms.InputTag("slimmedMuons")
+    process.BadChargedCandidateFilter.PFCandidates = cms.InputTag("packedPFCandidates")
+    process.BadChargedCandidateFilter.taggingMode   = cms.bool(True)
 
     # Do not apply EDfilters for HBHE noise, the discriminators for them are saved into the ttree
     process.CustomisationsSequence += process.HBHENoiseFilterResultProducer
-####    process.CustomisationsSequence += process.BadPFMuonFilter
-####    process.CustomisationsSequence += process.BadChargedCandidateFilter
+    process.CustomisationsSequence += process.BadPFMuonFilter
+    process.CustomisationsSequence += process.BadChargedCandidateFilter
 
 # ===== Set up MET uncertainties =====
 
