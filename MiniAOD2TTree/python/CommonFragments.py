@@ -57,6 +57,13 @@ def produceJets(process, isData):
                 updateCollection='cleanedPatJets', JETCorrPayload="AK4PFchs",
                 postFix='')
 
+    jetToolbox( process, 'ak4', 'ak4JetSubs', 'out',
+                PUMethod='Puppi',
+                addQGTagger=True, addPUJetID=True, JETCorrLevels = JEC,
+                bTagDiscriminators = ['pfCombinedInclusiveSecondaryVertexV2BJetTags', 'pfCombinedMVAV2BJetTags','pfCombinedCvsBJetTags','pfCombinedCvsLJetTags'],
+                updateCollection='cleanedPatJetsPuppi', JETCorrPayload="AK4PFchs",
+                postFix='')
+
     # Small fix required to add the variables ptD, axis2, mult. See:
     # https://hypernews.cern.ch/HyperNews/CMS/get/jet-algorithms/418/1.html
     getattr( process, 'updatedPatJetsAK4PFCHS').userData.userFloats.src += ['QGTagger'+'AK4PFCHS'+':ptD']
@@ -162,8 +169,8 @@ def reproduceMET(process,isdata):
 #      era="Spring16_25nsV6_MC"
       era="Summer16_23Sep2016V4_MC"
 
-#    jerera="Spring16_25nsV6"
-    jerera="Spring16_25nsV10"
+    jerera="Spring16_25nsV6"
+#    jerera="Spring16_25nsV10"
     
 ##___________________________External JEC file________________________________||
  
@@ -217,21 +224,21 @@ def reproduceMET(process,isdata):
         #######
         ### read the Puppi JER
 
-#        cms.PSet( 
-#          record = cms.string('JetResolutionRcd'),
-#          tag    = cms.string('JR_'+jerera+'_MC_PtResolution_AK4PFPuppi'),
-#          label  = cms.untracked.string('AK4PFPuppi_pt')
-#          ),
-#        cms.PSet(
-#          record = cms.string("JetResolutionRcd"),
-#          tag = cms.string('JR_'+jerera+'_MC_PhiResolution_AK4PFPuppi'),
-#          label= cms.untracked.string("AK4PFPuppi_phi")
-#          ),
-#        cms.PSet(
-#          record = cms.string('JetResolutionScaleFactorRcd'),
-#          tag    = cms.string('JR_'+jerera+'_MC_SF_AK4PFPuppi'),
-#          label  = cms.untracked.string('AK4PFPuppi')
-#          ),
+        cms.PSet( 
+          record = cms.string('JetResolutionRcd'),
+          tag    = cms.string('JR_'+jerera+'_MC_PtResolution_AK4PFPuppi'),
+          label  = cms.untracked.string('AK4PFPuppi_pt')
+          ),
+        cms.PSet(
+          record = cms.string("JetResolutionRcd"),
+          tag = cms.string('JR_'+jerera+'_MC_PhiResolution_AK4PFPuppi'),
+          label= cms.untracked.string("AK4PFPuppi_phi")
+          ),
+        cms.PSet(
+          record = cms.string('JetResolutionScaleFactorRcd'),
+          tag    = cms.string('JR_'+jerera+'_MC_SF_AK4PFPuppi'),
+          label  = cms.untracked.string('AK4PFPuppi')
+          ),
         ) 
     )
           
@@ -260,32 +267,36 @@ def reproduceMET(process,isdata):
 
 #    process.CustomisationsSequence += process.patMetCorrectionSequence
 
-    if isdata:
-        return
+#    if isdata:
+#        return
 
 #    process.CustomisationsSequence += process.patMetUncertaintySequence #only for MC
 #    process.CustomisationsSequence += process.patShiftedModuleSequence #only for MC
 
 
-    """    
+
     # puppi jets and puppi met
     from PhysicsTools.PatAlgos.slimming.puppiForMET_cff import makePuppiesFromMiniAOD
     makePuppiesFromMiniAOD(process);
 
     runMetCorAndUncFromMiniAOD(process,
                              isData=isdata,
-                             pfCandColl=cms.InputTag("puppiForMET"),
-                             recoMetFromPFCs=True,
-                             reclusterJets=True,
-                             jetFlavor="AK4PFPuppi",
+                             metType="Puppi",
+#                             pfCandColl=cms.InputTag("puppiForMET"),
+#                             recoMetFromPFCs=True,
+#                             jetFlavor="AK4PFPuppi",
                              postfix="Puppi"
                              )
-    process.patPFMetPuppi.addGenMET = cms.bool(False)
-    process.basicJetsForMetPuppi.src = cms.InputTag("slimmedJetsPuppi")
-    process.patPFMetT1Puppi.src = cms.InputTag("slimmedMETsPuppi")
 
-    process.producePatPFMETCorrectionsPuppi.remove(process.patPFMetPuppi)
-    process.CustomisationsSequence += process.producePatPFMETCorrectionsPuppi
+    process.puppiNoLep.useExistingWeights = False
+    process.puppi.useExistingWeights = False
+
+#    process.patPFMetPuppi.addGenMET = cms.bool(False)
+#    process.basicJetsForMetPuppi.src = cms.InputTag("slimmedJetsPuppi")
+#    process.patPFMetT1Puppi.src = cms.InputTag("slimmedMETsPuppi")
+#
+#    process.producePatPFMETCorrectionsPuppi.remove(process.patPFMetPuppi)
+#    process.CustomisationsSequence += process.producePatPFMETCorrectionsPuppi
 
 #    process.CustomisationsSequence += process.pfNoLepPUPPI
 #    process.CustomisationsSequence += process.puppiNoLep
@@ -305,4 +316,4 @@ def reproduceMET(process,isdata):
 #    process.CustomisationsSequence += process.patMetUncertaintySequencePuppi
 #    process.CustomisationsSequence += process.patShiftedModuleSequencePuppi
 #    process.CustomisationsSequence += process.patMetCorrectionSequencePuppi
-    """
+

@@ -9,10 +9,6 @@ METs = cms.VPSet(
 #        branchname = cms.untracked.string("MET_Type1_NoHF"),
 #        src = cms.InputTag("slimmedMETsNoHF")
 #    ),
-#    cms.PSet(
-#        branchname = cms.untracked.string("MET_Puppi"),
-#        src = cms.InputTag("slimmedMETsPuppi")
-#    ),
     cms.PSet(
         branchname = cms.untracked.string("MET_Type1_UnclusteredEnDown"),
         src = cms.InputTag("patPFMetT1UnclusteredEnDown")
@@ -44,6 +40,26 @@ METs = cms.VPSet(
     cms.PSet(
         branchname = cms.untracked.string("MET_Type1_TauEnUp"),  
         src = cms.InputTag("patPFMetT1TauEnUp")  
+    ),
+    cms.PSet(
+        branchname = cms.untracked.string("MET_Puppi"),
+        src = cms.InputTag("slimmedMETsPuppi")
+    ),
+    cms.PSet(
+        branchname = cms.untracked.string("MET_Puppi_JetEnDown"),
+        src = cms.InputTag("patPFMetT1JetEnDownPuppi")
+    ),
+    cms.PSet(
+        branchname = cms.untracked.string("MET_Puppi_JetEnUp"),
+        src = cms.InputTag("patPFMetT1JetEnUpPuppi")
+    ),
+    cms.PSet(
+        branchname = cms.untracked.string("MET_Puppi_JetResDown"),
+        src = cms.InputTag("patPFMetT1JetResDownPuppi")
+    ),
+    cms.PSet(
+        branchname = cms.untracked.string("MET_Puppi_JetResUp"),
+        src = cms.InputTag("patPFMetT1JetResUpPuppi")
     ),
 )
 

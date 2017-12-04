@@ -82,11 +82,11 @@ AK8Jets = cms.PSet(
 
 AK4JetsPUPPI = cms.PSet(
     branchname = cms.untracked.string("JetsPuppi"),
-    src        = cms.InputTag("updatedPatJetsUpdatedJECPuppi"),
-    srcJESup   = cms.InputTag("shiftedPatJetEnUp"),
-    srcJESdown = cms.InputTag("shiftedPatJetEnDown"),
-    srcJERup   = cms.InputTag("shiftedPatJetResUp"),
-    srcJERdown = cms.InputTag("shiftedPatJetResDown"),
+    src        = cms.InputTag("selectedPatJetsAK4PFPuppi"),
+    srcJESup   = cms.InputTag("shiftedPatJetEnUpPuppi"),
+    srcJESdown = cms.InputTag("shiftedPatJetEnDownPuppi"),
+    srcJERup   = cms.InputTag("shiftedPatJetResUpPuppi"),
+    srcJERdown = cms.InputTag("shiftedPatJetResDownPuppi"),
     discriminators = cms.vstring(
         "pfCombinedInclusiveSecondaryVertexV2BJetTags",
         "pfCombinedMVAV2BJetTags", 
@@ -95,14 +95,18 @@ AK4JetsPUPPI = cms.PSet(
         ),
     userFloats = cms.vstring(
         ),
+    userInts = cms.vstring(
+        ),
     )
 
 
 Jets = cms.VPSet()
 Jets.append(AK4Jets)
+Jets.append(AK4JetsPUPPI)
 
 JetsWithAK8 = cms.VPSet()
 JetsWithAK8.append(AK4Jets)
+JetsWithAK8.append(AK4JetsPUPPI)
 JetsWithAK8.append(AK8Jets)
 
 
