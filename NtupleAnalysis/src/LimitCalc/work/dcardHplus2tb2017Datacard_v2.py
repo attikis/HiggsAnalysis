@@ -47,51 +47,23 @@ LightMassPoints = [] # Inform the datacard generator that light H+ is not consid
 HeavyMassPoints = [180, 200, 220, 250, 300, 350, 400, 500, 800, 1000, 2000, 3000] # List of mass points to produce datacards
 MassPoints      = LightMassPoints + HeavyMassPoints
 
-# Include shape systematics (after multicrab has been produced with doSystematics=True)
-OptionIncludeSystematics = False    
-
-# If you want control plots, switch this to true and define control plots in the end of this file
-OptionDoControlPlots = False
-
-# Keep this always as True, unless you have a green light for unblinding and you know what you are doing
-BlindAnalysis = True    
-
-# Set the distribution used in limit extraction
-OptionMassShape = "LdgTetrajetMass"
-
-# Choose "MC_FakeAndGenuineTauNotSeparated" or "Embedding"
-OptionGenuineTauBackgroundSource = "MC_FakeAndGenuineTauNotSeparated" #fixme: what is this for?
-
-# Approxmation that makes limit running faster (normally not needed)
-OptionCombineSingleColumnUncertainties = False
-
-# Set to true for heavy H+
-OptionLimitOnSigmaBr = True 
-
-# Summary customisation
-OptionDisplayEventYieldSummary    = False # prints "Event yield summary" (TableProducer.py)
-OptionNumberOfDecimalsInSummaries = 1
-
-# A flag related to combination of different channels in 2012, keep always as False
-OptionDoTBbarForHeavy = False
-
-# Tolerance for throwing error on luminosity difference (For example, setting to "0.01" means that a 1 percent agreement is required)
-ToleranceForLuminosityDifference = 0.05 
-
-# Tolerance for almost zero rate (columns with smaller rate are suppressed)
-ToleranceForMinimumRate = 0.0 
-
-# Minimum stat. uncertainty to set to bins with zero events
-MinimumStatUncertainty = 0.5
-
-# Prefix for the labels of datacard columns, e.g. "Hplus2tb_"
-labelPrefix = "" #fixme: breaks if not empty string
-
-# Convert the following nuisances from shape to constant (an approximation that makes the limits run faster and converge more easily)
-OptionConvertFromShapeToConstantList=[]
-
-# Separate in the following shape nuisances the shape and normalization components
-OptionSeparateShapeAndNormalizationFromSystVariationList=[]
+# Combine options
+BlindAnalysis                          = True  # True, unless you have a green light for unblinding! [default: True]
+MinimumStatUncertainty                 = 0.5   # Minimum stat. uncertainty to set to bins with zero events [default: 0.5]
+OptionCombineSingleColumnUncertainties = False # Approxmation that makes limit running faster (normally not needed) [default: False]
+OptionConvertFromShapeToConstantList   = []    # Convert these nuisances from shape to constant (Approx. that makes limits run faster & converge more easily) [default: []]
+OptionDisplayEventYieldSummary         = False # Print "Event yield summary" (TableProducer.py) [default: False]
+OptionDoControlPlots                   = False # Produce control plots defined at end of this file [default: False]
+OptionDoTBbarForHeavy                  = False # Flag related to combination of different channels in 2012 (obsolete) [default: False]
+OptionGenuineTauBackgroundSource       = "MC_FakeAndGenuineTauNotSeparated" # Choose "MC_FakeAndGenuineTauNotSeparated" or "Embedding" [default: "MC_FakeAndGenuineTauNotSeparated"]
+OptionIncludeSystematics               = False # Shape systematics (Need pseudo-multicrab produced with doSystematics=True) [default: False]
+OptionLimitOnSigmaBr                   = True  # Set to true for heavy H+ [default: True]
+OptionMassShape                        = "LdgTetrajetMass" # Distribution used in limit extraction [default: "LdgTetrajetMass"]
+OptionNumberOfDecimalsInSummaries      = 1 # [default: 1]
+OptionSeparateShapeAndNormalizationFromSystVariationList=[] # Separate in the following shape nuisances the shape and normalization components [default: []]
+ToleranceForLuminosityDifference       = 0.05  # Tolerance for throwing error on luminosity difference ("0.01" means that a 1% is required) [default: 0.05]
+ToleranceForMinimumRate                = 0.0   # Tolerance for almost zero rate (columns with smaller rate are suppressed) [default: 0.0]
+labelPrefix                            = ""    # Prefix for the labels of datacard columns, e.g. "Hplus2tb_" #fixme: breaks if not empty string [default: ""]
 
 # Options for tables, figures etc.
 OptionBr   = 0.01  # Br(t->bH+)
@@ -100,24 +72,14 @@ OptionSqrtS= 13    # sqrt(s)
 #================================================================================================  
 # Counter and histogram path definitions
 #================================================================================================  
-
-# Rate counter definitions
-SignalRateCounter = "Selected events"            #fixme: what is this for?
-FakeRateCounter   = "EWKfaketaus:SelectedEvents" #fixme: what is this for?
-
-# Shape histogram definitions
-shapeHistoName=None
+SignalRateCounter         = "Selected events"            # fixme: what is this for?
+FakeRateCounter           = "EWKfaketaus:SelectedEvents" # fixme: what is this for?
+shapeHistoName            = None                         # Path where the shape histogram is located
 if OptionMassShape == "LdgTetrajetMass":
-    shapeHistoName="LdgTetrajetMass_AfterAllSelections"
-
-# Define the path where the histogram is located
-histoPathInclusive  = "ForDataDrivenCtrlPlots"
-
-# Get the new binning for the shape histogram
-ShapeHistogramsDimensions = systematics.getBinningForPlot(shapeHistoName)
-
-# Append to the datacard name
-DataCardName += "_" + OptionMassShape #fixme: is this used anywhere else besides the first line of the datacard (comment)?
+    shapeHistoName = "LdgTetrajetMass_AfterAllSelections"
+histoPathInclusive        = "ForDataDrivenCtrlPlots"
+ShapeHistogramsDimensions = systematics.getBinningForPlot(shapeHistoName) # Get the new binning for the shape histogram
+DataCardName             += "_" + OptionMassShape
 
 #================================================================================================  
 # Observation definition (how to retrieve number of observed events)
@@ -187,6 +149,7 @@ mergeColumnsByLabel=[]
 # ===============
 signalTemplate  = DataGroup(datasetType="Signal", histoPath=histoPathInclusive, shapeHistoName=shapeHistoName)
 signalNuisances = myLumiSystematics
+
 # signalNuisances = myLumiSystematics[:] + myPileupSystematics[:] + myTrgSystematics[:] + myLeptonVetoSystematics[:] + myESSystematics[:] + myBtagSystematics[:]
 # signalNuisances+= myTauIDSystematics[:] + myTauMisIDSystematics[:] 
 
@@ -204,15 +167,26 @@ for mass in MassPoints:
 
 # FakeB dataset
 # ===============
-myFakeB = DataGroup(label             = labelPrefix + "FakeBmeasurement",  #fixme: QCDMeasurement
-                    landsProcess      = 2, #fixme: what is it for?
-                    validMassPoints   = MassPoints,
-                    datasetType       = "Embedding", #fixme: what is it for?
-                    datasetDefinition = "FakeBMeasurementTrijetMass",
-                    nuisances         = myLumiSystematics,
-                    shapeHistoName    = shapeHistoName,
-                    histoPath         = histoPathInclusive)
-DataGroups.append(myFakeB)
+if 0:
+    myQCD = DataGroup(label             = labelPrefix + "FakeBmeasurement",  #fixme: QCDMeasurement
+                      landsProcess      = 2, #fixme: what is it for?
+                      validMassPoints   = MassPoints,
+                      datasetType       = "Embedding", #fixme: what is it for?
+                      datasetDefinition = "FakeBMeasurementTrijetMass",
+                      nuisances         = myLumiSystematics,
+                      shapeHistoName    = shapeHistoName,
+                      histoPath         = histoPathInclusive)
+else:
+    myQCD = DataGroup(label             = labelPrefix + "QCD",  #fixme: QCDMeasurement
+                      landsProcess      = 2, #fixme: what is it for?
+                      validMassPoints   = MassPoints,
+                      datasetType       = "Embedding", #fixme: what is it for?
+                      datasetDefinition = "QCD",
+                      nuisances         = myLumiSystematics,
+                      shapeHistoName    = shapeHistoName,
+                      histoPath         = histoPathInclusive)
+    
+DataGroups.append(myQCD)
 
 
 # Option to use a data-driven method ("embedding")
@@ -336,11 +310,11 @@ singleTop_pdf_down   = systematics.getCrossSectionUncertainty("SingleTop_pdf").g
 DY_scale_down        = systematics.getCrossSectionUncertainty("DYJetsToLL_scale").getUncertaintyDown()
 DY_scale_up          = systematics.getCrossSectionUncertainty("DYJetsToLL_scale").getUncertaintyUp()
 DY_pdf_down          = systematics.getCrossSectionUncertainty("DYJetsToLL_pdf").getUncertaintyDown()
-# DY_pdf_up            = systematics.getCrossSectionUncertainty("DYJetsToLL_pdf").getUncertaintyUp()
+DY_pdf_up            = systematics.getCrossSectionUncertainty("DYJetsToLL_pdf").getUncertaintyUp()
 diboson_scale_down   = systematics.getCrossSectionUncertainty("Diboson_scale").getUncertaintyDown()
-# diboson_scale_up     = systematics.getCrossSectionUncertainty("Diboson_scale").getUncertaintyUp()
+diboson_scale_up     = systematics.getCrossSectionUncertainty("Diboson_scale").getUncertaintyUp()
 diboson_pdf_down     = systematics.getCrossSectionUncertainty("Diboson_pdf").getUncertaintyDown()
-# diboson_pdf_up       = systematics.getCrossSectionUncertainty("Diboson_pdf").getUncertaintyUp()
+diboson_pdf_up       = systematics.getCrossSectionUncertainty("Diboson_pdf").getUncertaintyUp()
 lumi_2016            = systematics.getLuminosityUncertainty("2016")
 
 # Define all individual nuisances that can be potentially used
