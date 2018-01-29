@@ -51,6 +51,8 @@ class ElectronDumper : public BaseDumper {
 	edm::EDGetTokenT<double> *rhoMiniIsoToken;
 	// Marina - end
 
+        std::vector<short> *q;
+
         std::vector<float> *relIsoDeltaBetaCorrected;
         std::vector<float> *effAreaIsoDeltaBetaCorrected;
 	
