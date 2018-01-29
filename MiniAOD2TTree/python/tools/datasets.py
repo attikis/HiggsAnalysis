@@ -1,5 +1,4 @@
-lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Cert_294927-302663_13TeV_PromptReco_Collisions17_JSON.txt"
-
+lumiMask = "/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/PromptReco/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt"
 
 #================================================================================================ 
 # Class Definition
@@ -35,6 +34,8 @@ datasetsTauData.append(Dataset('/Tau/Run2017A-PromptReco-v3/MINIAOD', dataVersio
 datasetsTauData.append(Dataset('/Tau/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298996-299185_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
 datasetsTauData.append(Dataset('/Tau/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299327-302019_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
 datasetsTauData.append(Dataset('/Tau/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_302023-302494_13TeV_PromptReco_Collisions17_JSON_Run2017D.txt"))
+datasetsTauData.append(Dataset('/Tau/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_303572-304797_13TeV_PromptReco_Collisions17_JSON_Run2017E.txt"))
+datasetsTauData.append(Dataset('/Tau/Run2017F-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_305040-306462_13TeV_PromptReco_Collisions17_JSON_Run2017F.txt"))
 
 datasetsJetHTData = []
 das = ""
@@ -46,7 +47,10 @@ datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', da
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298996-299185_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299327-302019_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_302023-302494_13TeV_PromptReco_Collisions17_JSON_Run2017D.txt"))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask=lumiMask))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_303572-304797_13TeV_PromptReco_Collisions17_JSON_Run2017E.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017F-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_305040-306462_13TeV_PromptReco_Collisions17_JSON_Run2017F.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017G-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306526-306657_13TeV_PromptReco_Collisions17_JSON_Run2017G.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017H-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306896-307082_13TeV_PromptReco_Collisions17_JSON_Run2017H.txt"))
 
 datasetsElectronData = []
 das = ""
@@ -94,8 +98,9 @@ datasetsTTJets = []
 
 datasetsDY = []
 das = ""
-#datasetsDY.append(Dataset('', dataVersion="83Xmc", dasQuery=das))
-
+datasetsDY.append(Dataset('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v7-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+datasetsDY.append(Dataset('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10_ext1-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+datasetsDY.append(Dataset('/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10_ext1-v2/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
 
 datasetsDYJetsToQQ = []
 
@@ -171,7 +176,7 @@ datasetsSignalTauNu_TRGdev.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-
 tauLegDatasets = []
 #tauLegDatasets.extend(datasetsZeroBiasData)
 tauLegDatasets.extend(datasetsMuonData)
-#tauLegDatasets.extend(datasetsDY)
+tauLegDatasets.extend(datasetsDY)
 #tauLegDatasets.extend(datasetsZprime)
 # tauLegDatasets.extend(datasetsWJets_reHLT)
 # tauLegDatasets.extend(datasetsQCDMuEnriched_reHLT)
