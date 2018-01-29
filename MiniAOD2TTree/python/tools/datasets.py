@@ -83,6 +83,12 @@ das = ""
 
 
 datasetsSignalTauNu = []
+#datasetsSignalTauNu.append(Dataset('', dataVersion="92Xmc", dasQuery=das))
+#datasetsSignalTauNu.append(Dataset('', dataVersion="92Xmc", dasQuery=das))
+#datasetsSignalTauNu.append(Dataset('/ChargedHiggs_TTToHplusBWB_HplusToTauNu_M-160_13TeV_amcatnlo_pythia8/RunIISummer17MiniAOD-NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+#datasetsSignalTauNu.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-200_13TeV_amcatnlo_pythia8/RunIISummer17MiniAOD-NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v2/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+#datasetsSignalTauNu.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-500_13TeV_amcatnlo_pythia8/RunIISummer17MiniAOD-NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+#datasetsSignalTauNu.append(Dataset('/ChargedHiggs_HplusTB_HplusToTauNu_M-1000_13TeV_amcatnlo_pythia8/RunIISummer17MiniAOD-NZSFlatPU28to62_92X_upgrade2017_realistic_v10-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
 
 
 datasetsSingleTop = []
@@ -94,7 +100,7 @@ datasetsTop.append(Dataset('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/Phas
 
 
 datasetsTTJets = []
-
+datasetsTTJets.append(Dataset('/TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v3/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
 
 datasetsDY = []
 das = ""
@@ -109,6 +115,7 @@ datasetsZprime = []
 
 
 datasetsWJets = []
+datasetsWJets.append(Dataset('/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v1/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
 
 
 datasetsWJetsToQQ = []
@@ -118,6 +125,8 @@ datasetsZJetsToQQ = []
 
 
 datasetsDiboson = []
+datasetsDiboson.append(Dataset('/WW_TuneCUETP8M1_13TeV-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v2/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
+datasetsDiboson.append(Dataset('/WZ_TuneCUETP8M1_13TeV-pythia8/RunIISummer17MiniAOD-92X_upgrade2017_realistic_v10-v2/MINIAODSIM', dataVersion="92Xmc", dasQuery=das))
 
 
 datasetsDibosonToQQ = []
@@ -200,10 +209,10 @@ l1Datasets.extend(datasetsQCD)
 
 signalAnalysisDatasets = []
 signalAnalysisDatasets.extend(datasetsTauData)
-#signalAnalysisDatasets.extend(datasetsDY) 
-#signalAnalysisDatasets.extend(datasetsTop)
+signalAnalysisDatasets.extend(datasetsDY) 
+signalAnalysisDatasets.extend(datasetsTop)
 #signalAnalysisDatasets.extend(datasetsSingleTop)
-#signalAnalysisDatasets.extend(datasetsWJets)  
+signalAnalysisDatasets.extend(datasetsWJets)  
 #signalAnalysisDatasets.extend(datasetsDiboson)
 #signalAnalysisDatasets.extend(datasetsQCD)
 #signalAnalysisDatasets.extend(datasetsSignalTauNu)
