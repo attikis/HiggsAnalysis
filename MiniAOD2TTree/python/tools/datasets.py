@@ -43,14 +43,17 @@ das = ""
 
 datasetsMuonData = []
 das = ""
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_294927-297723_13TeV_PromptReco_Collisions17_JSON_Run2017A.txt"))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298996-299185_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299327-302019_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
+#datasetsMuonData.append(Dataset('/SingleMuon/Run2017A-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_294927-297723_13TeV_PromptReco_Collisions17_JSON_Run2017A.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_297031-297101_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017B-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_298678-299329_13TeV_PromptReco_Collisions17_JSON_Run2017B.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299368-299649_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v2/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_299958-300676_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
+datasetsMuonData.append(Dataset('/SingleMuon/Run2017C-PromptReco-v3/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_300742-302029_13TeV_PromptReco_Collisions17_JSON_Run2017C.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017D-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_302023-302494_13TeV_PromptReco_Collisions17_JSON_Run2017D.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017E-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_303572-304797_13TeV_PromptReco_Collisions17_JSON_Run2017E.txt"))
 datasetsMuonData.append(Dataset('/SingleMuon/Run2017F-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_305040-306462_13TeV_PromptReco_Collisions17_JSON_Run2017F.txt"))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017G-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306526-306657_13TeV_PromptReco_Collisions17_JSON_Run2017G.txt"))
-datasetsMuonData.append(Dataset('/SingleMuon/Run2017H-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306896-307082_13TeV_PromptReco_Collisions17_JSON_Run2017H.txt"))
+#datasetsMuonData.append(Dataset('/SingleMuon/Run2017G-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306526-306657_13TeV_PromptReco_Collisions17_JSON_Run2017G.txt"))
+#datasetsMuonData.append(Dataset('/SingleMuon/Run2017H-PromptReco-v1/MINIAOD', dataVersion="92Xdata", dasQuery=das, lumiMask="Cert_306896-307082_13TeV_PromptReco_Collisions17_JSON_Run2017H.txt"))
 
 datasetsElectronData = []
 das = ""
