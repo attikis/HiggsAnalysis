@@ -24,7 +24,7 @@ def produceCustomisations(process, isData):
     reproduceMETNoiseFilters(process)
     reproduceMET(process, isData)
 #    reproduceJEC(process)
-    produceJets(process, isData)
+#    produceJets(process, isData)
     print "=== Customisations done"
 
 
