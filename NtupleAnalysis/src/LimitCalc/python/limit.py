@@ -1575,6 +1575,7 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
         histograms.addText(x-0.2, y+0.6, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "tb":
         histograms.addText(x+0.01, y+0.84, processHeavyHtb, size=size)
+        histograms.addText(x-0.25, y+0.6, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     else:
         raise Exception("Unknown option for regime")
     y -= captionLineSpacing
