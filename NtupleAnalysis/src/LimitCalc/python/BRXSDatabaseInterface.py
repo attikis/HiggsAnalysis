@@ -2678,8 +2678,9 @@ def test():
 #        db.Print(variable="BR_tHpb*BR_Hp_taunu",selection="mHp==155 && mu==200")
 #        db.Print(variable="mHp",selection="mA==110 && mu==3300")
 #        db.Print(variable="mHp")
-        db.Print(variable="mh",selection="mHp==180&&mu==500")
+#        db.Print(variable="mh",selection="mHp==180&&mu==500")
 #        db.Print(variable="0.001*2*tHp_xsec*BR_Hp_taunu",selection="mHp==300&&mu==200")
+        db.Print(variable="0.001*2*tHp_xsec*BR_Hp_tb",selection="mHp==300&&mu==200")
 #        db.Print(variable="tHp_xsec",selection="mHp==200 && tanb== 40")
 
 #        db.getExpLimitInterpolated(120,"")
