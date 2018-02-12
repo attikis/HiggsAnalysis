@@ -107,11 +107,9 @@ def main():
 
     # Remove m=180,190
     for gr in graphs.values():
-#        limit.cleanGraph(gr, 750)
-        limit.cleanGraph(gr, 800)
-        limit.cleanGraph(gr, 1000)
-        limit.cleanGraph(gr, 2000)
-        limit.cleanGraph(gr, 3000)
+        limit.cleanGraph(gr, 1500)
+        limit.cleanGraph(gr, 2500)
+
 
 
     print "Plotting graphs"                    
