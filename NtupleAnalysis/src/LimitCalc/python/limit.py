@@ -1511,7 +1511,7 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
         #if scenario.replace("-LHCHXSWG", "") in ["lightstop", "mhmaxup"]:
         #    y += 0.05
     elif regime == "light":
-        x = 0.4
+        x = 0.3
         y = -0.05
     else:
         x = 0.52
@@ -1566,6 +1566,7 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
     size = 20
     if regime == "light":
         histograms.addText(x, y+0.9, process, size=size)
+        histograms.addText(x, y+0.84, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "heavy":
         histograms.addText(x+0.01, y+0.84, processHeavy, size=size)
     elif regime == "combined":
@@ -1585,7 +1586,7 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
             y -= captionLineSpacing
     else:
         raise Exception("not implemented")
-    histograms.addText(x-0.21, y+0.695, "^{}%s"%getTypesetScenarioName(scenario), size=size)
+#    histograms.addText(x-0.21, y+0.695, "^{}%s"%getTypesetScenarioName(scenario), size=size)
 #    histograms.addText(x-0.3, y+0.695, "^{}%s"%getTypesetScenarioName(scenario), size=size)
 #    histograms.addText(x-0.33, y+0.695, "^{}%s"%getTypesetScenarioName(scenario), size=size) # mhmaxup
 #    histograms.addText(x, y+0.93, "^{}%s"%getTypesetScenarioName(scenario), size=size)
