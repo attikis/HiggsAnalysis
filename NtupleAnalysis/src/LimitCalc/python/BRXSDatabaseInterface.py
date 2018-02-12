@@ -2642,6 +2642,16 @@ class BRXSDatabaseInterface:
                 return regexp + " " + match.group("version")
         return None
 
+    def getScenario(self):
+        scenario_re = re.compile("Scenario *= *(?P<version>\S+)")
+        keys = self.fIN.GetListOfKeys()
+        for i in range(len(keys)):
+            keyName = keys.At(i).GetName()
+            match = scenario_re.search(keyName)
+            if match:
+                return match.group("version")
+        return None
+
 def usage():
     print
     print "### Usage:  ",sys.argv[0],"<root file>"
