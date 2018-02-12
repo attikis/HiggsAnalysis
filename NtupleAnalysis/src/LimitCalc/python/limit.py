@@ -1569,6 +1569,7 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
         histograms.addText(x, y+0.84, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "heavy":
         histograms.addText(x+0.01, y+0.84, processHeavy, size=size)
+        histograms.addText(x-0.25, y+0.6, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "combined":
         histograms.addText(x, y, processCombination, size=size)
     elif regime == "tb":
