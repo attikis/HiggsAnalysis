@@ -45,9 +45,9 @@ def xminmax(points,label="x"):
 def findHighEndPosition(limit):
 
     xmin,xmax = xminmax(limit)
-    print "check xmin,xmax",xmin,xmax
+    #print "check xmin,xmax",xmin,xmax
     ymin,ymax = xminmax(limit,"y")
-    print "check ymin,ymax",ymin,ymax
+    #print "check ymin,ymax",ymin,ymax
     highestXY = -1
     for i,p in enumerate(limit):
         if p["x"] == xmax and p["y"] == ymax:
@@ -59,27 +59,27 @@ def append(index,json1,json2):
     merged = []
     if index == 0:
         for p in reversed(json2):
-            print "Json2       ",p["x"],p["y"]
+            #print "Json2       ",p["x"],p["y"]
             merged.append(p)
         for i,p in enumerate(json1):
-            print "Json1, first part",p["x"],p["y"]
+            #print "Json1, first part",p["x"],p["y"]
             merged.append(p)
     else:
         for i,p in enumerate(json1):
             if i <= index:
-                print "Json1, first part",p["x"],p["y"]
+                #print "Json1, first part",p["x"],p["y"]
                 merged.append(p)
         if json2[0]["y"] > json2[len(json2)-1]["y"]:
             for p in json2:
-                print "Json2       ",p["x"],p["y"]
+                #print "Json2       ",p["x"],p["y"]
                 merged.append(p)
         else:
             for p in reversed(json2):
-                print "Json2       ",p["x"],p["y"]
+                #print "Json2       ",p["x"],p["y"]
                 merged.append(p)
         for i,p in enumerate(json1):
             if i > index:
-                print "Json1, second part",p["x"],p["y"]
+                #print "Json1, second part",p["x"],p["y"]
                 merged.append(p)
     return merged                  
         
@@ -91,7 +91,7 @@ def mergeJson(json1,json2):
                 if len(json2[k]) > len(json1[k]):
                     returnJson[k] = json2[k]
             else:
-                print k
+                #print k
                 i = findHighEndPosition(json1[k])
                 returnJson[k] = append(i,json1[k],json2[k])
 
@@ -120,6 +120,9 @@ def main():
 
     jsonfile = mergeJsons(jsonfiles)
 
+    jsonfile["name"] = jsonfile["name"].replace("light","combined")
+    jsonfile["regime"] = jsonfile["regime"].replace("light","combined")
+    
     with open('merged.json', 'w') as fOUT:
         json.dump(jsonfile, fOUT, sort_keys=True, indent=2 )
 
