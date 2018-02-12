@@ -43,7 +43,7 @@ hplusDecayModeHtb = "H^{+} #rightarrow t#bar{b}"
 process            = "t #rightarrow H^{+}b, %s" % hplusDecayMode
 processHeavy       = "pp #rightarrow #bar{t}(b)H^{+}, %s" % hplusDecayMode
 processHeavyHtb    = "pp #rightarrow #bar{t}(b)H^{+}, %s" % hplusDecayModeHtb
-processCombination = "pp #rightarrow #bar{t}(b)H^{+}"
+processCombination = "pp #rightarrow H^{+}+X, %s" % hplusDecayMode
 
 # Label for the H+->tau BR assumption. fixme: alexandros (does not seem to work!)
 BRassumption = ""
@@ -1571,7 +1571,8 @@ def doTanBetaPlotGeneric(name, graphs, luminosity, finalstateText, xlabel, scena
         histograms.addText(x+0.01, y+0.84, processHeavy, size=size)
         histograms.addText(x-0.25, y+0.6, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "combined":
-        histograms.addText(x, y, processCombination, size=size)
+        histograms.addText(x, y+0.84, processCombination, size=size)
+        histograms.addText(x-0.2, y+0.6, "^{}%s"%getTypesetScenarioName(scenario), size=size)
     elif regime == "tb":
         histograms.addText(x+0.01, y+0.84, processHeavyHtb, size=size)
     else:
