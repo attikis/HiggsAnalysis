@@ -22,6 +22,7 @@
 #include "DataFormat/interface/GenWeight.h"
 #include "DataFormat/interface/GenParticle.h"
 #include "DataFormat/interface/PFCands.h"
+#include "DataFormat/interface/AK8Jet.h"
 
 class BranchManager;
 
@@ -80,6 +81,7 @@ public:
   const MuonCollection& muons() const { return fMuonCollection; }
   const GenParticleCollection& genparticles() const { return fGenParticleCollection; }
   const PFCandsCollection& pfCandidates() const { return fPFCandidates; }
+  const AK8JetCollection& ak8jets() const { return fAK8JetCollection; }
 
   const MET& genMET() const { return fGenMET; }
   const MET& met() const { return fMET; }
@@ -115,6 +117,8 @@ private:
   MuonCollection fMuonCollection;
   GenParticleCollection fGenParticleCollection;
   PFCandsCollection fPFCandidates;
+  AK8JetCollection fAK8JetCollection;
+
   MET fGenMET;
   MET fMET_Type1;
   MET fMET;

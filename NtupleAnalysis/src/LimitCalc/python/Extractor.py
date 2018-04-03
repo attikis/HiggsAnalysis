@@ -13,6 +13,8 @@ from HiggsAnalysis.NtupleAnalysis.tools.counter import EventCounter
 import HiggsAnalysis.NtupleAnalysis.tools.dataset as dataset
 from HiggsAnalysis.NtupleAnalysis.tools.systematics import ScalarUncertaintyItem,getBinningForPlot
 import HiggsAnalysis.QCDMeasurement.systematicsForMetShapeDifference as systematicsForMetShapeDifference
+import HiggsAnalysis.FakeBMeasurement.FakeBSystematics as fakeBSystematics
+
 import HiggsAnalysis.NtupleAnalysis.tools.ShellStyles as ShellStyles
 import HiggsAnalysis.NtupleAnalysis.tools.aux as aux
 import HiggsAnalysis.NtupleAnalysis.tools.histogramsExtras as histogramsExtras
@@ -59,11 +61,11 @@ class ExtractorMode:
     NUISANCE = 3
     ASYMMETRICNUISANCE = 4
     SHAPENUISANCE = 5
-    QCDNUISANCE = 6
+    QCDNUISANCE = 6 # also Fake-b
     CONTROLPLOT = 7
 
 class ExtractorBase:
-    def __init__(self, mode, exid, distribution, description, opts=None, scaleFactor = 1.0):
+    def __init__(self, mode, exid, distribution, description, opts=None, scaleFactor = 1.0, verbose=False):
         '''
         Constructor
         '''
@@ -74,12 +76,33 @@ class ExtractorBase:
         self._description = description
         self._opts = opts
         self._scaleFactor = scaleFactor
+        self._verbose = verbose
         self._extractablesToBeMerged = []
         self._masterExID = exid
         if self._scaleFactor == None:
             self._scaleFactor = 1.0
         if abs(self._scaleFactor - 1.0) > 0.00001:
-            print ShellStyles.WarningLabel()+"Scaling nuisance parameter %s by factor %f"%(self._exid, self._scaleFactor)
+            self.Print(ShellStyles.WarningLabel() + "Scaling nuisance parameter %s by factor %f" % (self._exid, self._scaleFactor), True)
+        return
+
+    def Verbose(self, msg, printHeader=True):
+        '''        
+        Calls Print() only if verbose options is set to true
+        '''
+        if not self._verbose:
+            return
+        Print(msg, printHeader)
+        return
+
+    def Print(self, msg, printHeader=True):
+        '''
+        Simple print function. If verbose option is enabled prints, otherwise does nothing
+        '''
+        fName = __file__.split("/")[-1]
+        fName = fName.replace(".pyc", ".py")
+        if printHeader:
+            print "=== ", fName
+        print "\t", msg
         return
 
     def isObservation(self):
@@ -94,87 +117,131 @@ class ExtractorBase:
         '''
         return self._mode == ExtractorMode.RATE
 
-    ## Returns true if extractable mode is any type of nuisance
     def isAnyNuisance(self):
+        '''
+        Returns true if extractable mode is any type of nuisance
+        '''
         return self._mode == ExtractorMode.NUISANCE or \
                self._mode == ExtractorMode.ASYMMETRICNUISANCE or \
                self._mode == ExtractorMode.SHAPENUISANCE or \
                self._mode == ExtractorMode.QCDNUISANCE
 
-    ## Returns true if extractable mode is nuisance
     def isNuisance(self):
+        '''
+        Returns true if extractable mode is nuisance
+        '''
         return self._mode == ExtractorMode.NUISANCE
 
-    ## Returns true if extractable mode is nuisance with asymmetric limits
     def isAsymmetricNuisance(self):
+        '''
+        Returns true if extractable mode is nuisance with asymmetric limits        
+        '''
         return self._mode == ExtractorMode.ASYMMETRICNUISANCE
 
-    ## Returns true if extractable mode is shape nuisance
     def isShapeNuisance(self):
+        '''
+        Returns true if extractable mode is shape nuisance
+        '''
         return self._mode == ExtractorMode.SHAPENUISANCE
 
-    ## Returns true if extractable mode is QCD nuisance
     def isQCDNuisance(self):
+        '''
+        Returns true if extractable mode is QCD nuisance
+        '''
         return self._mode == ExtractorMode.QCDNUISANCE
 
-    ## Returns the scale factor (used for projection estimates)
+    def getMode(self):
+        '''
+        Returns the mode
+        '''
+        return self._mode
+
     def getScaleFactor(self):
+        '''
+        Returns the scale factor (used for projection estimates)
+        '''
         return self._scaleFactor
 
-    ## True if nuisance will generate a new line in output (i.e. is not merged)
     def isPrintable(self):
+        '''
+        True if nuisance will generate a new line in output (i.e. is not merged)
+        '''
         return self._isPrintable
 
-    ## True if the id of the current extractable or it's master is the same as the asked one
     def isId(self, exid):
+        '''
+        True if the id of the current extractable or it's master is the same as the asked one
+        '''
         return self._exid == exid or self._masterExID == exid
 
-    ## Returns id of master
     def getMasterId(self):
+        '''
+        Returns id of master
+        '''
         return self._masterExID
 
-    ## Returns id
     def getId(self):
+        '''
+        Returns id
+        '''
         return self._exid
 
-    ## Returns distribution string
     def getDistribution(self):
+        '''
+        Returns distribution string
+        '''
         return self._distribution
 
-    ## Returns description string
     def getDescription(self):
+        '''
+        Returns description string
+        '''
         return self._description
 
-    ## Adds extractable to list of extractables to be merged
     def addExtractorToBeMerged(self, extractable):
+        '''
+        Adds extractable to list of extractables to be merged
+        '''
         self._extractablesToBeMerged.append(extractable)
         extractable.setAsSlave(self._exid)
+        return
 
-    ## Disables printing of extractable and sets id of master 
     def setAsSlave(self, masterId):
+        '''
+        Disables printing of extractable and sets id of master 
+        '''
         self._isPrintable = False
         self._masterExID = masterId
+        return
 
-    ## Returns the counter histogram
     def getCounterHistogram(self, rootFile, counterHisto):
+        '''
+        Returns the counter histogram
+        '''
         histo = rootFile.Get(counterHisto)
         if not histo:
             raise Exception(ErrorStyle()+"Error:"+ShellStyles.NormalStyle()+" Cannot find counter histogram '"+counterHisto+"'!")
         return histo
 
-    ## Returns index to bin corresponding to first matching label in a counter histogram
     def getCounterItemIndex(self, histo, counterItem):
+        '''
+        Returns index to bin corresponding to first matching label in a counter histogram
+        '''
         for i in range(1, histo.GetNbinsX()+1):
             if histo.GetXaxis().GetBinLabel(i) == myBinLabel:
                 return i
         raise Exception(ErrorStyle()+"Error:"+ShellStyles.NormalStyle()+" Cannot find counter by name "+counterItem+"!")
 
-    ## Virtual method for extracting information
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Virtual method for extracting information        
+        '''
         return -1.0
 
-    ## Virtual method for extracting additional information (returns None if not implemented)
     def extractAdditionalResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Virtual method for extracting additional information (returns None if not implemented)
+        '''
         return None
 
     def extractHistograms(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
@@ -183,16 +250,35 @@ class ExtractorBase:
         '''
         return None
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
-        print "- mode = ", self._mode
-        print "- extractable ID = ", self._exid
+        '''
+        Virtual method for printing debug information
+        '''
+        myDict = {}
+        myDict["Mode"]           = self.getMode()
+        myDict["Extractable ID"] = self.getId()
+        myDict["Is Nuisance"]    = self.isAnyNuisance()
         if self.isAnyNuisance():
-            print "- distribution = ", self._distribution
-            print "- description = ", self._description
-            print "- scale factor = ", self._scaleFactor
-            if not self.isPrintable():
-                print "- is slave of extractable with ID = ", self._masterExID
+            myDict["Distribution"] = self.getDistribution()
+            myDict["Description"]  = self.getDescription()
+            myDict["Scale Factor"] = self.getScaleFactor()
+            myDict["Is Printable"] = self.isPrintable()
+            myDict["Master Extractor (ID)"] = self.getMasterId()
+                
+        # Constrcut table
+        table = []
+        align = "{:<40} {:<40} "
+        hLine = "="*80
+        table.append(hLine)
+        table.append(align.format("Variable Name", "Variable Value"))
+        table.append(hLine)
+        for k in sorted(myDict):
+            table.append(align.format(k, myDict[k]))
+        table.append(hLine)
+        table.append("")
+        for i, row in enumerate(table, 1):
+            self.Print(row, i==1)
+        return
 
     # obsolete methods ?
     # double getMergedValue(std::vector< Dataset* > datasets, NormalisationInfo* info, double hostValue); // Returns first non zero value
@@ -212,11 +298,16 @@ class ExtractorBase:
     ## \var _masterExID
     # the ID of the master extractable (i.e. specifies line on which this extractable output is printed)
 
-## ConstantExtractor class
-# Returns a fixed constant number
 class ConstantExtractor(ExtractorBase):
-    ## Constructor
+    '''
+    ConstantExtractor class
+
+    Returns a fixed constant number
+    '''    
     def __init__(self, constantValue, mode, exid = "", distribution = "lnN", description = "", constantUpperValue = 0.0, opts=None, scaleFactor=1.0):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._constantValue = None
         if isinstance(constantValue, ScalarUncertaintyItem):
@@ -227,25 +318,34 @@ class ConstantExtractor(ExtractorBase):
                 self._constantValue = ScalarUncertaintyItem(exid,plus=constantUpperValue*self._scaleFactor,minus=constantValue*self._scaleFactor)
             else:
                 self._constantValue = ScalarUncertaintyItem(exid,constantValue*self._scaleFactor)
+        return
 
-    ## Method for extracking information
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracking information
+        '''
         return self._constantValue
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+        '''
         print "ConstantExtractor"
         print "- value = + %f - %f"%(self._constantValue.getUncertaintyUp,self._constantValue.getUncertaintyDown)
         ExtractorBase.printDebugInfo(self)
+        return
 
-    ## \var _constantValue
-    # ScalarUncertaintyItem containting the uncertainty
 
-## ConstantExtractor class
-# Returns a fixed constant number
 class ConstantExtractorForDataDrivenQCD(ExtractorBase):
-    ## Constructor
-    def __init__(self, constantValue, mode, exid = "", distribution = "lnN", description = "", constantUpperValue = 0.0, opts=None, scaleFactor=1.0):
+    '''
+    ConstantExtractor class
+
+    Returns a fixed constant number
+    '''
+    def __init__(self, constantValue, mode, exid = "", distribution = "lnN", description = "", constantUpperValue = 0.0, opts=None, scaleFactor=1.0, verbose=False):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._constantValue = None
         if isinstance(constantValue, ScalarUncertaintyItem):
@@ -253,35 +353,92 @@ class ConstantExtractorForDataDrivenQCD(ExtractorBase):
             self._constantValue.scale(self._scaleFactor)
         else:
             if self.isAsymmetricNuisance() or constantUpperValue != None:
-                self._constantValue = ScalarUncertaintyItem(exid,plus=constantUpperValue*self._scaleFactor,minus=constantValue*self._scaleFactor)
+                self._constantValue = ScalarUncertaintyItem(exid,plus=constantUpperValue*self._scaleFactor, minus=constantValue*self._scaleFactor)
             else:
                 self._constantValue = ScalarUncertaintyItem(exid,constantValue*self._scaleFactor)
-        # Flip sign
-        self._constantValue.scale(-1.0)
+        # Flip sign (if EWK fluctuates up, QCD fluctutes down, and vice versa; anti-correlated)
+        self._constantValue.scale(-1.0) 
+        self._verbose = False
+        # self.printDebugInfo()
+        return
 
-    ## Method for extracking information
+    def Verbose(self, msg, printHeader=True):
+        '''        
+        Calls Print() only if verbose options is set to true
+        '''
+        if not self._verbose:
+            return
+        Print(msg, printHeader)
+        return
+
+    def Print(self, msg, printHeader=True):
+        '''
+        Simple print function. If verbose option is enabled prints, otherwise does nothing
+        '''
+        fName = __file__.split("/")[-1]
+        fName = fName.replace(".pyc", ".py")
+        if printHeader:
+            print "=== ", fName
+        print "\t", msg
+        return
+
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracting information
+        '''
         return self._constantValue
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
-        print "ConstantExtractorForDataDrivenQCD"
-        print "- value = + %f - %f"%(self._constantValue.getUncertaintyUp,self._constantValue.getUncertaintyDown)
+        '''
+        Virtual method for printing debug information
+
+        \var _constantValue ScalarUncertaintyItem containting the uncertainty
+        '''
+        msg = "Value = + %f - %f" % (self._constantValue.getUncertaintyUp(), self._constantValue.getUncertaintyDown())
+        self.Print(msg, True)
         ExtractorBase.printDebugInfo(self)
+        return
 
-    ## \var _constantValue
-    # ScalarUncertaintyItem containting the uncertainty
 
-## CounterExtractor class
-# Extracts a value from a given counter in the list of main counters
 class CounterExtractor(ExtractorBase):
-    ## Constructor
-    def __init__(self, counterItem, mode, exid = "", distribution = "lnN", description = "", opts=None, scaleFactor=1.0):
+    '''
+    CounterExtractor class
+
+    Extracts a value from a given counter in the list of main counters
+    '''
+    def __init__(self, counterItem, mode, exid = "", distribution = "lnN", description = "", opts=None, scaleFactor=1.0, verbose=False):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._counterItem = counterItem
+        self._verbose = verbose
+        return
 
-    ## Method for extracking information
+    def Verbose(self, msg, printHeader=True):
+        '''        
+        Calls Print() only if verbose options is set to true
+        '''
+        if not self._verbose:
+            return
+        Print(msg, printHeader)
+        return
+
+    def Print(self, msg, printHeader=True):
+        '''
+        Simple print function. If verbose option is enabled prints, otherwise does nothing
+        '''
+        fName = __file__.split("/")[-1]
+        fName = fName.replace(".pyc", ".py")
+        if printHeader:
+            print "=== ", fName
+        print "\t", msg
+        return
+
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracking information
+        '''
         myCount = mainCounterTable.getCount(rowName=self._counterItem, colName=datasetColumn.getDatasetMgrColumn())
         # Return result
         myResult = None
@@ -298,29 +455,40 @@ class CounterExtractor(ExtractorBase):
                 myResult = ScalarUncertaintyItem(self._exid,myCount.uncertainty() / myCount.value()*self._scaleFactor)
         return myResult
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+        '''
         print "CounterExtractor"
         print "- counter item = ", self._counterItem
         ExtractorBase.printDebugInfo(self)
+        return
 
     ## \var _counterItem
     # Name of item (label) in counter histogram
 
-## MaxCounterExtractor class
-# Extracts a value from a given counter item in the list of main counters and compares it to the reference value
-# Largest deviation from the reference (nominal) value is taken
 class MaxCounterExtractor(ExtractorBase):
-    ## Constructor
+    '''
+    MaxCounterExtractor class
+    
+    Extracts a value from a given counter item in the list of main counters and compares it to the reference value
+    Largest deviation from the reference (nominal) value is taken
+    '''
     def __init__(self, counterDirs, counterItem, mode, exid = "", distribution = "lnN", description = "", opts=None, scaleFactor=1.0):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._counterItem = counterItem
         self._counterDirs = counterDirs
         if len(self._counterDirs) < 2:
             raise Exception(ErrorStyle()+"Error in Nuisance with id='"+self._exid+"':"+ShellStyles.NormalStyle()+" need to specify at least two directories for counters!")
+        return
 
-    ## Method for extracking information
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracking information
+        '''
         myResult = []
         for d in self._counterDirs:
             myHistoPath = d+"/weighted/counter"
@@ -339,6 +507,7 @@ class MaxCounterExtractor(ExtractorBase):
                     myFoundStatus = True
             if not myFoundStatus:
                 raise Exception(ErrorStyle()+"Error in Nuisance with id='"+self._exid+"' for column '"+datasetColumn.getLabel()+"':"+ShellStyles.NormalStyle()+" Cannot find counter name '"+self._counterItem+"' in histogram '"+myHistoPath+"'!")
+
         # Loop over results
         myMaxValue = 0.0
         # Protect for div by zero
@@ -351,11 +520,14 @@ class MaxCounterExtractor(ExtractorBase):
                     myMaxValue = myValue
         return ScalarUncertaintyItem(self._exid,myMaxValue*self._scaleFactor)
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+        '''
         print "MaxCounterExtractor"
         print "- counter item = ", self._counterItem
         ExtractorBase.printDebugInfo(self)
+        return
 
     ## \var _counterDirs
     # List of directories (without /weighted/counter suffix ) for counter histograms; first needs to be the nominal counter
@@ -422,19 +594,26 @@ class MaxCounterExtractor(ExtractorBase):
     ### \var _counterItem
     ## Name of item (label) in counter histogram
 
-
-## RatioExtractor class
-# Extracts two values from two counter items in the list of main counters and returns th ratio of these scaled by some factor
 class RatioExtractor(ExtractorBase):
-    ## Constructor
+    '''
+    RatioExtractor class
+
+    Extracts two values from two counter items in the list of main counters and returns th ratio of these scaled by some factor
+    '''
     def __init__(self, scale, numeratorCounterItem, denominatorCounterItem, mode, exid = "", distribution = "lnN", description = "", opts=None, scaleFactor=1.0):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._numeratorCounterItem = numeratorCounterItem
         self._denominatorCounterItem = denominatorCounterItem
         self._scale = scale
+        return
 
-    ## Method for extracking information
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracking information
+        '''
         myNumeratorCount = mainCounterTable.getCount(rowName=self._numeratorCounterItem, colName=datasetColumn.getDatasetMgrColumn())
         myDenominatorCount = mainCounterTable.getCount(rowName=self._denominatorCounterItem, colName=datasetColumn.getDatasetMgrColumn())
         # Protection against div by zero
@@ -446,25 +625,35 @@ class RatioExtractor(ExtractorBase):
         # Return result
         return ScalarUncertaintyItem(self._exid,myResult*self._scaleFactor)
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+
+        \var _numeratorCounterItem
+        Name of item (label) in counter histogram for numerator count
+
+        \var _denominatorCounterItem
+        Name of item (label) in counter histogram for denominator count
+        
+        \var _scale
+        Scaling factor for result (float)
+        '''
         print "RatioExtractor"
         print "- numeratorCounterItem = ", self._numeratorCounterItem
         print "- denominatorCounterItem = ", self._denominatorCounterItem
         ExtractorBase.printDebugInfo(self)
+        return
 
-    ## \var _numeratorCounterItem
-    # Name of item (label) in counter histogram for numerator count
-    ## \var _denominatorCounterItem
-    # Name of item (label) in counter histogram for denominator count
-    ## \var _scale
-    # Scaling factor for result (float)
-
-## ScaleFactorExtractor class
-# Extracts an uncertainty for a scale factor
 class ScaleFactorExtractor(ExtractorBase):
-    ## Constructor
+    '''
+    ScaleFactorExtractor class
+
+    Extracts an uncertainty for a scale factor
+    '''
     def __init__(self, histoDirs, histograms, normalisation, addSystInQuadrature = 0.0, mode = ExtractorMode.NUISANCE, exid = "", distribution = "lnN", description = "", opts=None, scaleFactor=1.0):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._histoDirs = histoDirs
         self._histograms = histograms
@@ -472,9 +661,12 @@ class ScaleFactorExtractor(ExtractorBase):
         self._addSystInQuadrature = addSystInQuadrature
         if len(self._histoDirs) != len(self._normalisation) or len(self._histoDirs) != len(self._histograms):
             raise Exception(ErrorStyle()+"Error in Nuisance with id='"+self._exid+"' for column '"+datasetColumn.getLabel()+"':"+ShellStyles.NormalStyle()+" need to specify equal amount of histoDirs, histograms and normalisation histograms!")
+        return
 
-    ## Method for extracking information
     def extractResult(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0):
+        '''
+        Method for extracking information
+        '''
         myResult = []
         for i in range (0, len(self._histoDirs)):
             myTotal = 0.0
@@ -518,17 +710,20 @@ class ScaleFactorExtractor(ExtractorBase):
         # Return result
         return ScalarUncertaintyItem(self._exid,sqrt(myCombinedResult)*self._scaleFactor)
 
-
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+
+        \var _counterDirs
+        List of directories (without /weighted/counter suffix ) for counter histograms; first needs to be the nominal counter
+
+        \var _counterItem
+        Name of item (label) in counter histogram
+        '''
         print "MaxCounterExtractor"
         print "- counter item = ", self._counterItem
         ExtractorBase.printDebugInfo(self)
-
-    ## \var _counterDirs
-    # List of directories (without /weighted/counter suffix ) for counter histograms; first needs to be the nominal counter
-    ## \var _counterItem
-    # Name of item (label) in counter histogram
+        return
 
 class ShapeExtractor(ExtractorBase):
     '''
@@ -605,16 +800,26 @@ class ShapeExtractor(ExtractorBase):
         # Return result
         return myHistograms
 
-    ## QCD specific method for extracting purity histogram
     def extractQCDPurityHistogram(self, datasetColumn, dsetMgr, shapeHistoName):
+        '''
+        QCD/FakeB specific method for extracting purity histogram
+        '''
         # Do not apply here additional normalization, it is not needed
         if not datasetColumn.typeIsQCD:
-            raise Exception(ShellStyles.ErrorLabel()+"extractQCDPurityHistogram() called for non-QCD datacolumn '%s'!"%datasetColumn.getLabel())
+            msg = "extractQCDPurityHistogram() called for non-QCD datacolumn '%s'!" % (datasetColumn.getLabel())
+            raise Exception(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle())
+
         if not self.isRate():
-            raise Exception(ShellStyles.ErrorLabel()+"extractQCDPurityHistogram() called for nuisance! (only valid for rate)")
-        # Obtain purity histogram
+            msg = "extractQCDPurityHistogram() called for nuisance! (only valid for rate)"
+            raise Exception(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle())
+
         if not dsetMgr.getDataset(datasetColumn.getDatasetMgrColumn()).hasRootHisto(shapeHistoName+"_Purity"):
-            raise Exception(ShellStyles.ErrorLabel()+"T1he pseudo-multicrab directory for QCD is outdated! Please regenerate it (with the proper normalization!!!)")
+            msg = "The pseudo-multicrab directory for QCD is outdated! Please regenerate it (with the proper normalization!)"
+            raise Exception(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle())
+
+        # Obtain purity histogram 
+        hName = shapeHistoName + "_Purity"
+        self.Verbose("Obtaining purity hisrogram %s from dataset \"%s\"" % (hName, datasetColumn.getDatasetMgrColumn()), True)
         h = dsetMgr.getDataset(datasetColumn.getDatasetMgrColumn()).getDatasetRootHisto(shapeHistoName+"_Purity")
         return h
 
@@ -743,17 +948,23 @@ class ShapeVariationSeparateShapeAndNormalization(ExtractorBase):
         # Obsolete
         raise Exception("obsolete")
 
-    ## Virtual method for printing debug information
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+        '''
         print "ShapeVariationExtractor"
         ExtractorBase.printDebugInfo(self)
 
 
-## ShapeVariationToConstantExtractor class
-# Converts up and down variation histograms to asymmetric normalization uncertainty
 class ShapeVariationToConstantExtractor(ExtractorBase):
-    ## Constructor
+    '''
+    ShapeVariationToConstantExtractor class
+    Converts up and down variation histograms to asymmetric normalization uncertainty
+    '''
     def __init__(self, systVariation, mode = ExtractorMode.SHAPENUISANCE, exid = "", distribution = "shapeQ", description = "", opts=None, scaleFactor=1.0):
+        '''
+        Constructor
+        '''
         ExtractorBase.__init__(self, mode, exid, distribution, description, opts=opts, scaleFactor=scaleFactor)
         self._systVariation = systVariation
         if not "SystVar" in self._systVariation:
@@ -814,6 +1025,8 @@ class QCDShapeVariationExtractor(ExtractorBase):
 
     ## Virtual method for extracting histograms
     def extractHistograms(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0, rootHistoWithUncertainties = None):
+        if "FakeB" in datasetColumn.getLabel() or  "FakeB" ==  datasetColumn.getLabel():
+            return self.extractHistogramsForFakeB(datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation, rootHistoWithUncertainties)
         myHistograms = []
         if not rootHistoWithUncertainties:
             # Check that results have been cached
@@ -882,10 +1095,111 @@ class QCDShapeVariationExtractor(ExtractorBase):
         # Return result
         return myHistograms
 
-    ## Virtual method for printing debug information
+    def extractHistogramsForFakeB(self, datasetColumn, dsetMgr, mainCounterTable, luminosity, additionalNormalisation = 1.0, rootHistoWithUncertainties = None):
+        '''
+        Virtual method for extracting histograms
+        
+        The shape difference of the charged Higgs boson invariant mass distributions between the samples (CR1 Vs CR2, VR and SR)
+        is calculated in the following way:
+        1) The invariant mass distributions for the FakeB events (Data-EwkGenuineB) are obtained for both regions after all selections
+        2) The areas of these distributions are normalized to unity.
+        3) For each bin in the distributions, the statistical uncertainty due to the limited number of events in the bin is calculated.
+        This statistical uncertainty is assumed to be the only uncertainty affecting the event number in that bin.
+        4) One normalized distribution is divided by the other, and the statistical uncertainty of the resulting quotient distribution 
+        is calculated by error propagation. This uncertainty is used as an estimate for the shape difference between the two regions.
+        '''
+        myHistograms = []
+        if not rootHistoWithUncertainties:
+            self.Verbose("Check that results have been cached", True)
+            if datasetColumn.getCachedShapeRootHistogramWithUncertainties() == None:
+                msg = "You forgot to cache rootHistogramWithUncertainties for the datasetColumn before creating extractors for nuisances!"
+                raise Exception(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle())
+
+        self.Verbose("Get uncertainty variation dictionary", True)
+        myShapeUncertDict = datasetColumn.getCachedShapeRootHistogramWithUncertainties().getShapeUncertainties()
+        if rootHistoWithUncertainties != None:
+            myShapeUncertDict = rootHistoWithUncertainties.getShapeUncertainties()
+
+        self.Verbose("Check that asked variation does not exist yet", True)
+        if self._systVariation in myShapeUncertDict.keys():
+            msg = "FakeB systematics for labelled \"%s\" already exists for dataset column \"%s\"!" % (self._systVariation, datasetColumn.getLabel())
+            raise Exception(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle())
+
+        self.Verbose("Obtaining the Rate histograms (ROOT Histogram With Uncertainties)", True)
+        dset = dsetMgr.getDataset(datasetColumn.getDatasetMgrColumn())
+        myRateHisto = None
+        if rootHistoWithUncertainties == None:
+            myRateHisto = datasetColumn.getCachedShapeRootHistogramWithUncertainties().getRootHisto()
+        else:
+            myRateHisto = rootHistoWithUncertainties.getRootHisto()
+        
+        self.Verbose("Constuct full histogram path in ROOT file", True)
+        myHistoNamePrefix = myRateHisto.GetName().replace("_cloned","").replace("_" + dset.name, "")
+        myHistoNameShort  = myHistoNamePrefix
+        myHistoFolder     = "ForDataDrivenCtrlPlots"
+        myHistoNamePrefix = os.path.join(myHistoFolder, myHistoNamePrefix)
+
+        # Define the histograms sources for the invariant mass shape (ForDataDrivenCtrlPlots/LdgTetrajetMass_AfterAllSelections)
+        mySrcUp   = "_SystVar" + self._systVariation + "Up"
+        mySrcDown = "_SystVar" + self._systVariation + "Down"
+
+        # Get the invariant mass shape for the case where TF+Error
+        self.Verbose("Getting ROOT histo at \"%s (Var=\"%s\")" % (myHistoNamePrefix, mySrcUp), True)
+        (hSystUpFromSrc, hSystUpFromSrcName) = dset.getRootHisto(myHistoNamePrefix, analysisPostfix=mySrcUp)
+
+        # Get the invariant mass shape for the case where TF-Error
+        self.Verbose("Getting ROOT histo at \"%s (Var=\"%s\")" % (myHistoNamePrefix, mySrcDown), True)
+        (hSystDownFromSrc, hSystDownFromSrcName) = dset.getRootHisto(myHistoNamePrefix, analysisPostfix=mySrcDown)
+
+        self.Verbose("Store original source histograms (SystUpFromSrc)", True)
+        # srcPrefix  = "%s_%sSource" % (datasetColumn.getLabel(), self.getId())
+        srcPrefix  = "%s_%s" % (datasetColumn.getLabel(), self.getId())
+        hSystUpFromSrcSource = aux.Clone(hSystUpFromSrc, srcPrefix + "Up")
+        hSystUpFromSrcSource.SetTitle(srcPrefix + "Up")
+        histogramsExtras.makeFlowBinsVisible(hSystUpFromSrcSource)
+        myHistograms.append(hSystUpFromSrcSource)
+
+        self.Verbose("Store original source histograms (SystDownFromSrc)", True)
+        hSystDownFromSrcSource = aux.Clone(hSystDownFromSrc, srcPrefix + "Down")
+        hSystDownFromSrcSource.SetTitle(srcPrefix + "Down")
+        histogramsExtras.makeFlowBinsVisible(hSystDownFromSrcSource)
+        myHistograms.append(hSystDownFromSrcSource)
+
+        self.Verbose("Handle under/overflow bins (numerator)", True)
+        histogramsExtras.makeFlowBinsVisible(hSystUpFromSrc)
+
+        self.Verbose("Handle under/overflow bins (denominator)", True)
+        histogramsExtras.makeFlowBinsVisible(hSystDownFromSrc)
+
+        self.Verbose("Create output histograms (up)", True)
+        title = datasetColumn.getLabel() + "_" + self._masterExID
+        hUp   = aux.Clone(myRateHisto)
+        hUp.SetTitle(title + "Up")
+        hUp.Reset()
+
+        self.Verbose("Create output histograms (down)", True)
+        hDown = aux.Clone(myRateHisto)
+        hDown.SetTitle(title + "Down")
+        hDown.Reset()
+
+        self.Verbose("Do calculation and fill output histograms", True)
+        myTFSystematics = fakeBSystematics.SystematicsForTransferFactor(self._verbose)
+        myTFSystematics.createSystHistograms(myRateHisto, hUp, hDown, hSystUpFromSrc, hSystDownFromSrc, quietMode=True)
+
+        # Store uncertainty histograms
+        if rootHistoWithUncertainties == None:
+            datasetColumn.getCachedShapeRootHistogramWithUncertainties().addShapeUncertaintyFromVariation(self._systVariation, hUp, hDown)
+        else:
+            rootHistoWithUncertainties.addShapeUncertaintyFromVariation(self._systVariation, hUp, hDown)
+        return myHistograms
+
     def printDebugInfo(self):
+        '''
+        Virtual method for printing debug information
+        '''
         print "QCDShapeVariationExtractor"
         ExtractorBase.printDebugInfo(self)
+        return
 
 ## ControlPlotExtractor class
 # Extracts histograms for control plot

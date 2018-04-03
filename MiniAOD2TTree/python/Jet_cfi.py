@@ -56,31 +56,6 @@ AK4Jets = cms.PSet(
         ),
     )
 
-AK8Jets = cms.PSet(
-    # Marina
-    branchname = cms.untracked.string("AK8Jets"),
-    src        = cms.InputTag("selectedPatJetsAK8PFCHS"),
-    systVariations = cms.bool(False),
-
-    discriminators = cms.vstring(
-        "pfCombinedInclusiveSecondaryVertexV2BJetTags",
-        "pfCombinedMVAV2BJetTags",
-        "pfCombinedCvsLJetTags",
-        "pfCombinedCvsBJetTags"
-        ),
-    userFloats = cms.vstring(
-        "NjettinessAK8CHS:tau1",
-        "NjettinessAK8CHS:tau2",
-        "NjettinessAK8CHS:tau3",
-        "NjettinessAK8CHS:tau4",
-        ),
-
-    userInts = cms.vstring(
-        ),
-    checkSubjets = cms.bool(True),
-    )
-   
-
 AK4JetsPUPPI = cms.PSet(
     branchname = cms.untracked.string("JetsPuppi"),
     src        = cms.InputTag("updatedPatJetsUpdatedJECPuppi"),
@@ -132,9 +107,3 @@ for i in range(len(Jets)):
     pset = Jets[i].clone()
     pset.systVariations = cms.bool(False)
     JetsNoSysVariations.append(pset)
-
-JetsNoSysVariationsWithAK8 = cms.VPSet()
-for i in range(len(JetsWithAK8)):
-    pset = JetsWithAK8[i].clone()
-    pset.systVariations = cms.bool(False)
-    JetsNoSysVariationsWithAK8.append(pset)
