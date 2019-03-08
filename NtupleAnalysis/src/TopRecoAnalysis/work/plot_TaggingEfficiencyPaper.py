@@ -199,13 +199,8 @@ def GetHistoKwargs(opts):
     units = "GeV" # not GeV/c
 
     kwargs = {
-        #"xlabel"           : "generated top p_{T} (%s)" % (units),
-        # "xlabel"           : "candidate p_{T} (%s)" % (units),
         "xlabel"           : "p_{T} (%s)" % (units),
         "ylabel"           : "Efficiency / " + units,
-        # "ylabel"           : "Misidentification rate / " + units,
-        # "rebinX"           : 1,
-        # "rebinX"           : systematics._dataDrivenCtrlPlotBinning["LdgTrijetDijetMass_AfterAllSelections"],
         "ratioYlabel"      : "Ratio ",
         "ratio"            : opts.ratio,
         "ratioInvert"      : True,
@@ -213,13 +208,12 @@ def GetHistoKwargs(opts):
         "addMCUncertainty" : False,
         "addLuminosityText": False,
         "addCmsText"       : True,
-        #"cmsExtraText"     : "Preliminary",
-        "cmsExtraText"     : "Simulation",
-        #"opts"             : {"ymin": 0.0, "ymax": 1.0},
+        "cmsExtraText"     : "Preliminary", #"Simulation",
         "opts"             : {"ymin": 0.0, "ymaxfactor": 1.2},
-        #"opts2"            : {"ymin": 0.6, "ymax": 1.4},
-        "opts2"            : {"ymin": 0.0, "ymax": 10.4},
-        "moveLegend"       : {"dx": -0.05, "dy": -0.0, "dh": -0.15},
+        "opts2"            : {"ymin": 0.0, "ymax": 12.4},
+        #"opts2"            : {"ymin": 0.0, "ymax": 10.4},
+        #"moveLegend"       : {"dx": -0.05, "dy": -0.0, "dh": -0.15},
+        "moveLegend"       : {"dx": +0.05, "dy": -0.0, "dh": -0.15},
         "cutBoxY"          : {"cutValue": 1.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True, "mainCanvas": True, "ratioCanvas": False}
         }
     myBins  = [0, 100, 150, 200, 300, 400, 500, 600, 800]
@@ -366,7 +360,9 @@ def PlotEfficiency(datasetsMgr, datasetsMgr40, intLumi):
     eff40_QCD = convert2TGraph(eff40_QCD)
 
     styles.ttStyle.apply(eff40_TT)
-    styles.qcdStyle.apply(eff40_QCD)
+    #styles.qcdStyle.apply(eff40_QCD)
+    #styles.fakeBStyle.apply(eff40_QCD)
+    styles.genuineBLineStyle.apply(eff40_QCD)
 
     # Append in list
     gEff40_TT  = histograms.HistoGraph(eff40_TT , "t#bar{t}", "lp", "P")

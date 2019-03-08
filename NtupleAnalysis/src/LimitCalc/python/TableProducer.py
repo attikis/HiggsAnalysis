@@ -1274,6 +1274,7 @@ class TableProducer:
                                    ["CMS_HPTB_mu_RF_HPTB", "RF scale acceptance (signal)"],
                                    ["CMS_HPTB_mu_RF_top" , "RF scale acceptance (top)"],
                                    ["CMS_HPTB_mu_RF_ewk" , "RF scale acceptance (EWK)"],
+                                   ["CMS_HPTB_fakeB_transferfactor", "Fake $b$ transfer factors"], # added 7 Mar 2018 (was accidentally deleted?)
                                    ]
             else:
                 myNuisanceOrder = [["CMS_eff_trg_MC", "trigger efficiency"],

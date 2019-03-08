@@ -124,7 +124,7 @@ def getFakeBSystematics(myTTBarSystematics, OptionShapeSystematics, verbose=Fals
 #================================================================================================  
 # Options
 #================================================================================================  
-OptionTest                             = False  # [default: False]
+OptionTest                             = True  # [default: False]
 OptionPaper                            = True  # [default: True]
 OptionIncludeSystematics               = True  # [default: True]   (Shape systematics; Requires pseudo-multicrab produced with doSystematics=True) 
 OptionFakeBSyst                        = "TransferFactor" # [default: "TransferFactor"] (Options: TransferFactor, TransferFactor2x, TransferFactor3x)
@@ -316,8 +316,10 @@ lumi_2016            = systematics.getLuminosityUncertainty("2016")
 lumi13TeV_Const = Nuisance(id="lumi_13TeV"         , label="Luminosity 13 TeV uncertainty", distr="lnN", function="Constant", value=lumi_2016)
 trgMC_Const     = Nuisance(id="CMS_eff_trg_MC"     , label="Trigger MC efficiency (Approx.)", distr="lnN", function="Constant", value=0.05)
 PU_Const        = Nuisance(id="CMS_pileup"         , label="Pileup (Approx.)", distr="lnN", function="Constant", value=0.05)
-eVeto_Const     = Nuisance(id="CMS_eff_e_veto"     , label="e veto", distr="lnN", function="Ratio", numerator="passed e selection (Veto)", denominator="passed PV", scaling=0.02)
-muVeto_Const    = Nuisance(id="CMS_eff_m_veto"     , label="mu veto", distr="lnN", function="Ratio", numerator="passed mu selection (Veto)", denominator="passed e selection (Veto)", scaling=0.01)
+eVeto_Const     = Nuisance(id="CMS_eff_e_veto"     , label="e veto"  , distr="lnN", function="Ratio", numerator="passed e selection (Veto)", denominator="passed PV", scaling=0.02)
+muVeto_Const    = Nuisance(id="CMS_eff_m_veto"     , label="mu veto" , distr="lnN", function="Ratio", numerator="passed mu selection (Veto)", denominator="passed e selection (Veto)", scaling=0.01)
+#eVeto_Const     = Nuisance(id="CMS_eff_e_veto"     , label="e veto"  , distr="lnN", function="Constant", value=0.05)
+#muVeto_Const    = Nuisance(id="CMS_eff_m_veto"     , label="mu veto" , distr="lnN", function="Constant", value=0.05)
 tauVeto_Const   = Nuisance(id="CMS_eff_tau_veto"   , label="tau veto", distr="lnN", function="Ratio", numerator="Passed tau selection (Veto)", denominator="passed mu selection (Veto)", scaling=0.03)
 bTagSF_Const    = Nuisance(id="CMS_eff_b"          , label="b tagging (Approx.)", distr="lnN", function="Constant", value=0.05)
 JES_Const       = Nuisance(id="CMS_scale_j"        , label="Jet Energy Scale (JES) (Approx.)"     , distr="lnN", function="Constant", value=0.03)
@@ -546,8 +548,10 @@ hLdgTopPt = ControlPlotInput(
                          "unit"               : "%s" % (uPt),
                          "log"                : True,
                          "legendPosition"     : "NE",
-                         "ratioLegendPosition": "right",
-                         "opts"               : {"ymin": 1e-2, "ymaxfactor": 10}#, "xmax": 900.0} }
+                         "ratioLegendPosition": "SE", #"right",
+                         #"opts"               : {"ymin": 1e-2, "ymaxfactor": 10}#, "xmax": 900.0} }
+                         #"opts"               : {"ymin": 1e-2, "ymaxfactor": 10, "xmax": 900.0}
+                         "opts"               : {"ymin": 1e-2, "ymaxfactor": 10, "xmax": 800.0}
                          },
     )
 
@@ -840,7 +844,9 @@ hLdgHiggsMass = ControlPlotInput(
                          "log"                : True,
                          "legendPosition"     : "NE",
                          "ratioLegendPosition": "right",
-                         "opts"               : {"ymin": 1e-2, "ymaxfactor": 10}#, "xmax": 3000.0} 
+                         #"opts"               : {"ymin": 1e-2, "ymaxfactor": 10}
+                         "opts"               : {"ymin": 0.5e-2, "ymaxfactor": 10} # paper
+                         #"opts"               : {"xmin":150.0, "ymin": 0.5e-2, "ymaxfactor": 10} # paper
                          },
     blindedRange=[0.0, 2500.0], # specify range min,max if blinding applies to this control plot
     flowPlotCaption  = "", # Leave blank if you don't want to include the item to the selection flow plot    
@@ -1361,10 +1367,10 @@ if 0:
 if OptionTest:
     ControlPlots = []
     ControlPlots.append(hLdgHiggsMass)
-    ControlPlots.append(hTetrajetBjetPt)
-    ControlPlots.append(hTetrajetBjetEta)
+    #ControlPlots.append(hTetrajetBjetPt)
+    #ControlPlots.append(hTetrajetBjetEta)
     ControlPlots.append(hLdgTopPt)
-    ControlPlots.append(hLdgTopMass)
-    ControlPlots.append(hMET)
-    ControlPlots.append(hHT)
-    MassPoints = [500]#, 650]
+    #ControlPlots.append(hLdgTopMass)
+    #ControlPlots.append(hMET)
+    #ControlPlots.append(hHT)
+    MassPoints = [500, 650, 800]
