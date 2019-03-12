@@ -213,7 +213,8 @@ class Category:
                 histo.SetLineColor(lineColours[i])
                 histo.SetLineStyle(lineStyles[i])
                 histo.SetLineWidth(3)
-            histo.SetTitle("H^{#pm} (%s GeV)" % m)
+            #histo.SetTitle("H^{#pm} (%s GeV, #sigma = 1 pb, associated)" % m)
+            histo.SetTitle("H^{#pm} (%s GeV, #sigma = 1 pb)" % m)
             histo.SetBins(nbins, array.array("d", binning) )
             self.h_signal.append(histo.Clone(hName))
                                    
@@ -323,10 +324,13 @@ class Category:
         if opts.fitUncert:
             p.addMCUncertainty(postfit=not opts.prefit) # boolean changes only the legend
 
+        legHeader = ""
         if opts.prefit:
-            p.setLegendHeader("Pre-Fit")
+            legHeader = "Prefit"
         else:
-            p.setLegendHeader("Post-Fit")
+            legHeader = "Postfit"
+        if 0:
+            p.setLegendHeader(legHeader)
 
         # Customise histogram 
         units = "GeV" #(GeV/c^{2})
@@ -400,7 +404,8 @@ def main(opts):
     h2tb_1 = Category("tbhadr", opts)
     
     # Customise legend position and size
-    hadrMoveLegend = {"dx": -0.08, "dy": -0.02, "dh": 0.14}
+    #hadrMoveLegend = {"dx": -0.08, "dy": -0.02, "dh": 0.14}
+    hadrMoveLegend = {"dx": -0.15, "dy": 0.0, "dh": 0.14}
     h2tb_1.setMoveLegend(hadrMoveLegend)
 
     # Add all histograms

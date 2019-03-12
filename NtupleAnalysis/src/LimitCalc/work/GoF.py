@@ -102,7 +102,9 @@ def CleanFiles(opts):
 
 def doPlots(i, opts):
 
-    Print("Processing %s%s%s algorithm" % (ShellStyles.NoteStyle(), opts.algorithm, ShellStyles.NormalStyle(), ), True)
+    msg = "Processing %s%s%s algorithm" % (ShellStyles.NoteStyle(), opts.algorithm, ShellStyles.NormalStyle() )
+    Print(msg, True)
+
     # Settings
     if opts.h2tb:
         analysis = "H^{+}#rightarrow tb fully hadronic"
@@ -117,8 +119,8 @@ def doPlots(i, opts):
     if len(rootFiles) > 0:
         if os.path.isfile(opts.outputfile):
             os.remove(opts.outputfile)
-        Print("Merging \"%s\" ROOT files into \"%s\"" % (opts.inputfile, opts.inputfile), True)
-        call("hadd %s %s" % (opts.outputfile, opts.inputfile), shell=True)
+        Verbose("Merging \"%s\" ROOT files into \"%s\"" % (opts.inputfile, opts.inputfile), False)
+        call("hadd %s %s > mergeROOT.txt" % (opts.outputfile, opts.inputfile), shell=True)
     else:
         msg = "%sFound %d toy ROOT files to merge%s" % (ShellStyles.NoteStyle(), len(rootFiles), ShellStyles.NormalStyle() )
         Print(msg, True)
@@ -131,14 +133,14 @@ def doPlots(i, opts):
     if not os.path.isfile(opts.outputfile):
         raise Exception("The output ROOT file \"%s\" does not exist!" % (opts.outputfile) )
     else:
-        Print("Opening merged ROOT file \"%s\" to read results" % (opts.outputfile), False)
+        Verbose("Opening merged ROOT file \"%s\" to read results" % (opts.outputfile), False)
     fToys = ROOT.TFile(opts.outputfile)
     fData = ROOT.TFile(opts.outputfile)
     tToys = fToys.Get("limit")
     tData = fData.Get("limit")
     nToys = tToys.GetEntries()
 
-    if 1:#opts.verbose:
+    if opts.verbose:
         aux.PrintTH1Info(tData)
 
     if opts.verbose:
@@ -172,10 +174,18 @@ def doPlots(i, opts):
         
     # Finalise p-value calculation by dividing by number of toys total
     pval = pval_cum / GoF_TOYS_TOT
-    Print("p-Value = %d/%d = %.3f" % (pval_cum, GoF_TOYS_TOT, pval), False)
+    msg = "%sp-Value = %.3f%s (= %.2f/%.2f)" % (ShellStyles.SuccessStyle(), pval, ShellStyles.NormalStyle(), pval_cum, GoF_TOYS_TOT)
+    Print(msg, False)
 
     # Create GoF histo & fill it
-    hist = ROOT.TH1D("GoF", "", 50, round(min(toys)), round(max(toys)))
+    nBins = 100
+    xMax = {}
+    xMax["saturated"] = 100
+    xMax["KS"] = 0.1
+    xMax["AD"] = 10
+    hist = ROOT.TH1D("GoF", "", nBins, 0.0, xMax[opts.algorithm])
+    # hist = ROOT.TH1D("GoF", "", nBins[opts.algorithm], round(min(toys)), round(max(toys)))
+
     # For-loop: Toys
     for k in toys: 
         hist.Fill(k)
@@ -186,6 +196,15 @@ def doPlots(i, opts):
     hist.GetXaxis().SetTitle("#chi^{2}_{%s}" % (opts.algorithm) )
     hist.SetLineColor(ROOT.kRed)
     hist.SetLineWidth(3)
+    if opts.algorithm == "KS":
+        hist.GetXaxis().SetRangeUser(0.0, 0.05)
+    elif opts.algorithm == "AD":
+        hist.GetXaxis().SetRangeUser(0.0, 5.0)
+    elif opts.algorithm == "saturated":
+        hist.GetXaxis().SetRangeUser(0.0, 100.0)
+    else:
+        raise Exception("Unexpected algorithm \"%s\"" % (opts.algorithm) )
+        
     hist.Draw()
 
     # Customise arrow indicating data-observed
@@ -243,7 +262,7 @@ def doPlots(i, opts):
     return
 
 def SavePlot(plot, plotName, saveDir, saveFormats = [".C", ".png", ".pdf"]):
-    Verbose("Saving the plot in %s formats: %s" % (len(saveFormats), ", ".join(saveFormats) ) )
+    Verbose("Saving canvas in %s formats: %s" % (len(saveFormats), ", ".join(saveFormats) ) )
 
      # Check that path exists
     if not os.path.exists(saveDir):
