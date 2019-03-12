@@ -1783,15 +1783,42 @@ void FakeBMeasurement::process(Long64_t entry) {
   //================================================================================================
   if (0) std::cout << "=== BJet selection" << std::endl;
   const BJetSelection::Data bjetData = fBaselineBJetSelection.silentAnalyze(fEvent, jetData);
-  if (bjetData.passedSelection()) 
+  ///*
+    if (bjetData.passedSelection()) 
     {
-      DoBaselineAnalysis(entry, jetData, bjetData, nVertices);
+    DoBaselineAnalysis(entry, jetData, bjetData, nVertices);
     }
   else
     {
       DoInvertedAnalysis(entry, jetData, nVertices); 
     }
- 
+  //*/
+  /*
+  // TEMPORARY-START-FIXME fixme
+  if (bjetData.passedSelection()) 
+    {
+      unsigned int nMediumBjets = 0;
+      double bdiscWP = fInvertedBJetSelection.getDiscriminatorWP( cfg_BaselineBJetsDiscr, cfg_BaselineBJetsDiscrWP);
+      for (auto bjet: bjetData.getSelectedBJets())
+	{
+	  if (bjet.bjetDiscriminator() < bdiscWP) continue;
+	  nMediumBjets++;
+	}
+      bool bInSR  = (nMediumBjets >= 2); // (nMediumBjets == 2);
+      bool bInCR4 = (nMediumBjets == 1);
+      if (bInSR) 
+	{
+	  // std::cout << "SR) nMediumBjets = " << nMediumBjets << std::endl;
+	DoBaselineAnalysis(entry, jetData, bjetData, nVertices);
+      }
+      if (bInCR4)
+	{
+	  // std::cout << "CR) nMediumBjets = " << nMediumBjets << std::endl;
+	  DoInvertedAnalysis(entry, jetData, nVertices); 
+	}
+    }
+  // TEMPORARY-END
+  */
   return;
 }
 
@@ -1869,7 +1896,7 @@ void FakeBMeasurement::DoBaselineAnalysis(Long64_t entry,
 
   // Define variables
   float ldgMVA            = topData.getMVAmax1(); // topData.getMVALdgInPt();
-  float subldgMVA         = topData.getMVAmax2(); // topData.getMVASubldgInPt()
+  float subldgMVA         = topData.getMVAmax2(); // topData.getMVASubldgInPt();
   bool bPass_LdgTopMVA    = cfg_LdgTopMVACut.passedCut(ldgMVA);
   bool bPass_SubldgTopMVA = cfg_LdgTopMVACut.passedCut(subldgMVA);
   bool bPass_BothMVA      = bPass_LdgTopMVA * bPass_SubldgTopMVA;
@@ -1900,6 +1927,7 @@ void FakeBMeasurement::DoBaselineAnalysis(Long64_t entry,
 
       // If top fails determine if event falls into  Control Region 1 (CR1)
       if (!bPass_InvertedTop) return;
+
       if (0) std::cout << "=== Baseline: Control Region 1 (CRone)" << std::endl;
       cCRone.increment();
 
@@ -2254,19 +2282,23 @@ void FakeBMeasurement::DoInvertedAnalysis(Long64_t entry,
   if (!invBjetData.passedSelection()) return;
   
   // CSVv2-Medium requirement (CSVv2-L > 0.5426, CSVv2-M > 0.8484, CSVv2-T = 0.9535)
+  unsigned int nLooseBjets  = 0; // tmp - fixme
   unsigned int nMediumBjets = 0;
   double bdiscWP = fInvertedBJetSelection.getDiscriminatorWP( cfg_BaselineBJetsDiscr, cfg_BaselineBJetsDiscrWP);
   
   for (auto bjet: invBjetData.getSelectedBJets())
     {
+      if (bjet.bjetDiscriminator() > 0.5426 ) nLooseBjets++;
       if (bjet.bjetDiscriminator() < bdiscWP) continue;
        nMediumBjets++;
     }
-  bool passBaselineBjetCuts = cfg_BaselineNumberOfBJets.passedCut(nMediumBjets); 
+  bool passBaselineBjetCuts = cfg_BaselineNumberOfBJets.passedCut(nMediumBjets);
   if (!passBaselineBjetCuts) return;
   
   // Increment counter
   cInvertedBTaggingCounter.increment();
+  
+  // std::cout << "nLooseBjets = " << nLooseBjets << ", nMediumBjets = " << nMediumBjets << std::endl; //tmp
 
   //================================================================================================  
   // 9) BJet SF  
@@ -2320,6 +2352,7 @@ void FakeBMeasurement::DoInvertedAnalysis(Long64_t entry,
   bool bPass_SubldgTopMVA = cfg_LdgTopMVACut.passedCut(subldgMVA);
   bool bPass_BothMVA      = bPass_LdgTopMVA * bPass_SubldgTopMVA;
   bool bPass_InvertedTop  = bPass_LdgTopMVA * cfg_SubldgTopMVACut.passedCut(subldgMVA);
+  // std::cout << "ldgMVA = " << ldgMVA << " (" << cfg_LdgTopMVACut.getCutValue() << ")" << ", subldgMVA = " << subldgMVA << " (" << cfg_SubldgTopMVACut.getCutValue() << ")" << std::endl;
 
   // Fill histos after StandardSelections: Require any two tops with BDT > -1.0 and presence of free b-jet (not taken up by any of the two best (in MVA) tops) 
   std::vector<float> myFactorisationInfo;
@@ -2346,7 +2379,7 @@ void FakeBMeasurement::DoInvertedAnalysis(Long64_t entry,
 
       // If top fails determine if event falls into  Control Region 2 (CR2)
       if (!bPass_InvertedTop) return;
-      if (topData.getLdgTrijetBJet().bjetDiscriminator() < 0.8484) return; // fixme - test - iro
+      if (topData.getLdgTrijetBJet().bjetDiscriminator() < 0.8484) return; // added: 05 July 2018
 
       if (0) std::cout << "=== Inverted BJet: Control Region 2 (CR2)" << std::endl;
       cCRtwo.increment();
@@ -2519,7 +2552,7 @@ void FakeBMeasurement::DoInvertedAnalysis(Long64_t entry,
   // Verification Region (VR)
   //================================================================================================
   if (!topData.passedSelection()) return;
-  if (topData.getLdgTrijetBJet().bjetDiscriminator() < 0.8484) return; // fixme - test - iro
+  if (topData.getLdgTrijetBJet().bjetDiscriminator() < 0.8484) return; // added: 05 July 2018
 
   if (0) std::cout << "=== Inverted BJet: Verification Region (VR)" << std::endl;
   cVR.increment();

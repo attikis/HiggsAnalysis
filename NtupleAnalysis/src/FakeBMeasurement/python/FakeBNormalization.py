@@ -190,14 +190,14 @@ class FakeBNormalizationManager:
         TF_Up2x  = TF + 2*TF_Error
         TF_Up3x  = TF + 3*TF_Error
         if TF_Up > 1.0:
-            #Print("Forcing TF_Up (=%.3f) to be equal to 1!" % ( TF_Up), True) # added  23 Oct 2018
-            TF_Up = 1.0
+            Print("TF_Up (=%.3f). Greater than 1.0!" % ( TF_Up), True) # added  23 Oct 2018
+            # TF_Up = 1.0 # why ? no physics reason to do this! Commented out on 22 Nov 2018
         if TF_Up2x > 1.0:
-            #Print("Forcing TF_Up2x (=%.3f) to be equal to 1!" % ( TF_Up2x), True) # added  23 Oct 2018
-            TF_Up2x = 1.0
+            Print("TF_Up2x (=%.3f). Greater than 1.0." % ( TF_Up2x), True) # added  23 Oct 2018
+            # TF_Up2x = 1.0 # why ? no physics reason to do this! Commented out on 22 Nov 2018
         if TF_Up3x > 1.0:
-            #Print("Forcing TF_Up3x (=%.3f) to be equal to 1!" % ( TF_Up3x), True) # added  23 Oct 2018
-            TF_Up3x = 1.0
+            Print("TF_Up3x (=%.3f). Greater than 1.0!" % ( TF_Up3x), True) # added  23 Oct 2018
+            # TF_Up3x = 1.0 # why ? no physics reason to do this! Commented out on 22 Nov 2018
 
         # Down variations
         TF_Down   = TF - TF_Error

@@ -6,7 +6,7 @@ definition of the Control Region (CR). In the FakeB measurement
 we define the CR2 and VR by inverting both the b-jet selection
 and the 2nd top BDT. 
 
-Here, we need to show that moving the BDT of the second top to smaller
+Here i need to show that moving the BDT of the second top to smaller
 values than the maximum allowable one (default) does not change
 the closure tests.
 
@@ -16,11 +16,11 @@ USAGE:
 
 
 EXAMPLES:
-./plot_ClosurePerturbation.py -m FakeBMeasurement_3CSVv2M_Default_22Nov2018 -n FakeBMeasurement_BDT0p4_dBDTm0p2_23Nov2018 -l FakeBMeasurement_BDT0p4_dBDTm0p4_23Nov2018 --logY
-
+./plot_ClosurePerturbation.py -m FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p40_6BinsAbsEta_0PtBins_NoFatjetVeto_180326_062820 -n FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p38_6BinsAbsEta_0PtBins_NoFatjetVeto_180328_142550 -l FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p36_6BinsAbsEta_0PtBins_NoFatjetVeto_180328_142751
+./plot_ClosurePerturbation.py -m FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p40_6BinsAbsEta_0PtBins_NoFatjetVeto_180326_062820 -n FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p36_6BinsAbsEta_0PtBins_NoFatjetVeto_180328_142751 -l FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p34_6BinsAbsEta_0PtBins_NoFatjetVeto_180328_142923/
 
 LAST USED:
-./plot_ClosurePerturbation.py -m FakeBMeasurement_3CSVv2M_Default_22Nov2018 -n FakeBMeasurement_BDT0p4_dBDTm0p2_23Nov2018 -l FakeBMeasurement_BDT0p4_dBDTm0p4_23Nov2018 --logY
+./plot_ClosurePerturbation.py -m FakeBMeasurement_Preapproval_MVAm1p00to0p40_6AbsEtaBins_0PtBins_NoFatjetVeto_Systematics_12Apr2018 -n FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p30_6BinsAbsEta_0PtBins_NoFatjetVeto_180331_001547 -l FakeBMeasurement_PreSel_3CSVv2M_b3Pt40_InvSel_3CSVv2L_2CSVv2M_MVAm1p00to0p20_6BinsAbsEta_0PtBins_NoFatjetVeto_180331_001221 --logY
 
 '''
 
@@ -48,15 +48,6 @@ import HiggsAnalysis.NtupleAnalysis.tools.systematics as systematics
 import HiggsAnalysis.NtupleAnalysis.tools.crosssection as xsect
 import HiggsAnalysis.NtupleAnalysis.tools.multicrabConsistencyCheck as consistencyCheck
 import HiggsAnalysis.NtupleAnalysis.tools.ShellStyles as ShellStyles
-
-#================================================================================================ 
-# Definitions
-#================================================================================================ 
-ss = ShellStyles.SuccessStyle()
-ns = ShellStyles.NormalStyle()
-ts = ShellStyles.NoteStyle()
-hs = ShellStyles.HighlightAltStyle()
-es = ShellStyles.ErrorStyle()
 
 #================================================================================================ 
 # Function Definition
@@ -127,8 +118,8 @@ def main(opts):
     # Apply TDR style
     style = tdrstyle.TDRStyle()
     style.setOptStat(False)
-    style.setGridX(opts.gridY)
-    style.setGridY(opts.gridX)
+    style.setGridX(False)
+    style.setGridY(False)
 
     # Obtain dsetMgrCreator and register it to module selector
     dsetMgrCreator = dataset.readFromMulticrabCfg(directory=opts.mcrab1)
@@ -195,37 +186,48 @@ def main(opts):
         datasetsMgr3.merge("EWK", aux.GetListOfEwkDatasets())
         plots._plotStyles["EWK"] = styles.getAltEWKStyle()
 
-        # Pri1nt dataset information
+        # Print dataset information
         datasetsMgr1.PrintInfo()
         if 0:
             datasetsMgr2.PrintInfo()
             datasetsMgr3.PrintInfo()
 
         # Get all the histograms and their paths (e.g. ForFakeBMeasurement/Baseline_DeltaRLdgTrijetBJetTetrajetBJet_AfterCRSelections)
-        hList    = datasetsMgr1.getDataset(datasetsMgr1.getAllDatasetNames()[0]).getDirectoryContent(opts.folder)
-        hList    = [x for x in hList if "StdSelections" not in x]
-        hPaths   = [os.path.join(opts.folder, h) for h in hList]
-        keepList = ["tetrajetmass"]#, "trijetmass", "ht"] # "tetrajetbjet"
-        
+        hList  = datasetsMgr1.getDataset(datasetsMgr1.getAllDatasetNames()[0]).getDirectoryContent(opts.folder)
+        hPaths = [os.path.join(opts.folder, h) for h in hList]
+
         # Create a smaller list with only histos of interest
         hListS = []
         for h in hList:
-            
-            keepHisto = False
-            for k in keepList:
-                if k not in h.lower():
-                    continue
-                else:
-                    keepHisto = True
-                    break
-
-            # Skip this histogram?
-            if not keepHisto:
+            if "StandardSelections" in h:
                 continue
-            else:
-                hListS.append(h)
+            if "IsGenuineB" in h:
+                continue
+            if "_Bjet" in h:
+                continue
+            if "_Jet" in h:
+                continue
+            if "_SubLdg" in h:
+                continue
+            if "_Njets" in h:
+                continue
+            if "_NBjets" in h:
+                continue
+            if "_Delta" in h:
+                continue
+            if "Dijet" in h:
+                continue
+            if "Bdisc" in h:
+                continue
+            #if "MVA" in h:
+            #    continue
+            if "MET" in h:
+                continue
+            if "HT" in h:
+                continue
+            # Otherwise keep the histogram
+            hListS.append(h)
 
-        # Create the list
         hPathsS = [os.path.join(opts.folder, h) for h in hListS]
         
         # Create two lists of paths: one for "Baseline" (SR)  and one for "Inverted" (CR)
@@ -235,7 +237,7 @@ def main(opts):
         path_CR2 = []  # inverted, _AfterCRSelections
 
         # For-loop: All histogram paths
-        for p in hPathsS:
+        for p in hPathsS: #hPaths:
             if "Baseline" in p:
                 if "AllSelections" in p:
                     path_SR.append(p)
@@ -252,25 +254,26 @@ def main(opts):
         for hCR1, hCR2 in zip(path_CR1, path_CR2):
             if "IsGenuineB" in hCR1:
                 continue
+            #hName = hCR1.replace("_AfterCRSelections", "_CR1vCR2").replace("ForFakeBMeasurement/Baseline_", "")
             hName = hCR1.replace("_AfterCRSelections", " (CR1 and R2)").replace("ForFakeBMeasurement/Baseline_", "")
             msg   = "{:<9} {:>3} {:<1} {:<3} {:<50}".format("Histogram", "%i" % counter, "/", "%s:" % (len(path_CR1)), hName)
-            aux.PrintFlushed(ss + msg + ns, counter==1)
+            Print(ShellStyles.SuccessStyle() + msg + ShellStyles.NormalStyle(), counter==1)
 
             PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hCR1, hCR2, "CR1")
-            PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hCR1, hCR2, "CR2")
+            PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hCR1, hCR2, "CR2") #iro
             counter+=1
-        print
 
-        counter = 1
+        
         # WARNING! This unblinds the Signal Region (SR)        
         for hSR, hVR in zip(path_SR, path_VR):
             if "IsGenuineB" in hSR:
                 continue
             if 1:
                 continue
+            #hName = hCR1.replace("_AfterCRSelections", "_SRvVR").replace("ForFakeBMeasurement/Baseline_", "")
             hName = hCR1.replace("_AfterCRSelections", " (SR and VR)").replace("ForFakeBMeasurement/Baseline_", "")
             msg   = "{:<9} {:>3} {:<1} {:<3} {:<50}".format("Histogram", "%i" % counter, "/", "%s:" % (len(path_CR1)), hName)
-            aux.PrintFlushed(ss + msg + ns, counter==1)
+            Print(ShellStyles.SuccessStyle() + msg + ShellStyles.NormalStyle(), counter==1)
 
             PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hSR, hVR, "SR")
             PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hSR, hVR, "VR")
@@ -303,7 +306,6 @@ def getHistos(datasetsMgr, dataset, hBaseline, hInverted):
     h2 = datasetsMgr.getDataset(dataset).getDatasetRootHisto(hInverted)
     h2.setName("Inverted-" + dataset)
     return [h1, h2]
-
 
 def PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hBaseline, hInverted, ext):
 
@@ -401,12 +403,9 @@ def PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hBaseline, hInverte
     p.setLuminosity(opts.intLumi)
 
     # Get the BDT cut values from the multicrab name
-    BDT1 = 0.4
-    BDT2 = 0.2
-    BDT3 = 0.0
-    #BDT1 = find_between(opts.mcrab1, "MVAm1p00to", "_").replace("p", ".")
-    #BDT2 = find_between(opts.mcrab2, "MVAm1p00to", "_").replace("p", ".")
-    #BDT3 = find_between(opts.mcrab3, "MVAm1p00to", "_").replace("p", ".")
+    BDT1 = find_between(opts.mcrab1, "MVAm1p00to", "_").replace("p", ".")
+    BDT2 = find_between(opts.mcrab2, "MVAm1p00to", "_").replace("p", ".")
+    BDT3 = find_between(opts.mcrab3, "MVAm1p00to", "_").replace("p", ".")
 
     # Apply histogram styles
     if ext == "CR1" or ext == "SR":
@@ -455,7 +454,7 @@ def PlotComparison(datasetsMgr1, datasetsMgr2, datasetsMgr3, hBaseline, hInverte
     kwargs_ = GetHistoKwargs(hBaseline_Inclusive, ext, opts)
 
     # Draw the histograms
-    plots.drawPlot(p, hBaseline_Inclusive, **kwargs_)
+    plots.drawPlot(p, hBaseline_Inclusive, **kwargs_) #iro
     
     # Save plot in all formats    
     saveName = hBaseline_Inclusive.split("/")[-1]
@@ -474,21 +473,33 @@ def GetHistoKwargs(histoName, ext, opts):
     _ylabel = None
     _yNorm  = "Events"
     _logY   = opts.logY
-    divideByBinWidth = True
-
     if _logY:
-        maxFactorY = 3.0
+        maxFactorY = 4.0
     else:
         maxFactorY = 1.2
-
     if opts.normaliseToOne:
         _yNorm  = "Arbitrary units"
-        _opts   = {"ymin": 1e-5, "ymaxfactor": maxFactorY}
+        _opts   = {"ymin": 0.7e-4, "ymaxfactor": maxFactorY}
     else:
         _opts   = {"ymin": 1e0, "ymaxfactor": maxFactorY}
     _format = "%0.0f"
     _xlabel = None
-    _ratio  = True        
+    _ratio  = True
+
+    if "dijetm" in hName:
+        _rebinX = 2
+        _units  = "GeV/c^{2}"
+        _format = "%0.0f " + _units
+        _xlabel = "m_{jj} (%s)" % (_units)
+        _cutBox = {"cutValue": 80.399, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _opts["xmax"] = 200.0
+
+    if "met" in hName:
+        _units  = "GeV"
+        _rebinX = systematics._dataDrivenCtrlPlotBinning["MET_AfterAllSelections"]  #2
+        _opts["xmax"] = 300.0
+        binWmin, binWmax = GetBinWidthMinMax(_rebinX)
+        _ylabel = _yNorm + " / %.0f-%.0f %s" % (binWmin, binWmax, _units)
 
     if "ht_" in hName:
         _units  = "GeV"
@@ -516,22 +527,82 @@ def GetHistoKwargs(histoName, ext, opts):
         #_opts["xmin"] = -1.0 #0.45
         _cutBox = {"cutValue": 0.40, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
 
+    if "nbjets" in hName:
+        _units  = ""
+        _format = "%0.0f " + _units
+        _cutBox = {"cutValue": 3.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _opts["xmin"] =  2.0
+        _opts["xmax"] = 10.0
+
+    if "njets" in hName:
+        _units  = ""
+        _format = "%0.0f " + _units
+        #_cutBox = {"cutValue": 7.0, "fillColor": 16, "box": True, "line": False, "greaterThan": True}
+        _opts["xmin"] = 7.0
+        _opts["xmax"] = 20.0
+
+    if "btagdisc" in hName:
+        _rebinX = 2
+        _units  = ""
+        _format = "%0.2f " + _units
+        _cutBox = {"cutValue": 0.8484, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+
+    if "ldgdijetpt" in hName:
+        _rebinX = 1
+        _units  = "GeV/c"
+        _format = "%0.0f " + _units
+        _xlabel = "p_{T} (%s)" % _units
+        _cutBox = {"cutValue": 40.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _opts["xmax"] = 800.0
+
+    if "ldgdijetm" in hName:
+        _rebinX = 1
+        _units  = "GeV/c^{2}"
+        _format = "%0.0f " + _units
+        _xlabel = "m_{jj} (%s)" % _units
+        _cutBox = {"cutValue": 80.385, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _opts["xmax"] = 200.0
+
     if "trijetm" in hName:
         _rebinX = 2
-        _units  = "GeV" #"GeV/c^{2}"
+        _units  = "GeV/c^{2}"
         _format = "%0.0f " + _units
         _xlabel = "m_{jjb} (%s)" % _units
         _cutBox = {"cutValue": 173.21, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
         _opts["xmax"] = 500.0 # 300
 
+    if "eta" in hName:
+        _rebinX = 2 
+        _units  = ""
+        _format = "%0.2f " + _units
+        _cutBox = {"cutValue": 0.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _opts["xmin"] = -2.5
+        _opts["xmax"] = +2.5
+
     if "pt" in hName:
         _rebinX = 2 
-        _units  = "GeV" # "GeV/c"
+        _units  = "GeV/c"
         _format = "%0.0f " + _units
         _cutBox = {"cutValue": 40.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
-        if "tetrajet" in hName:
+        if "jet1" in hName:
+            _opts["xmax"] = 1000.0
+        elif "jet2" in hName:
+            _opts["xmax"] = 800.0
+        elif "jet3" in hName:
+            _opts["xmax"] = 600.0
+        elif "jet4" in hName:
+            _opts["xmax"] = 400.0
+        elif "jet5" in hName:
+            _opts["xmax"] = 300.0
+        elif "jet6" in hName:
+            _opts["xmax"] = 250.0
+        elif "jet7" in hName:
+            _opts["xmax"] = 200.0
+        elif "tetrajet" in hName:
             _cutBox = {"cutValue": 200.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+            #_rebinX = systematics._dataDrivenCtrlPlotBinning["LdgTetrajetPt_AfterAllSelections"]
             _rebinX = 5
+            #_rebinX = 10
             _opts["xmax"] = 800.0
             if isinstance(_rebinX, list):
                 binWmin, binWmax = GetBinWidthMinMax(_rebinX)
@@ -540,25 +611,39 @@ def GetHistoKwargs(histoName, ext, opts):
                 _ylabel = _yNorm + " / %.0f " + _units
         
             ROOT.gStyle.SetNdivisions(8, "X")
+        elif "dijet" in hName:
+            _cutBox = {"cutValue": 200.0, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
         elif "trijet" in hName:
             _rebinX = systematics._dataDrivenCtrlPlotBinning["LdgTrijetPt_AfterAllSelections"]
             _rebinX = [i for i in range(0, 600+50, 50)]
         else:
             _opts["xmax"] = 600.0
+        #ROOT.gStyle.SetNdivisions(8, "X")
+
+    if "bdisc" in hName:
+        _format = "%0.2f"
+        _rebinX = 1 #2
+        _opts["xmin"] = 0.0
+        _opts["xmax"] = 1.0
+        _cutBox = {"cutValue": +0.8484, "fillColor": 16, "box": False, "line": False, "greaterThan": True}
+        _xlabel = "b-tag discriminant"
+        if "trijet" in hName:
+            _opts["xmin"] = 0.7
 
     if "trijetmass" in hName:
         _rebinX = systematics._dataDrivenCtrlPlotBinning["LdgTrijetMass_AfterAllSelections"]
         _opts["xmax"] = 350.0
-
     if "tetrajetm" in hName:
-        _units  = "GeV" #"GeV/c^{2}"
-        #_rebinX = 10
-        _rebinX = systematics._dataDrivenCtrlPlotBinning["LdgTetrajetMass_AfterAllSelections"]
+        _units  = "GeV/c^{2}"
+        #_rebinX = systematics._dataDrivenCtrlPlotBinning["LdgTetrajetMass_AfterAllSelections"]
+        #_rebinX = systematics.getBinningForTetrajetMass(0)
+        #_rebinX = systematics.getBinningForTetrajetMass(9)
+        #_rebinX = 5
+        _rebinX = 10
         _opts["xmax"] = 3000.0
         if isinstance(_rebinX, list):
-            # binWmin, binWmax = GetBinWidthMinMax(_rebinX)
-            #_ylabel = _yNorm + " / %.0f-%.0f %s" % (binWmin, binWmax, _units)
-            _ylabel = "< %s / %s >" % (_yNorm, _units)
+            binWmin, binWmax = GetBinWidthMinMax(_rebinX)
+            _ylabel = _yNorm + " / %.0f-%.0f %s" % (binWmin, binWmax, _units)
         else:
             _ylabel = _yNorm + " / %.0f " + _units
         _xlabel = "m_{jjbb} (%s)" % (_units)
@@ -569,8 +654,8 @@ def GetHistoKwargs(histoName, ext, opts):
 
     _kwargs = {
         "ratioCreateLegend": True,
-        "ratioType"        : "errorPropagation", # "errorScale"
-        "divideByBinWidth" : divideByBinWidth,
+        "ratioType"        : "errorPropagation",
+        # "ratioType"        : "errorScale",
         "ratioErrorOptions": {"numeratorStatSyst": False, "denominatorStatSyst": False}, # Include stat.+syst. to numerator (if syst globally enabled)
         "ratioMoveLegend"  : {"dx": -0.51, "dy": 0.03, "dh": -0.05},
         "errorBarsX"       : True,
@@ -586,12 +671,13 @@ def GetHistoKwargs(histoName, ext, opts):
         "addCmsText"       : True,
         "cmsExtraText"     : "Preliminary",
         "opts"             : _opts,
-        "opts2"            : {"ymin": 0.60, "ymax": 1.40},
+        "opts2"            : {"ymin": 0.30, "ymax": 1.70},
+        #"opts2"            : {"ymin": 0.6, "ymax": 2.0-0.6},
+        #"opts2"            : {"ymin": 0.80, "ymax": 2.0-0.80},
         "log"              : _logY,
         "createLegend"     : {"x1": 0.58, "y1": 0.78, "x2": 0.98, "y2": 0.92},
         "cutBox"           : _cutBox,
         }
-
     return _kwargs
         
 def GetBinWidthMinMax(binList):
@@ -665,8 +751,6 @@ if __name__ == "__main__":
     SIGNALMASS   = 500
     FOLDER       = "ForFakeBMeasurement"
     LOGY         = False
-    GRIDX        = False
-    GRIDY        = False
 
     # Define the available script options
     parser = OptionParser(usage="Usage: %prog [options]")
@@ -682,12 +766,6 @@ if __name__ == "__main__":
 
     parser.add_option("--logY", dest="logY", action="store_true", default=LOGY, 
                       help="Set y-axis to logarithmic scalen [default: %s]" % LOGY)
-
-    parser.add_option("--gridX", dest="gridX", action="store_true", default=GRIDX, 
-                      help="Enable the x-axis grid [default: %s]" % GRIDX)
-
-    parser.add_option("--gridY", dest="gridY", action="store_true", default=GRIDY, 
-                      help="Enable the y-axis grid [default: %s]" % GRIDY)
 
     parser.add_option("-o", "--optMode", dest="optMode", type="string", default=OPTMODE, 
                       help="The optimization mode when analysis variation is enabled  [default: %s]" % OPTMODE)
@@ -768,4 +846,4 @@ if __name__ == "__main__":
     main(opts)
 
     if not opts.batchMode:
-        raw_input("=== ./plot_ClosurePerturbation.py: Press any key to quit ROOT ...")
+        raw_input("=== plot_test.py: Press any key to quit ROOT ...")
