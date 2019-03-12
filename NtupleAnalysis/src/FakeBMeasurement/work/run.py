@@ -200,29 +200,11 @@ def main():
     allSelections.TopSelectionBDT.CSV_bDiscCutValue = 0.54 # allow CSVv2-L for inverted top
     
     # Testing
-    if 1:
-        msg = "WARNING! This is test seting  of the FakeB measurement with only 1 CSVv2-M. Disable once done!"
+    if 0:
+        msg = "WARNING! This is a simple testing of the FakeB measurement with only 1 CSVv2-M. Disable once done!"
         Print(ShellStyles.ErrorStyle() + msg + ShellStyles.NormalStyle(), True)
-        # allSelections.BJetSelection.bjetDiscrWorkingPoint     = "Loose"
-        # allSelections.BJetSelection.numberOfBJetsCutValue     = 2
-        # allSelections.BJetSelection.numberOfBJetsCutDirection = "=="
-        #
-        # allSelections.FakeBMeasurement.LdgTopMVACutValue      = 0.6
-        # allSelections.FakeBMeasurement.LdgTopMVACutDirection  = ">="
-        # allSelections.FakeBMeasurement.SubldgTopMVACutValue      = allSelections.FakeBMeasurement.LdgTopMVACutValue-0.4
-        # allSelections.FakeBMeasurement.SubldgTopMVACutDirection  = "<"
-        #
-        # allSelections.FakeBMeasurement.baselineBJetsCutValue     = 2
-        # allSelections.FakeBMeasurement.baselineBJetsCutDirection = "=="
-        # allSelections.FakeBMeasurement.baselineBJetsDiscrWP      = "Medium"
-        #
-        # allSelections.FakeBMeasurement.bjetDiscrWorkingPoint     = "Loose", # NOTE: Defines VR and CR2
-        # allSelections.FakeBMeasurement.numberOfBJetsCutValue     = 2
-        # allSelections.FakeBMeasurement.numberOfBJetsDirection    = "=="
-        #
-        allSelections.FakeBBjetSelection.bjetDiscrWorkingPoint     = "Loose"
-        allSelections.FakeBBjetSelection.numberOfBJetsCutValue     = 2
-        allSelections.FakeBBjetSelection.numberOfBJetsCutDirection = "=="
+        allSelections.FakeBMeasurement.baselineBJetsCutValue     = 0 #1
+        allSelections.FakeBMeasurement.baselineBJetsCutDirection = "=="
 
 
     # ================================================================================================
