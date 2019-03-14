@@ -36,10 +36,11 @@ EXAMPLES:
 ../.././postFit_HToTB.py --mass 500 --prefit --fitUncert
 ../.././postFit_HToTB.py --mergeRares --url --mass 250,500,800 --fitUncert --prefit && ../.././postFit_HToTB.py --mergeRares --url --mass 250,500,800 --fitUncert
 ../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --prefit --url && ../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --url 
+../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --prefit --xMin 150 --url && ../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --xMin 150 --url 
 
 
 LAST USED:
-../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --prefit --xMin 150 --url && ../.././postFit_HToTB.py --paper --mass 250,500,800 --fitUncert --xMin 150 --url 
+../.././postFit_HToTB.py --paper --mass 800 --fitUncert --prefit && ../.././postFit_HToTB.py --paper --mass 800 --fitUncert --url 
 
 
 '''
@@ -214,7 +215,7 @@ class Category:
                 histo.SetLineStyle(lineStyles[i])
                 histo.SetLineWidth(3)
             #histo.SetTitle("H^{#pm} (%s GeV, #sigma = 1 pb, associated)" % m)
-            histo.SetTitle("H^{#pm} (%s GeV, #sigma = 1 pb)" % m)
+            histo.SetTitle("H^{#pm} (%s GeV, #sigma = 1.0 pb)" % m)
             histo.SetBins(nbins, array.array("d", binning) )
             self.h_signal.append(histo.Clone(hName))
                                    
@@ -331,12 +332,15 @@ class Category:
             legHeader = "Postfit"
         if 0:
             p.setLegendHeader(legHeader)
+        p.setLegendHeader("Associated production")
+        #histograms.addText(0.2, 0.60, "Associated Production")
 
         # Customise histogram 
         units = "GeV" #(GeV/c^{2})
         myParams = {}
-        myParams["xlabel"]            = "m_{jjbb} (%s)" % (units)
-        myParams["ylabel"]            = "< Events / " + units + " >"
+        myParams["xlabel"]            = "m_{bt^{res}} (%s)" % (units)
+        # myParams["ylabel"]            = "< Events / " + units + " >"
+        myParams["ylabel"]            = "Events / " + units
         myParams["ratio"]             = True
         myParams["ratioYlabel"]       = "Data/Bkg. "
         myParams["logx"]              = self.gOpts.logX
@@ -353,6 +357,9 @@ class Category:
         myParams["addMCUncertainty"]  = True
         myParams["addLuminosityText"] = True
         myParams["moveLegend"]        = self.moveLegend
+        myParams["legendHeader"]      = "TEST"
+        myParams["ratioCreateLegend"] = True
+        myParams["ratioMoveLegend"]    = {}
         #myParams["saveFormats"]       = []
         
         # Draw the plot
@@ -405,7 +412,7 @@ def main(opts):
     
     # Customise legend position and size
     #hadrMoveLegend = {"dx": -0.08, "dy": -0.02, "dh": 0.14}
-    hadrMoveLegend = {"dx": -0.15, "dy": 0.0, "dh": 0.14}
+    hadrMoveLegend = {"dx": -0.20, "dy": 0.0, "dh": 0.14}
     h2tb_1.setMoveLegend(hadrMoveLegend)
 
     # Add all histograms
@@ -413,7 +420,7 @@ def main(opts):
     h2tb_1.addHisto("TT_GenuineB", "t#bar{t}" , color=ROOT.kMagenta-2)
     if opts.paper:
         h2tb_1.addHisto("ttX_GenuineB", "t,tW,t#bar{t}+X", color=ROOT.kAzure-4)
-        h2tb_1.addHisto("EWK_GenuineB", "EWK"            , color=ROOT.kOrange+9)
+        h2tb_1.addHisto("EWK_GenuineB", "Electroweak"    , color=ROOT.kOrange+9)
     else:
         h2tb_1.addHisto("SingleTop_GenuineB", "Single t"     , color=ROOT.kSpring+4)
         if opts.mergeRares:
