@@ -3353,13 +3353,18 @@ class PlotDrawer:
                         raise Exception("Unsupported type(rh) = %s. EXIT" % (str(type(rh))), True)
 
                     if rh_type == "TGraphAsymmErrors":
-                        for i in xrange(1, rh.GetN()):
-
+                        for i in xrange(0, rh.GetN()): # start from 0 bin, not 1!
+                            
                             # Get bin-width and divide all values
                             dx = rh.GetErrorX(i)*2
                             rh.GetY()[i] = rh.GetY()[i]/dx
                             rh.GetEYhigh()[i] = rh.GetEYhigh()[i]/dx
                             rh.GetEYlow()[i]  = rh.GetEYlow()[i]/dx
+                            # print "i = %d, dx = %.1f" % (i, dx)
+                            # print "1) rh.GetY()[i] = ", rh.GetY()[i]
+                            # print "1) rh.GetEYlow()[i] = ", rh.GetEYlow()[i]
+                            # print "1) rh.GetEYhigh()[i] = ", rh.GetEYhigh()[i]
+                            # print
 
                     if rh_type == "TH1F":
                         if "data" not in rh_name.lower():
