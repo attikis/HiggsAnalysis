@@ -32,6 +32,8 @@ https://twiki.cern.ch/twiki/bin/view/CMS/HowToGenXSecAnalyzer#Running_the_GenXSe
 '''
 
 DEGUB = False
+SIGNALXSECTION = 1.0
+
 def Verbose(msg, printHeader=False):
     '''
     Calls Print() only if verbose options is set to true.
@@ -715,12 +717,15 @@ def setBackgroundCrossSections(datasets, doWNJetsWeighting=True, quietMode=False
     for dset in datasets.getMCDatasets():
         setBackgroundCrossSectionForDataset(dset, doWNJetsWeighting, quietMode)
 
+def getSignalCrossSection():
+    return SIGNALXSECTION
+
 def setBackgroundCrossSectionForDataset(dataset, doWNJetsWeighting=True, quietMode=False):
     datasetName = dataset.getName().split("_ext", 1)[0] #use only the first part of dataset name, before "_ext"
     value = backgroundCrossSections.crossSection(datasetName, dataset.getEnergy())
     if value is None:
         if "ChargedHiggs" in dataset.getName() or "HplusToTauNu" in dataset.getName():
-            value = 1.0 # Force signal xsection to 1 pb
+            value = SIGNALXSECTION #1.0 # Force signal xsection to 1 pb
         else:
             for wnJets in ["W1Jets", "W2Jets", "W3Jets", "W4Jets"]:
                 if wnJets in dataset.getName():

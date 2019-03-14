@@ -49,6 +49,7 @@ import dataset
 import histograms
 import styles
 import aux
+import HiggsAnalysis.NtupleAnalysis.tools.crosssection as xsect
 
 #================================================================================================
 # Global Definitions
@@ -761,7 +762,8 @@ for mass in _heavyHplusMasses:
     _legendLabels["ChargedHiggs_HplusTB_HplusToTB_M_%d"%mass] = "H^{+} m_{H^{+}}=%d GeV" % mass
 
 for mass in _heavyHplusToTBbarMasses:
-    _legendLabels["ChargedHiggs_HplusTB_HplusToTB_M_%d"%mass] = "H^{+} m_{H^{+}}=%d GeV" % mass
+    # _legendLabels["ChargedHiggs_HplusTB_HplusToTB_M_%d"%mass] = "H^{+} m_{H^{+}}=%d GeV" % mass
+    _legendLabels["ChargedHiggs_HplusTB_HplusToTB_M_%d"%mass] = "H^{+} (%d GeV, #sigma = %.1f pb)" % (mass, xsect.getSignalCrossSection())
     _legendLabels["HplusToTBbar_M%d"%mass] = "H^{+}#rightarrowtb m_{H^{+}}=%d GeV" % mass
 
 ## Map the logical dataset names to plot styles

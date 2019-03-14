@@ -377,9 +377,9 @@ fakeBLineStyle    = StyleCompound([StyleMarker(markerSize=1.2, markerColor=ROOT.
 fakeBLineStyle1   = StyleCompound([StyleMarker(markerSize=1.2, markerColor=ROOT.kRed, markerSizes=None, markerStyle=ROOT.kFullTriangleDown),
                                    StyleLine(lineColor=ROOT.kRed, lineStyle=ROOT.kSolid, lineWidth=3), 
                                    StyleFill(fillColor=ROOT.kRed, fillStyle=0)])
-signalStyleHToTB  = StyleCompound([StyleMarker(markerSize=0, markerColor=ROOT.kMagenta, markerSizes=None, markerStyle=4),
-                                   StyleLine(lineColor=ROOT.kMagenta, lineStyle=ROOT.kSolid, lineWidth=4), 
-                                  StyleFill(fillColor=ROOT.kMagenta, fillStyle=0)])
+signalStyleHToTB = StyleCompound([StyleMarker(markerSize=0.0, markerColor=ROOT.kSpring-3, markerSizes=None, markerStyle=ROOT.kFullTriangleUp),
+                                   StyleLine(lineColor=ROOT.kSpring-3, lineStyle=ROOT.kDashed, lineWidth=3), 
+                                   StyleFill(fillColor=ROOT.kSpring-3, fillStyle=0)])
 #signalStyleHToTB  = signalStyle
 
 signalFillStyleHToTB  = StyleCompound([StyleMarker(markerSize=0, markerColor=ROOT.kYellow-7, markerSizes=None, markerStyle=4),
