@@ -394,7 +394,7 @@ def SavePlot(plot, plotName, saveDir, saveFormats = [".C", ".png", ".pdf"]):
     # using "divideByBinWidth" option with "addMCUncertainty" option. Must call exit otherwise hangs
     if opts.fitUncert:
         Print("EXIT!", True)
-        os._exit(0) #sys.exit()
+        os._exit(0)
     return
 
 
@@ -569,6 +569,11 @@ if __name__=="__main__":
 
     opts.dataFiles = []
     opts.masses = opts.mass.split(",")
+    opts.massesString = ""
+    for m in ["M" + m for m in opts.masses]:
+        opts.massesString += "_" + m
+    print "opts.massesString = ", opts.massesString
+
     for m in opts.masses:
         fName = "combine_histograms_hplushadronic_m%s.root" % (m)
         opts.dataFiles.append(fName)
@@ -580,7 +585,7 @@ if __name__=="__main__":
         postfix = "postFit"
         if opts.prefit:
             postfix = "preFit"
-        opts.saveName = "LdgTetrajetMass_%s" % (postfix) #results should be the same for bkg-only fit (expectedSignal=0)
+        opts.saveName = "LdgTetrajetMass%s_%s" % (opts.massesString, postfix) #results should be the same for bkg-only fit (expectedSignal=0)
 
     if opts.saveDir == None:
         opts.saveDir = aux.getSaveDirPath(opts.mcrab, prefix="", postfix="Closure")
